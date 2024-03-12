@@ -1,0 +1,8 @@
+#!/bin/bash
+
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ "$current_branch" = "main" ]; then
+    echo "Pushing directly to main is not allowed. Please create a new branch and submit a pull request."
+    exit 1
+fi
