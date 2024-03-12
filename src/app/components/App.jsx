@@ -1,10 +1,13 @@
 import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import Tasks from "./Tasks";
 
-function App () {
+function App() {
   return (
     <div>
       <Header />
-      <h1>My To-Do-List</h1>
+      <Tasks />
       <Footer />
     </div>
   );
