@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function TaskList () {
+function List () {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
@@ -40,4 +40,4 @@ function TaskList () {
   );
 };
 
-export default TaskList;
+export default List;
