@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
 function List () {
+  // Define state variables
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
+
+  // Define functions for adding and removing tasks
   function addTask() {
     if (newTask.trim() === '') {
       alert('Please enter a task.');
@@ -19,6 +22,7 @@ function List () {
     setTasks(updatedTasks);
   };
 
+  // Render/Return the JSX for the List component
   return (
     <div>
       <ul>
