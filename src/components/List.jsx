@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 function List() {
   // Define state variables
-  const [tasks, setTasks] = useState([]); // list state for tasks 
-  const [newTask, setNewTask] = useState(''); // new task state for input value 
-  const [editingIndex, setEditingIndex] = useState(null); // index of the item being edited (null if not editing) 
-  const [editedTask, setEditedTask] = useState(''); // value of the edited task input 
+  const [tasks, setTasks] = useState([]); // taskList state for storing tasks
+  const [newTask, setNewTask] = useState(''); // value for new task input 
+  const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
+  const [editedTask, setEditedTask] = useState(''); // value for the value of the edited task input 
 
   // Define function for adding tasks 
   function addTask() {
@@ -13,7 +13,7 @@ function List() {
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
     }
-    setTasks([...tasks, newTask]); // add new task to tasks list  
+    setTasks([...tasks, newTask]); // push new task to the rest of tasks list  
     setNewTask(''); // clear the new task input 
   }
 
@@ -39,11 +39,13 @@ function List() {
     setEditedTask(''); // reset edited task value 
   };
 
+ 
+
   // Render/Return the JSX for the List component 
   return (
     <div id='container'>
       <div className="todo-container">
-        <ul className="todo-list">
+        <ul className="taskList">
           {tasks.map((task, index) => ( // map over the tasks list
             <li key={index} onClick={() => editTask(index)}>  {/* add click event to edit task */}
               {editingIndex === index ? ( // check if the task is being edited
@@ -75,7 +77,7 @@ function List() {
             placeholder="Add a new task"
             autoFocus
           />
-          <button onClick={addTask}>Add Task</button> {/* add button to add task */}
+          <button id='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
         </div>
       </div>
     </div>
