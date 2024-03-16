@@ -1,5 +1,21 @@
-body {
+* {
+  background-color: black;
+  color: white; 
+  text-align: center;
+}
+h1 {
+  color: white;
+  text-align: center;
+  font-size: 2rem;
   margin: 0;
+  padding: 1rem;
+  background-color: black;
+  border-bottom: 1px solid white;
+
+}
+
+body {
+  margin: 1rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +26,22 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+ul li {
+  color: black;
+  text-indent: 45rem;
+  text-align: left; 
+  list-style-position: inside;
+  background-image: url('./notepad.jpg');
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
 }
