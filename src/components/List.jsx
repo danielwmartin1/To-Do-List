@@ -12,35 +12,35 @@ function List () {
       alert('Please enter a task.');
       return;
     }
-    setTasks([...tasks, newTask]);
-    setNewTask('');
+    setTasks([...tasks, newTask]); // add new task to tasks list
+    setNewTask(''); // clear the new task input
   }
 // Define function for removing tasks
   const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+    const updatedTasks = [...tasks]; // make a copy of the current tasks
+    updatedTasks.splice(index, 1); // remove the task at the specified index
+    setTasks(updatedTasks); // update the tasks list
   };
 
   // Render/Return the JSX for the List component
   return (
     <div>
       <ul>
-        {tasks.map((task, index) => (
-          <li onClick={() => removeTask(index)} key={index}>
+        {tasks.map((task, index) => ( // map over the tasks list
+          <li onClick={() => removeTask(index)} key={index}> {/* add click event to remove task */}
             {task}
           </li>
         ))}
       </ul>
-      <input
+      <input // add input for new task
         id="newTask"
         type="text"
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)} // update newTask state
         placeholder="Add a new task"
         autofocus />
-      <button onClick={addTask}>Add Task</button>
-    </div>
+        <button onClick={addTask}>Add Task</button> {/* add button to add task */}
+      </div>
   );
 };
 
