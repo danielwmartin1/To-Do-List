@@ -51,19 +51,19 @@ function List() {
                   type="text"
                   value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                  onKeyDown={(e) => { // save changes on Enter key press
+                    onKeyDown={(e) => { // save changes on Enter key press
                     if (e.key === 'Enter') { // save changes on Enter key press
                       updateTask(index);
-                    } 
-                  }}
-                  onBlur={() => updateTask(index)} // save changes on blur
+                    }
+                    }}
+                    onBlur={() => updateTask(index)} // save changes on blur
                   autoFocus
-                />  
+                />
               ) : (
                 <span>{task}</span> // display the task
               )}
                 <button className="removeButton" onClick={() => removeTask(index)}>{/* add button to remove task */}Remove</button>
-            </li>
+              </li>
           ))}
         </ul>
         <div className="inputContainer">
@@ -72,11 +72,6 @@ function List() {
             type="text"
             value={newTask} // display the newTask value
             onChange={(e) => setNewTask(e.target.value)} // update newTask state
-            onKeyDown={(e) => { 
-              if (e.key === 'Enter') { // add task on Enter key press 
-                addTask(); 
-              }
-            }}
             placeholder="Add a new task"
             autoFocus
           />
