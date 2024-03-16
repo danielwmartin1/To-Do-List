@@ -29,16 +29,17 @@ ul {
   margin: 1;
 } 
 
-ul li {
+.listItem {
   font-family: "Architects Daughter", cursive;
   color: black;
-  text-indent: 40%;
+  text-indent: 42.5%;
   font-size: 1.30rem;
   background-image: url('./notepad.jpg');
   list-style-type: disc;
   list-style-position: inside;
   border: 1px solid black ;
 }
+
 
 .container {
   height: 100vh;
@@ -47,6 +48,7 @@ ul li {
 .inputContainer {
   text-align: center;
 }
+
 
 .newTask {
   margin: 1rem;
@@ -67,6 +69,9 @@ ul li {
   border-radius: 5px;
   cursor: pointer;
 }
+.addButton:hover {
+  background-color: rgb(4, 213, 220);
+}
 
 .removeButton {
   background-color: rgb(220, 4, 4);
@@ -76,6 +81,9 @@ ul li {
   margin: 0.5rem;
   border-radius: 5px;
   cursor: pointer;
+}
+.removeButton:hover {
+  background-color: rgb(4, 98, 220);
 }
 
 footer {

@@ -47,7 +47,7 @@ function List() {
       <div className="todo-container">
         <ul className="taskList">
           {tasks.map((task, index) => ( // map over the tasks list
-            <li key={index} onClick={() => editTask(index)}>  {/* add click event to edit task */}
+            <li className='listItem' key={index} onClick={() => editTask(index)}>  {/* add click event to edit task */}
               {editingIndex === index ? ( // check if the task is being edited
                 <input
                   type="text"
