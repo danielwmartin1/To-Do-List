@@ -1,3 +1,9 @@
+.architects-daughter-regular {
+  font-family: "Architects Daughter", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   margin: 1rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -24,16 +30,17 @@ ul {
 } 
 
 ul li {
+  font-family: "Architects Daughter", cursive;
   color: black;
   text-indent: 40%;
-  font-size: 1.25rem;
+  font-size: 1.30rem;
   background-image: url('./notepad.jpg');
   list-style-type: disc;
   list-style-position: inside;
   border: 1px solid black ;
 }
 
-#container {
+.container {
   height: 100vh;
 }
 
@@ -41,7 +48,7 @@ ul li {
   text-align: center;
 }
 
-#newTask {
+.newTask {
   margin: 1rem;
   padding: 1rem;
   font-size: 1.1rem;
@@ -51,7 +58,7 @@ ul li {
   text-align: center;
 }
 
-#addButton {
+.addButton {
   background-color: green;
   color: white;  
   border: none;

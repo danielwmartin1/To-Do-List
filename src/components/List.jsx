@@ -70,14 +70,14 @@ function List() {
         </ul>
         <div className="inputContainer">
           <input // add input for new task
-            id="newTask"
+            className="newTask"
             type="text"
             value={newTask} // display the newTask value
             onChange={(e) => setNewTask(e.target.value)} // update newTask state
             placeholder="Add a new task"
             autoFocus
           />
-          <button id='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
+          <button className='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
         </div>
       </div>
     </div>
