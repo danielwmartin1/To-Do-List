@@ -18,7 +18,7 @@ function List() {
   }
 
   // Define function for removing tasks
-  const removeTask = (index) => {
+  const removeTask = (index) => { // pass the index of the task to be removed
     const updatedTasks = [...tasks]; // make a copy of the current tasks
     updatedTasks.splice(index, 1); // remove the task at the specified index
     setTasks(updatedTasks); // update the tasks list
@@ -31,7 +31,7 @@ function List() {
   };
 
   // Define function for updating edited task
-  const updateTask = (index) => {
+  const updateTask = (index) => { // pass the index of the task to be updated
     const updatedTasks = [...tasks]; // make a copy of the current tasks
     updatedTasks[index] = editedTask; // update the task at the specified index
     setTasks(updatedTasks); // update the tasks list
@@ -69,7 +69,7 @@ function List() {
           <input // add input for new task
             id="newTask"
             type="text"
-            value={newTask}
+            value={newTask} // display the newTask value
             onChange={(e) => setNewTask(e.target.value)} // update newTask state
             placeholder="Add a new task"
             autoFocus
