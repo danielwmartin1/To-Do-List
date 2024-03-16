@@ -72,9 +72,9 @@ function List() {
             type="text"
             value={newTask} // display the newTask value
             onChange={(e) => setNewTask(e.target.value)} // update newTask state
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                addTask();
+            onKeyDown={(e) => { 
+              if (e.key === 'Enter') { // add task on Enter key press 
+                addTask(); 
               }
             }}
             placeholder="Add a new task"
