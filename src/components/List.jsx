@@ -45,17 +45,18 @@ function List() {
       <div className="todo-container">
         <ul className="todo-list">
           {tasks.map((task, index) => ( // map over the tasks list
-            <li key={index} onContextMenu={(e) => { e.preventDefault(); editTask(index); }}>  {/* add right-click context menu to edit task */}
+            <li key={index} onClick={() => editTask(index)}>  {/* add click event to edit task */}
               {editingIndex === index ? ( // check if the task is being edited
                 <input
                   type="text"
                   value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                  onKeyDown={(e) => { // save changes on Enter key press
+                    onKeyDown={(e) => { // save changes on Enter key press
                     if (e.key === 'Enter') { // save changes on Enter key press
                       updateTask(index);
                     }
-                  }} 
+                    }}
+                    onBlur={() => updateTask(index)} // save changes on blur
                   autoFocus
                 />
               ) : (
