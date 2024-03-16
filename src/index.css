@@ -72,6 +72,11 @@ ul {
 .addButton:hover {
   background-color: rgb(4, 213, 220);
 }
+.addButton:active {
+  background-color: rgb(0,220, 0);
+  color: blue;
+  border: 1px solid black;
+}
 
 .removeButton {
   background-color: rgb(220, 4, 4);
@@ -84,6 +89,11 @@ ul {
 }
 .removeButton:hover {
   background-color: rgb(4, 98, 220);
+}
+.removeButton:active {
+  background-color: rgb(255, 10, 255);
+  border: 1px solid black;
+  color: blue
 }
 
 footer {
