@@ -24,23 +24,28 @@ function List () {
 
   // Render/Return the JSX for the List component
   return (
-    <div>
-      <ul>
-        {tasks.map((task, index) => ( // map over the tasks list
-          <li onClick={() => removeTask(index)} key={index}> {/* add click event to remove task */}
-            {task}
-          </li>
-        ))}
-      </ul>
-      <input // add input for new task
-        id="newTask"
-        type="text"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)} // update newTask state
-        placeholder="Add a new task"
-        autofocus />
-        <button onClick={addTask}>Add Task</button> {/* add button to add task */}
+    <div id='container'>
+      <div className="todo-container">
+        <ul className="todo-list">
+          {tasks.map((task, index) => ( // map over the tasks list
+            <li key={index} onClick={() => removeTask(index)}>
+              {task}
+            </li>
+          ))}
+        </ul>
+        <div class="inputContainer">
+          <input // add input for new task
+            id="newTask"
+            type="text"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)} // update newTask state
+            placeholder="Add a new task"
+            autoFocus
+          />
+          <button onClick={addTask}>Add Task</button> {/* add button to add task */}
+        </div>
       </div>
+    </div>
   );
 };
 
