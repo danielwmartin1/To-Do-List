@@ -20,11 +20,10 @@ function List() {
   }
 
   // Define function for removing tasks  
-  const removeTask = (index) => { // pass the index of the task to be removed  
-    const updatedTasks = [...taskList]; // make a copy of the current tasks  
-    updatedTasks.splice(index, 1); // remove the task at the specified index  
-    setTaskList(updatedTasks); // update the tasks list   
-  };  
+  const removeTask = (index) => {
+    const updatedTasks = taskList.filter((_, i) => i !== index); // filter out the task at the specified index
+    setTaskList(updatedTasks); // update the tasks list
+  };
 
   // Define function for editing tasks  
   const editTask = (index) => {
