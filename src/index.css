@@ -18,13 +18,13 @@ h1 {
 }
 
 ul li {
-  margin: 0.5rem;
   color: black;
   text-indent: 40%;
   font-size: 1.25rem;
   background-image: url('./notepad.jpg');
   list-style-type: disc;
   list-style-position: inside;
+  border: 1px solid black ;
 }
 
 #container {
