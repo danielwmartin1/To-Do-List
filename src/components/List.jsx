@@ -62,11 +62,11 @@ function List() {
               ) : (
                 <span>{task}</span> // display the task
               )}
-                <button class="removeButton" onClick={() => removeTask(index)}>{/* add button to remove task */}Remove</button>
+                <button className="removeButton" onClick={() => removeTask(index)}>{/* add button to remove task */}Remove</button>
               </li>
           ))}
         </ul>
-        <div class="inputContainer">
+        <div className="inputContainer">
           <input // add input for new task
             id="newTask"
             type="text"
