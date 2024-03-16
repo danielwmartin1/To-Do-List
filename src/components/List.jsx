@@ -9,8 +9,8 @@ function List() {
 
   // Define function for adding tasks
   function addTask() {
-    if (newTask.trim() === '') {
-      alert('Please enter a task.');
+    if (newTask.trim() === '') { // check if the new task is empty
+      alert('Please enter a task.'); // show an alert if the new task is empty
       return;
     }
     setTasks([...tasks, newTask]); // add new task to tasks list
@@ -45,24 +45,24 @@ function List() {
       <div className="todo-container">
         <ul className="todo-list">
           {tasks.map((task, index) => ( // map over the tasks list
-            <li key={index} onContextMenu={(e) => { e.preventDefault(); editTask(index); }}>
-              {editingIndex === index ? (
+            <li key={index} onContextMenu={(e) => { e.preventDefault(); editTask(index); }}>  {/* add right-click context menu to edit task */}
+              {editingIndex === index ? ( // check if the task is being edited
                 <input
                   type="text"
-                  value={editedTask}
+                  value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                  onKeyDown={(e) => { // save changes on Enter key press
+                    if (e.key === 'Enter') { // save changes on Enter key press
                       updateTask(index);
                     }
-                  }} // save changes on blur
+                  }} 
                   autoFocus
                 />
               ) : (
-                <span>{task}</span>
+                <span>{task}</span> // display the task
               )}
-              <button onClick={() => removeTask(index)}>Remove</button>
-            </li>
+                <button class="removeButton" onClick={() => removeTask(index)}>{/* add button to remove task */}Remove</button>
+              </li>
           ))}
         </ul>
         <div class="inputContainer">
