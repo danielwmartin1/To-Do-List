@@ -11,6 +11,7 @@ function List() {
 
   // Define function for adding tasks 
   function addTask() {
+    console.log("addTask called");
     if (newTask.trim() === '') { // check if the new task is empty 
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
@@ -20,19 +21,23 @@ function List() {
   }
 
   // Define function for removing tasks  
-  const removeTask = (index) => {
+  const removeTask = (event, index) => {
+    console.log(`removeTask called for index ${index}`);
     const updatedTasks = taskList.filter((_, i) => i !== index); // filter out the task at the specified index
     setTaskList(updatedTasks); // update the tasks list
+    event.stopPropagation();  // stops the click event from propagating up the dom tree
   };
 
   // Define function for editing tasks  
   const editTask = (index) => {
+    console.log(`editTask called for edit ${index}`);
     setEditingIndex(index); // set the editing index to the index of the task being edited   
     setEditedTask(taskList[index]); // set the value of the edited task input to the value of the task being edited 
   };
 
   // Define function for updating edited task 
   const updateTask = (index) => { // pass the index of the task to be updated 
+    console.log(`updateTask called for index ${index}`);
     const updatedTasks = [...taskList]; // make a copy of the current tasks 
     updatedTasks[index] = editedTask; // update the task at the specified index with the value of the edited task input
     setTaskList(updatedTasks); // update the tasks list 
@@ -60,7 +65,7 @@ function List() {
                   autoFocus />
                   ) : (<span>{taskList}</span> // display the task
                   )}
-                <button className="removeButton" onClick={() => removeTask(index)}>{/* add button to remove task */}Remove</button>
+                <button className="removeButton" onClick={(event) => removeTask(event, index)}>{/* add button to remove task */}Remove</button>
               </li>
           ))}
         </ul>
