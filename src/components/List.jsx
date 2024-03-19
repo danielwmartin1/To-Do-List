@@ -1,47 +1,88 @@
 import React, { useState } from 'react';
 
-function List () {
+// Define List component
+function List() {
   // Define state variables
-  const [tasks, setTasks] = useState([]); // list state
-  const [newTask, setNewTask] = useState(''); // new task state
+  const [taskList, setTaskList] = useState([]); // taskList state for storing tasks
+  const [newTask, setNewTask] = useState(''); // value for new task input 
+  const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
+  const [editedTask, setEditedTask] = useState(''); // value for the value of the edited task input 
 
 
-  // Define functions for adding tasks
+  // Define function for adding tasks 
   function addTask() {
-    if (newTask.trim() === '') {
-      alert('Please enter a task.');
+    console.log("addTask called");
+    if (newTask.trim() === '') { // check if the new task is empty 
+      alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
     }
-    setTasks([...tasks, newTask]);
-    setNewTask('');
+    setTaskList([...taskList, newTask]); // push new task to the rest of tasks list   
+    setNewTask(''); // clear the new task input 
   }
-// Define function for removing tasks
-  const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+
+  // Define function for removing tasks  
+  const removeTask = (event, index) => {
+    console.log(`removeTask called for index ${index}`);
+    const updatedTasks = taskList.filter((_, i) => i !== index); // filter out the task at the specified index
+    setTaskList(updatedTasks); // update the tasks list
+    event.stopPropagation();  // stops the click event from propagating up the dom tree
   };
 
-  // Render/Return the JSX for the List component
+  // Define function for editing tasks  
+  const editTask = (index) => {
+    console.log(`editTask called for edit ${index}`);
+    setEditingIndex(index); // set the editing index to the index of the task being edited   
+    setEditedTask(taskList[index]); // set the value of the edited task input to the value of the task being edited 
+  };
+
+  // Define function for updating edited task 
+  const updateTask = (index) => { // pass the index of the task to be updated 
+    console.log(`updateTask called for index ${index}`);
+    const updatedTasks = [...taskList]; // make a copy of the current tasks 
+    updatedTasks[index] = editedTask; // update the task at the specified index with the value of the edited task input
+    setTaskList(updatedTasks); // update the tasks list 
+    setEditingIndex(null); // reset editing index 
+    setEditedTask(''); // reset edited task value 
+  };
+
+
+  // Render/Return the JSX for the List component 
   return (
-    <div>
-      <ul>
-        {tasks.map((task, index) => (
-          <li onClick={() => removeTask(index)} key={index}>
-            {task}
-          </li>
-        ))}
-      </ul>
-      <input
-        id="newTask"
-        type="text"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)} // update newTask state
-        placeholder="Add a new task"
-        autofocus />
-      <button onClick={addTask}>Add Task</button>
+    <div id='container'>
+      <div className="todo-container">
+        <ul className="taskList">
+          {taskList.map((taskList, index) => ( // map over the tasks list
+            <li className='listItem' key={index} onClick={() => editTask(index)}>  {/* add click event to edit task */}
+              {editingIndex === index ? ( // check if the task is being edited
+                <input type="text" value={editedTask} // display the edited task value
+                  onChange={(e) => setEditedTask(e.target.value)} // update edited task value
+                  onKeyDown={(e) => { // save changes on Enter key press
+                    if (e.key === 'Enter') { // save changes on Enter key press
+                      updateTask(index);
+                    }
+                  }}
+                  onBlur={() => updateTask(index)} // save changes on blur
+                  autoFocus />
+                  ) : (<span>{taskList}</span> // display the task
+                  )}
+                <button className="removeButton" onClick={(event) => removeTask(event, index)}>{/* add button to remove task */}Remove</button>
+              </li>
+          ))}
+        </ul>
+        <div className="inputContainer">
+          <input // add input for new task
+            className="newTask"
+            type="text"
+            value={newTask} // display the newTask value
+            onChange={(e) => setNewTask(e.target.value)} // update newTask state
+            placeholder="Add a new task"
+            autoFocus
+          />
+          <button className='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default List;
