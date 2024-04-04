@@ -24,7 +24,7 @@ function List() {
   // Define function for removing tasks  
   const removeTask = (event, index) => {
     console.log(`removeTask called for index ${index}`);
-    const updatedTasks = taskList.filter((i !== index)); // filter out the task at the specified index
+    const updatedTasks = taskList.filter((_, i) => i !== index); //filters out the task at the specified index  
     setTaskList(updatedTasks); // update the tasks list
     event.stopPropagation();  // stops the click event from propagating up the dom tree
   };
