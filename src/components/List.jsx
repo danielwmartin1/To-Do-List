@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 
 // Define List component
 function List() {
+  
   // Define state variables
   const [taskList, setTaskList] = useState([]); // taskList state for storing tasks
   const [newTask, setNewTask] = useState(''); // value for new task input 
   const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
-  const [editedTask, setEditedTask] = useState(''); // value for the value of the edited task input 
+  const [editedTask, setEditedTask] = useState(''); // value of edited task input
 
 
   // Define function for adding tasks 
   function addTask() {
     console.log("addTask called");
-    if (newTask.trim() === '') { // check if the new task is empty 
+    if (!newTask.trim()) { // check if the new task is empty
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
     }
@@ -23,7 +24,7 @@ function List() {
   // Define function for removing tasks  
   const removeTask = (event, index) => {
     console.log(`removeTask called for index ${index}`);
-    const updatedTasks = taskList.filter((_, i) => i !== index); // filter out the task at the specified index
+    const updatedTasks = taskList.filter((i !== index)); // filter out the task at the specified index
     setTaskList(updatedTasks); // update the tasks list
     event.stopPropagation();  // stops the click event from propagating up the dom tree
   };
@@ -75,8 +76,12 @@ function List() {
             type="text"
             value={newTask} // display the newTask value
             onChange={(e) => setNewTask(e.target.value)} // update newTask state
-            placeholder="Add a new task"
-            autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addTask();
+                console.log("Add task");
+              }
+            }}
           />
           <button className='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
         </div>
