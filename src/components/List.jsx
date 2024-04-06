@@ -11,7 +11,7 @@ function List() {
 
 
   // Define function for adding tasks 
-  function addTask() {
+  const addTask = () => {
     console.log("addTask called");
     if (!newTask.trim()) { // check if the new task is empty
       alert('Please enter a task.'); // show an alert if the new task is empty   
@@ -33,7 +33,7 @@ function List() {
   const editTask = (listIndex) => {
     console.log(`editTask called for edit ${listIndex}`);
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
-    setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited 
+    setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
   };
 
   // Define function for updating edited task 
@@ -51,11 +51,12 @@ function List() {
   return (
     <div id='container'>
       <div className="todo-container">
-        <ul className="taskList">
-          {taskList.map((taskList, listIndex) => ( // map over the tasks list
-            <li className='listItem' key={listIndex} onClick={() => editTask(listIndex)}>  
+
+        <ul className="taskList"> {taskList.map((taskList, listIndex) => ( // map over the tasks list
+            <li className='listItem' key={listIndex} onClick={() => editTask(listIndex)}> 
               {editingIndex === listIndex ? (      // check if the task is being edited
-                <input type="text" value={editedTask} // display the edited task value
+                <input type="text" 
+                  value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
                   onKeyDown={(e) => { // save changes on Enter key press
                     if (e.key === 'Enter') { // save changes on Enter key press
@@ -64,10 +65,12 @@ function List() {
                   }}
                   onBlur={() => updateTask(listIndex)} // save changes on blur
                   autoFocus />
-                ) : (<span>{taskList}</span> // display the task
+              ) : (
+                  <span>{taskList}</span> // display the task
                 )}
-                <button className="removeButton" onClick={(event) => removeTask(event, listIndex)}>{/* add button to remove task */}Remove</button>
-              </li>
+
+              <button className="removeButton" onClick={(event) => removeTask(event, listIndex)}>{/* add button to remove task */}Remove</button>
+            </li>
           ))}
         </ul>
         <div className="inputContainer">
