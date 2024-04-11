@@ -22,11 +22,11 @@ function List() {
   }
 
   // Define function for removing tasks  
-  const removeTask = (event, listIndex) => {
+  const removeTask = (e, listIndex) => {
     console.log(`removeTask called for index ${listIndex}`);
     const updatedTasks = taskList.filter((_, i) => i !== listIndex); //filters out the task at the specified index  
     setTaskList(updatedTasks); // update the tasks list
-    event.stopPropagation();  // stops the click event from propagating up the dom tree
+    e.stopPropagation();  // stops the click event from propagating up the dom tree
   };
 
   // Define function for editing tasks  
@@ -34,6 +34,7 @@ function List() {
     console.log(`editTask called for edit ${listIndex}`);
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
     setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
+    
   };
 
   // Define function for updating edited task 
@@ -68,11 +69,11 @@ function List() {
               ) : (
                   <span>{taskList}</span> // display the task
                 )}
-
-              <button className="removeButton" onClick={(event) => removeTask(event, listIndex)}>{/* add button to remove task */}Remove</button>
+              <button className="removeButton" onClick={(e) => removeTask(e, listIndex)}> Remove </button>
             </li>
           ))}
         </ul>
+  
         <div className="inputContainer">
           <input // add input for new task
             className="newTask"
