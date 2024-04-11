@@ -24,9 +24,9 @@ function List() {
   // Define function for removing tasks  
   const removeTask = (e, listIndex) => {
     console.log(`removeTask called for index ${listIndex}`);
-    const updatedTasks = taskList.filter((_, i) => i !== listIndex); //filters out the task at the specified index  
+    const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
     setTaskList(updatedTasks); // update the tasks list
-    e.stopPropagation();  // stops the click event from propagating up the dom tree
+    e.stopPropagation();// stops the click event from propagating up the dom tree
   };
 
   // Define function for editing tasks  
@@ -54,9 +54,14 @@ function List() {
       <div className="todo-container">
 
         <ul className="taskList"> {taskList.map((taskList, listIndex) => ( // map over the tasks list
-            <li className='listItem' key={listIndex} onClick={() => editTask(listIndex)}> 
+            <li 
+              className='listItem' 
+              key={listIndex} 
+              onClick={() => editTask(listIndex)}> 
               {editingIndex === listIndex ? (      // check if the task is being edited
-                <input type="text" 
+                <input 
+                  autofocus
+                  type="text" 
                   value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
                   onKeyDown={(e) => { // save changes on Enter key press
@@ -64,11 +69,9 @@ function List() {
                       updateTask(listIndex);
                     }
                   }}
-                  onBlur={() => updateTask(listIndex)} // save changes on blur
-                  autoFocus />
-              ) : (
+                />) : ( 
                   <span>{taskList}</span> // display the task
-                )}
+                  )}
               <button className="removeButton" onClick={(e) => removeTask(e, listIndex)}> Remove </button>
             </li>
           ))}
