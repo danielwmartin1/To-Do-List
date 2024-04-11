@@ -34,7 +34,6 @@ function List() {
     console.log(`editTask called for edit ${listIndex}`);
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
     setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
-    
   };
 
   // Define function for updating edited task 
