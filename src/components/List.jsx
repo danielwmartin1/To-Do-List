@@ -59,17 +59,18 @@ function List() {
               onClick={() => editTask(listIndex)}> 
               {editingIndex === listIndex ? (      // check if the task is being edited
                 <input 
-                  autofocus
+                  autoFocus
                   type="text" 
                   value={editedTask} // display the edited task value
                   onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                  onKeyDown={(e) => { // save changes on Enter key press
+                    onKeyDown={(e) => { // save changes on Enter key press
                     if (e.key === 'Enter') { // save changes on Enter key press
                       updateTask(listIndex);
                     }
-                  }}
-                />) : ( 
-                  <span>{taskList}</span> // display the task
+                    }}
+                    onBlur={() => updateTask(listIndex)}
+                  />) : ( 
+                    <span>{taskList}</span> // display the task
                   )}
               <button className="removeButton" onClick={(e) => removeTask(e, listIndex)}> Remove </button>
             </li>
@@ -78,6 +79,7 @@ function List() {
   
         <div className="inputContainer">
           <input // add input for new task
+            autoFocus
             className="newTask"
             type="text"
             value={newTask} // display the newTask value
