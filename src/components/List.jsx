@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 function List() {
   
   // Define state variables
-  const [newTask, setNewTask] = useState(''); // value for new task input 
-  const [taskList, setTaskList] = useState([]); // taskList state for storing tasks
+  const [newTask, setNewTask] = useState(''); // value for new task input being added
+  const [taskList, setTaskList] = useState([]); // taskList array to store tasks
   const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
   const [editedTask, setEditedTask] = useState(''); // value of edited task input
 
@@ -31,7 +31,7 @@ function List() {
 
   // Define function for editing tasks  
   const editTask = (listIndex) => {
-    console.log(`editTask called for edit ${listIndex}`);
+    console.log(`handleEditTask called for edit ${listIndex}`);
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
     setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
   };
@@ -49,55 +49,57 @@ function List() {
 
   // Render/Return the JSX for the List component 
   return (
-    <div id='container'>
-      <div 
-        onBlur={() => editTask(null)}
-        className="todo-container"
-      >
-        <ul className="taskList"> {taskList.map((taskList, listIndex) => ( // map over the tasks list
-            <li 
-              className='listItem' 
-              key={listIndex} 
-              onClick={() => editTask(listIndex)}> 
-              {editingIndex === listIndex ? (      // check if the task is being edited
-                <input 
-                  autoFocus
-                  type="text" 
-                  value={editedTask} // display the edited task value
-                  onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                    onKeyDown={(e) => { // save changes on Enter key press
-                    if (e.key === 'Enter') { // save changes on Enter key press
-                      updateTask(listIndex);
-                    }
-                    }}
-                />) : ( 
-                    <span>{taskList}</span> // display the task
-                  )}
-              <button 
-                className="removeButton" 
-                onClick={(e) => removeTask(e, listIndex)}> Remove </button>
-            </li>
-          ))}
-        </ul>
-  
-        <div className="inputContainer">
-          <input // add input for new task
-            autoFocus
-            className="newTask"
-            type="text"
-            value={newTask} // display the newTask value
-            onChange={(e) => setNewTask(e.target.value)} // update newTask state
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                addTask();
-                console.log("Add task");
-              }
-            }}
-          />
-          <button className='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
+    <React.StrictMode>
+      <div id='container'>
+        <div 
+          onBlur={() => editTask(null)}
+          className="todo-container"
+        >
+          <ul className="taskList"> {taskList.map((taskList, listIndex) => ( // map over the tasks list
+              <li 
+                className='listItem' 
+                key={listIndex} 
+                onClick={() => editTask(listIndex)}> 
+                {editingIndex === listIndex ? (      // check if the task is being edited
+                  <input 
+                    autoFocus
+                    type="text" 
+                    value={editedTask} // display the edited task value
+                    onChange={(e) => setEditedTask(e.target.value)} // update edited task value
+                      onKeyDown={(e) => { // save changes on Enter key press
+                      if (e.key === 'Enter') { // save changes on Enter key press
+                        updateTask(listIndex);
+                      }
+                      }}
+                  />) : ( 
+                      <span>{taskList}</span> // display the task
+                    )}
+                <button 
+                  className="removeButton" 
+                  onClick={(e) => removeTask(e, listIndex)}> Remove </button>
+              </li>
+            ))}
+          </ul>
+    
+          <div className="inputContainer">
+            <input // add input for new task
+              autoFocus
+              className="newTask"
+              type="text"
+              value={newTask} // display the newTask value
+              onChange={(e) => setNewTask(e.target.value)} // update newTask state
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  addTask();
+                  console.log("Add task");
+                }
+              }}
+            />
+            <button className='addButton' onClick={addTask}>Add Task</button> {/* add button to add task */}
+          </div>
         </div>
       </div>
-    </div>
+    </React.StrictMode>
   );
 }
 

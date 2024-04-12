@@ -5,11 +5,13 @@ import List from "./List";
 
 function App() {
   return (
+    <React.StrictMode>
     <div>
       <Header />
       <List />
       <Footer />
     </div>
+    </React.StrictMode>
   );
 }
 
