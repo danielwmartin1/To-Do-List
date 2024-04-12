@@ -50,8 +50,10 @@ function List() {
   // Render/Return the JSX for the List component 
   return (
     <div id='container'>
-      <div className="todo-container">
-
+      <div 
+        onBlur={() => editTask(null)}
+        className="todo-container"
+      >
         <ul className="taskList"> {taskList.map((taskList, listIndex) => ( // map over the tasks list
             <li 
               className='listItem' 
@@ -68,11 +70,12 @@ function List() {
                       updateTask(listIndex);
                     }
                     }}
-                    onBlur={() => updateTask(listIndex)}
-                  />) : ( 
+                />) : ( 
                     <span>{taskList}</span> // display the task
                   )}
-              <button className="removeButton" onClick={(e) => removeTask(e, listIndex)}> Remove </button>
+              <button 
+                className="removeButton" 
+                onClick={(e) => removeTask(e, listIndex)}> Remove </button>
             </li>
           ))}
         </ul>
