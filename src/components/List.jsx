@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState , useEffect} from 'react';
+import axios from "axios";
 // Define List component
 function List() {
   
@@ -9,6 +9,23 @@ function List() {
   const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
   const [editedTask, setEditedTask] = useState(''); // value of edited task input
 
+  const [data, setData] = useState([]);
+
+  // Function to fetch data using Axios
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/tasks");
+      console.log("response", response);
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // Call fetchData on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // Define function for adding tasks 
   const addTask = () => {
