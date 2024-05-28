@@ -9,14 +9,15 @@ function List() {
   const [editingIndex, setEditingIndex] = useState(null); // state for the index of the task being edited 
   const [editedTask, setEditedTask] = useState(''); // value of edited task input
 
-  const [data, setData] = useState([]);
 
   // Function to fetch data using Axios
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:4000/tasks");
       console.log("response", response);
-      setData(response.data);
+      //setData(response.data);
+      const taskData = response.data.map((task) => task.title);
+      setTaskList(taskData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -34,7 +35,8 @@ function List() {
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
     }
-    setTaskList([...taskList, newTask]); // push new task to the rest of tasks list   
+    setTaskList([...taskList, newTask]); // push new task to the rest of tasks list  
+    console.log(taskList); 
     setNewTask(''); // clear the new task input 
   }
 
