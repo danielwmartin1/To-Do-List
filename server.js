@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors');
 
+// update syntax above
+
 const app = express()
 const port = 4000
 
