@@ -9,9 +9,9 @@ const port = 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 // Connect to MongoDB
-const mongo_uri = 'mongodb://localhost:27017/tasks';
+const mongo_uri = 'mongodb://localhost:27017';
 const mongodb = async () => {
   try {
     await mongoose.connect(mongo_uri, []);
