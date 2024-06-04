@@ -49,16 +49,19 @@ function List() {
 
   // Define function for editing tasks  
   const editTask = async (listIndex) => {
-    console.log(`handleEditTask called for edit ${listIndex}`);
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
-    setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
-    try {
-      await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
-        id: listIndex + 1,
-        title: editedTask,
-      });
-    } catch (error) {
-      console.error("Error updating task:", error);
+    if (listIndex !== null) { // check if a task is being edited
+      console.log(`handleEditTask called for edit ${listIndex}`);
+      
+      setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
+      try {
+        await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
+          id: listIndex + 1,
+          title: editedTask,
+        });
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
     }
   };
 

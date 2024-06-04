@@ -6,10 +6,15 @@ const mongoose = require('mongoose');
 
 const app = express();
 const port = 4000;
-
+// middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  console.log(req.method, req.path)
+  next()
+})
+
 // Connect to MongoDB
 const mongo_uri = 'mongodb://localhost:27017';
 const mongodb = async () => {
@@ -41,12 +46,23 @@ let tasks = [
   },
 ];
 
+let nextId = 4;
+
 app.get('/tasks', (req, res) => {
   res.send(tasks);
 });
 
+app.get('/tasks/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const task = tasks.find((task) => task.id === id);
+  res.send(task);
+});
+
 app.post('/tasks', (req, res) => {
-  const newTask = req.body;
+  const newTask = {
+    id: nextId++, 
+    title: req.body.title,
+  };
   tasks.push(newTask);
   res.send(tasks);
 });
