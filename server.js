@@ -35,8 +35,8 @@ app.post('/tasks', (req, res) => {
 });
 
 app.put('/tasks/:id', (req, res) => {
-  const updatedTask = req.body;
   const id = parseInt(req.params.id);
+  const updatedTask = req.body;
   tasks = tasks.map((task) => {
     if (task.id === id) {
       return updatedTask;
@@ -46,7 +46,7 @@ app.put('/tasks/:id', (req, res) => {
   res.send(tasks);
 });
 
-app.delete('/tasks/:id', (req, res) => {
+app.delete('/tasks/:id', (req, res) => { 
   const id = parseInt(req.params.id);
   tasks = tasks.filter((task) => task.id !== id);
   res.send(tasks);

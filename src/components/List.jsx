@@ -29,8 +29,12 @@ function List() {
   }, []);
 
   // Define function for adding tasks 
-  const addTask = () => {
+  const addTask = async () => {
     console.log("addTask called");
+    await axios.post("http://localhost:4000/tasks", {
+      id: taskList.length + 1,
+      title: newTask,
+    }); 
     if (!newTask.trim()) { // check if the new task is empty
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
@@ -41,22 +45,24 @@ function List() {
   }
 
   // Define function for removing tasks  
-  const removeTask = (e, listIndex) => {
+  const removeTask = async (e, listIndex) => {
     console.log(`removeTask called for index ${listIndex}`);
     const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
     setTaskList(updatedTasks); // update the tasks list
     e.stopPropagation();// stops the click event from propagating up the dom tree
+    await axios.delete(`http://localhost:4000/tasks/${listIndex + 1}`);
   };
 
   // Define function for editing tasks  
-  const editTask = (listIndex) => {
+  const editTask = async (listIndex) => {
     console.log(`handleEditTask called for edit ${listIndex}`);
+
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
     setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
   };
 
   // Define function for updating edited task 
-  const updateTask = (listIndex) => { // pass the index of the task to be updated 
+  const updateTask = async (listIndex) => { // pass the index of the task to be updated 
     console.log(`updateTask called for index ${listIndex}`);
     const updatedTasks = [...taskList]; // make a copy of the current tasks 
     updatedTasks[listIndex] = editedTask; // update the task at the specified index with the value of the edited task input
