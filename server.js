@@ -9,10 +9,9 @@ const port = 4000;
 app.use(cors());
 app.use(bodyParser.json());
 
-
+mongoose.connect('mongodb://localhost:27017/tasks', {});
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/tasks', {});
 const mongodb = async () => {
   try {
     await mongoose.connect('mongodb://localhost:27017/tasks', []);
