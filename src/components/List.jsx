@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState , useEffect} from 'react';
+import axios from "axios";
 // Define List component
 function List() {
   
@@ -10,40 +10,91 @@ function List() {
   const [editedTask, setEditedTask] = useState(''); // value of edited task input
 
 
+  // Function to fetch data using Axios
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/tasks");
+      console.log("response", response);
+      const taskData = response.data.map((task) => task.title);
+      setTaskList(taskData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // Call fetchData on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // Define function for adding tasks 
-  const addTask = () => {
+  const addTask = async () => {
     console.log("addTask called");
+    try {
+      await axios.post("http://localhost:4000/tasks", {
+        id: taskList.length + 1,
+        title: newTask,
+      });
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
     if (!newTask.trim()) { // check if the new task is empty
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
     }
-    setTaskList([...taskList, newTask]); // push new task to the rest of tasks list   
+    setTaskList([...taskList, newTask]); // push new task to the rest of tasks list  
+    console.log(taskList); 
     setNewTask(''); // clear the new task input 
   }
 
-  // Define function for removing tasks  
-  const removeTask = (e, listIndex) => {
-    console.log(`removeTask called for index ${listIndex}`);
-    const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
-    setTaskList(updatedTasks); // update the tasks list
-    e.stopPropagation();// stops the click event from propagating up the dom tree
-  };
-
   // Define function for editing tasks  
-  const editTask = (listIndex) => {
-    console.log(`handleEditTask called for edit ${listIndex}`);
+  const editTask = async (listIndex) => {
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
-    setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
+    if (listIndex !== null) { // check if a task is being edited
+      console.log(`handleEditTask called for edit ${listIndex}`);
+      
+      setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
+      try {
+        await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
+          id: listIndex + 1,
+          title: editedTask,
+        });
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
+    }
   };
 
   // Define function for updating edited task 
-  const updateTask = (listIndex) => { // pass the index of the task to be updated 
+  const updateTask = async (listIndex) => { // pass the index of the task to be updated 
     console.log(`updateTask called for index ${listIndex}`);
     const updatedTasks = [...taskList]; // make a copy of the current tasks 
     updatedTasks[listIndex] = editedTask; // update the task at the specified index with the value of the edited task input
     setTaskList(updatedTasks); // update the tasks list 
     setEditingIndex(null); // reset editing index 
     setEditedTask(''); // reset edited task value 
+    // Send updated task to the API
+    try {
+      await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
+        id: listIndex + 1,
+        title: editedTask,
+      });
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  // Define function for removing tasks  
+  const removeTask = async (e, listIndex) => {
+    console.log(`removeTask called for index ${listIndex}`);
+    const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
+    setTaskList(updatedTasks); // update the tasks list
+    e.stopPropagation();// stops the click event from propagating up the dom tree
+    try {
+      await axios.delete(`http://localhost:4000/tasks/${listIndex + 1}`);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
 
