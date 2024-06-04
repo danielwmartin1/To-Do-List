@@ -3,24 +3,26 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+
 const app = express();
 const port = 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/tasks', {});
-
 // Connect to MongoDB
+const mongo_uri = 'mongodb://localhost:27017/tasks';
 const mongodb = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/tasks', []);
+    await mongoose.connect(mongo_uri, []);
     console.log('Connected to MongoDB');
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
   }
 };
 mongodb();
+
+
 
 
 // In-memory data store
