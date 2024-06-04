@@ -15,7 +15,6 @@ function List() {
     try {
       const response = await axios.get("http://localhost:4000/tasks");
       console.log("response", response);
-      //setData(response.data);
       const taskData = response.data.map((task) => task.title);
       setTaskList(taskData);
     } catch (error) {
@@ -31,10 +30,14 @@ function List() {
   // Define function for adding tasks 
   const addTask = async () => {
     console.log("addTask called");
-    await axios.post("http://localhost:4000/tasks", {
-      id: taskList.length + 1,
-      title: newTask,
-    }); 
+    try {
+      await axios.post("http://localhost:4000/tasks", {
+        id: taskList.length + 1,
+        title: newTask,
+      });
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
     if (!newTask.trim()) { // check if the new task is empty
       alert('Please enter a task.'); // show an alert if the new task is empty   
       return;
@@ -44,21 +47,19 @@ function List() {
     setNewTask(''); // clear the new task input 
   }
 
-  // Define function for removing tasks  
-  const removeTask = async (e, listIndex) => {
-    console.log(`removeTask called for index ${listIndex}`);
-    const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
-    setTaskList(updatedTasks); // update the tasks list
-    e.stopPropagation();// stops the click event from propagating up the dom tree
-    await axios.delete(`http://localhost:4000/tasks/${listIndex + 1}`);
-  };
-
   // Define function for editing tasks  
   const editTask = async (listIndex) => {
     console.log(`handleEditTask called for edit ${listIndex}`);
-
     setEditingIndex(listIndex); // set the editingIndex to the listIndex being edited   
     setEditedTask(taskList[listIndex]); // set the value of the edited task input to the value of the task being edited
+    try {
+      await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
+        id: listIndex + 1,
+        title: editedTask,
+      });
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
   };
 
   // Define function for updating edited task 
@@ -69,6 +70,28 @@ function List() {
     setTaskList(updatedTasks); // update the tasks list 
     setEditingIndex(null); // reset editing index 
     setEditedTask(''); // reset edited task value 
+    // Send updated task to the API
+    try {
+      await axios.put(`http://localhost:4000/tasks/${listIndex + 1}`, {
+        id: listIndex + 1,
+        title: editedTask,
+      });
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  // Define function for removing tasks  
+  const removeTask = async (e, listIndex) => {
+    console.log(`removeTask called for index ${listIndex}`);
+    const updatedTasks = taskList.filter((currentElement, index) => index !== listIndex); //filters out the task at the specified index  
+    setTaskList(updatedTasks); // update the tasks list
+    e.stopPropagation();// stops the click event from propagating up the dom tree
+    try {
+      await axios.delete(`http://localhost:4000/tasks/${listIndex + 1}`);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
 
