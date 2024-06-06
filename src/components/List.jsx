@@ -31,7 +31,8 @@ function List() {
       const response = await axios.post("http://localhost:4000/tasks", {
         title: newTask,
       });
-      setTaskList([...taskList, response.data]);
+      setTaskList(response.data);
+      //console.log(response.data);
       setNewTask('');
     } catch (error) {
       console.error("Error adding task:", error);
@@ -99,14 +100,14 @@ function List() {
                     autoFocus
                     type="text" 
                     value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
+                    onChange={(e) => setEditedTask(e.target.value)} // update edited task value
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        updateTask(task.id);
+                        updateTask(task.id); // save changes on Enter key press
                       }
                     }}
                   />) : ( 
-                      <span>{task.title}</span>
+                      <span>{task.title}</span> // display the task
                     )}
                 <button 
                   className="removeButton" 
