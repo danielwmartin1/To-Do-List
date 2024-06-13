@@ -2,10 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const Tasks = require('./models/tasks');
+//const connectDB = require('./config/database');
+//const taskRoutes = require('./routes/taskRoutes');
+//const Tasks = require('./models/Tasks.js');
+//const TaskService = require('./services/TaskService');
+//const TaskRepository = require('./repositories/TaskRepository');
+
+//I would like to change all of the above to modular import style
+//it seems to work on all other files except for the server.js file
 
 const app = express();
 const port = 4000;
+
 // middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -19,14 +27,13 @@ app.use((req, res, next) => {
 const mongo_uri = 'mongodb://localhost:27017';
 const mongodb = async () => {
   try {
-    await mongoose.connect(mongo_uri, []);
+    await mongoose.connect(mongo_uri);
     console.log('Connected to MongoDB');
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
   }
 };
 mongodb();
-
 
 // In-memory data store
 let tasks = [
@@ -43,20 +50,19 @@ let tasks = [
     title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle",
   },
 ];
-
 let nextId = 4;
 
-app.get('/tasks', (req, res) => {
+app.get('/tasks', async (req, res) => {
   res.send(tasks);
 });
 
-app.get('/tasks/:id', (req, res) => {
+app.get('/tasks/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   const task = tasks.find((task) => task.id === id);
   res.send(task);
 });
 
-app.post('/tasks', (req, res) => {
+app.post('/tasks', async (req, res) => {
   const newTask = {
     id: nextId++, 
     title: req.body.title,
@@ -65,19 +71,23 @@ app.post('/tasks', (req, res) => {
   res.send(tasks);
 });
 
-app.put('/tasks/:id', (req, res) => {
+app.put('/tasks/:id', async (req, res) => {
   const id = parseInt(req.params.id);
-  const updatedTask = req.body;
+  const updatedTaskData = req.body;
   tasks = tasks.map((task) => {
     if (task.id === id) {
-      return updatedTask;
+      task = {
+        ...task,
+        ...updatedTaskData
+      };
     }
     return task;
   });
-  res.send(tasks);
+  const updatedTask = tasks.find((task) => task.id === id);
+  res.send(updatedTask);
 });
 
-app.delete('/tasks/:id', (req, res) => { 
+app.delete('/tasks/:id', async (req, res) => { 
   const id = parseInt(req.params.id);
   tasks = tasks.filter((task) => task.id !== id);
   res.send(tasks);
@@ -86,3 +96,5 @@ app.delete('/tasks/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+module.exports = app;
