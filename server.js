@@ -29,10 +29,10 @@ app.use((req, res, next) => {
 })
 
 // Connect to MongoDB
-const mongo_uri = 'mongodb://localhost:27017';
+const BASE_URL = 'mongodb://localhost:27017';
 const mongodb = async () => {
   try {
-    await mongoose.connect(mongo_uri);
+    await mongoose.connect(BASE_URL);
     console.log('Connected to MongoDB');
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
