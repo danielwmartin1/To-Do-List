@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-//const Task = require('./models/Task');
 //const Tasks = require('./models/Tasks.js');
 //const tasks = require('./models/tasks.json');
 //const TaskRepository = require('./repositories/TaskRepository');
