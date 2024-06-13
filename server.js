@@ -2,11 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-//const connectDB = require('./config/database');
-//const taskRoutes = require('./routes/taskRoutes');
+//const Task = require('./models/Task');
 //const Tasks = require('./models/Tasks.js');
-//const TaskService = require('./services/TaskService');
+//const tasks = require('./models/tasks.json');
 //const TaskRepository = require('./repositories/TaskRepository');
+//const taskRepository = new TaskRepository();
+//const TaskService = require('./services/TaskService');
+//const taskService = new TaskService();
+//const TaskRoutes = require('./routes/TaskRoutes');
+//const taskRoutes = new TaskRoutes();
+//const axios = require('axios');
+//const connectDB = require('./config/database');
 
 //I would like to change all of the above to modular import style
 //it seems to work on all other files except for the server.js file
