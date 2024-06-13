@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+// const Todo = require('./models/todo');
 
 const app = express();
 const port = 4000;
@@ -26,8 +26,6 @@ const mongodb = async () => {
   }
 };
 mongodb();
-
-
 
 
 // In-memory data store
