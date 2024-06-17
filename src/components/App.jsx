@@ -1,17 +1,15 @@
 import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import List from "./List";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
+import List from "./List.jsx";
 
 function App() {
   return (
-    <React.StrictMode>
     <div>
       <Header />
       <List />
       <Footer />
     </div>
-    </React.StrictMode>
   );
 }
 

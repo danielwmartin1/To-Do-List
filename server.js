@@ -1,17 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-//const Tasks = require('./models/Tasks.js');
-//const tasks = require('./models/tasks.json');
-//const TaskRepository = require('./repositories/TaskRepository');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+//import Tasks from './models/Tasks.js';
+//import tasks from './models/tasks.json';
+//import TaskRepository from './repositories/TaskRepository';
 //const taskRepository = new TaskRepository();
-//const TaskService = require('./services/TaskService');
-//const taskService = new TaskService();
-//const TaskRoutes = require('./routes/TaskRoutes');
+//import TaskService from './services/TaskService';
+//import TaskRoutes from './routes/TaskRoutes';
 //const taskRoutes = new TaskRoutes();
-//const axios = require('axios');
-//const connectDB = require('./config/database');
+//import axios from 'axios';
+//import connectDB from './config/database';
 
 //I would like to change all of the above to modular import style
 //it seems to work on all other files except for the server.js file
@@ -41,21 +40,7 @@ const mongodb = async () => {
 mongodb();
 
 // In-memory data store
-let tasks = [
-  {
-    id: 1,
-    title: "The Rise of Decentralized Finance",
-  },
-  {
-    id: 2,
-    title: "The Impact of Artificial Intelligence on Modern Businesses",
-  },
-  {
-    id: 3,
-    title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle",
-  },
-];
-let nextId = 4;
+
 
 app.get('/tasks', async (req, res) => {
   res.send(tasks);
@@ -102,4 +87,4 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-module.exports = app;
+export default app;

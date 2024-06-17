@@ -24,5 +24,5 @@ class TaskService {
   }
 }
 
-module.exports = TaskService;
+export default TaskService;
 

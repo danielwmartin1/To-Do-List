@@ -1,6 +1,6 @@
 // routes/taskRoutes.js
 import express from 'express';
-import TaskService from '../services/TaskService';
+//import TaskService from '../services/TaskService.js';
 import axios from 'axios';
 
 const app = express();
@@ -64,4 +64,4 @@ app.delete('/tasks/:id', async (req, res) => {
   }
 });
 
-module.exports = app;
+export default app;
