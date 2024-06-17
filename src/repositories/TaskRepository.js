@@ -1,5 +1,5 @@
 // repositories/TaskRepository.js
-import Task from '../models/Task';
+import Tasks from '../models/Tasks';
 
 class TaskRepository {
   async getAll() {
