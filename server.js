@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 })
 
 // Connect to MongoDB
-const BASE_URL = 'mongodb://localhost:27017';
+const BASE_URL = 'mongodb://localhost:27017/tasks';
 const mongodb = async () => {
   try {
     await mongoose.connect(BASE_URL);
