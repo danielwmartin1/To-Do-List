@@ -3,24 +3,24 @@ import Tasks from '../models/Tasks';
 
 class TaskRepository {
   async getAll() {
-    return await Task.find();
+    return await Tasks.find();
   }
 
   async getById(id) {
-    return await Task.findById(id);
+    return await Tasks.findById(id);
   }
 
   async add(taskData) {
-    const task = new Task(taskData);
+    const task = new Tasks(taskData);
     return await task.save();
   }
 
   async update(id, taskData) {
-    return await Task.findByIdAndUpdate(id, taskData, { new: true });
+    return await Tasks.findByIdAndUpdate(id, taskData, { new: true });
   }
 
   async delete(id) {
-    return await Task.findByIdAndDelete(id);
+    return await Tasks.findByIdAndDelete(id);
   }
 }
 
