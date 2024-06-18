@@ -9,7 +9,7 @@ const BASE_URL = 'http://localhost:4000/tasks';
 // Task routes
 app.get('/tasks', async (req, res) => {
   try {
-    await axios.get(BASE_URL);
+    const response = await axios.get(BASE_URL);
     res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -18,7 +18,7 @@ app.get('/tasks', async (req, res) => {
 
 app.get('/tasks/:id', async (req, res) => {
   try {
-    await axios.get(`${BASE_URL}/${req.params.id}`);
+    const response = await axios.get(`${BASE_URL}/${req.params.id}`);
     res.json(response.data);
   } catch (err) {
     if (err.response.status === 404) {
@@ -31,7 +31,7 @@ app.get('/tasks/:id', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
   try {
-    await axios.post(BASE_URL, req.body);
+    const response = await axios.post(BASE_URL, req.body);
     res.status(201).json(response.data);
   } catch (err) {
     res.status(500).json({ error: err.message });

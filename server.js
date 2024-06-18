@@ -8,7 +8,6 @@ import mongoose from 'mongoose';
 //const taskRepository = new TaskRepository();
 //import TaskService from './services/TaskService';
 //import TaskRoutes from './routes/TaskRoutes';
-//const taskRoutes = new TaskRoutes();
 //import axios from 'axios';
 //import connectDB from './config/database';
 

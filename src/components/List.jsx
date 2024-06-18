@@ -39,14 +39,14 @@ function List() {
     }
   }
 
-  const editTask = async (id) => {
-    setEditingId(id);
-    const taskToEdit = taskList.find(task => task.id === id);
-    if (taskToEdit) {
-      setEditedTask(taskToEdit.title);
-    } else {
+   const editTask = async (id) => {
+      setEditingId(id);
+      const taskToEdit = taskList.find(task => task.id === id);
+      if (taskToEdit) {
+        setEditedTask(taskToEdit.title);
+      } else {
       console.error(`No task found with id: ${id}`);
-    }
+      }
   };
   
 
