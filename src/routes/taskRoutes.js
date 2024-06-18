@@ -40,7 +40,7 @@ app.post('/tasks', async (req, res) => {
 
 app.put('/tasks/:id', async (req, res) => {
   try {
-    await axios.put(`${BASE_URL}/${req.params.id}`, req.body);
+    const response = await axios.put(`${BASE_URL}/${req.params.id}`, req.body);
     res.json(response.data);
   } catch (err) {
     if (err.response.status === 404) {
@@ -54,7 +54,7 @@ app.put('/tasks/:id', async (req, res) => {
 app.delete('/tasks/:id', async (req, res) => {
   try {
     await axios.delete(`${BASE_URL}/${req.params.id}`);
-    res.json({ message: 'Task deleted' });
+    res.json({ 'message': 'Task deleted' });
   } catch (err) {
     if (err.response.status === 404) {
       res.status(404).json({ error: 'Task not found' });
