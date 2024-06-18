@@ -56,6 +56,7 @@ app.get('/tasks/:id', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
   const newTask = { 
+    id: tasks.length + 1, 
     title: req.body.title,
   };
   tasks.push(newTask);
