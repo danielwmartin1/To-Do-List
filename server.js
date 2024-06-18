@@ -80,16 +80,12 @@ app.put('/tasks/:id', async (req, res) => {
   const updatedTaskData = req.body;
   tasks = tasks.map((task) => {
     if (task.id === id) {
-      task = {
-        ...task,
-        ...updatedTaskData
-      };
+      console.log('Edited to', updatedTaskData); // Move logging inside the condition
+      return { ...task, ...updatedTaskData }; // Correctly merge updated data with the existing task
     }
-    console.log('Edited to', updatedTaskData);
-    return updatedTaskData;
+    return task; // Return the task as is if the id doesn't match
   });
-  const updatedTask = tasks.find((task) => task.id === id);
-  res.send(updatedTask);
+  res.send(tasks); // Send back the updated tasks array as a response
 });
 
 app.delete('/tasks/:id', async (req, res) => { 
