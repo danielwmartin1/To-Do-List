@@ -72,7 +72,7 @@ app.post('/tasks', async (req, res) => {
   };
   tasks.push(newTask);
   res.send(tasks);
-  console.log('tasks', tasks);
+  console.log('Posted a task titled', req.body.title);
 });
 
 app.put('/tasks/:id', async (req, res) => {
@@ -85,8 +85,8 @@ app.put('/tasks/:id', async (req, res) => {
         ...updatedTaskData
       };
     }
-    console.log('task', task);
-    return task;
+    console.log('Edited to', updatedTaskData);
+    return updatedTaskData;
   });
   const updatedTask = tasks.find((task) => task.id === id);
   res.send(updatedTask);
@@ -96,7 +96,7 @@ app.delete('/tasks/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   tasks = tasks.filter((task) => task.id !== id);
   res.send(tasks);
-  console.log('Deleted id ' + id);
+  console.log('Deleted id' + id);
 });
 
 app.listen(port, () => {
