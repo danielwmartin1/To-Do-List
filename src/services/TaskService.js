@@ -1,5 +1,5 @@
 // services/TaskService.js
-import TaskRepository from '../repositories/TaskRepository';
+import TaskRepository from '../repositories/TaskRepository.js';
 const taskRepository = new TaskRepository();
 
 class TaskService {
