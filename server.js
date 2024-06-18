@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-//import TaskSchema from './models/Tasks.js';
+//import Task from './models/Tasks.js';
 //import tasks from './models/tasks.json';
 //import TaskRepository from './repositories/TaskRepository.js';
 //const taskRepository = new TaskRepository();
@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 //import TaskRoutes from './routes/TaskRoutes';
 //import axios from 'axios';
 import connectDB from './src/config/database.js';
+import Tasks from './src/models/Tasks.js';
 
 
 const app = express();
@@ -83,6 +84,7 @@ app.delete('/tasks/:id', async (req, res) => {
   res.send(tasks);
   console.log('Deleted id' + id);
 });
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
