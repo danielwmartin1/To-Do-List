@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-//import Tasks from './models/Tasks.js';
+//import TaskSchema from './models/Tasks.js';
 //import tasks from './models/tasks.json';
 //import TaskRepository from './repositories/TaskRepository';
 //const taskRepository = new TaskRepository();
@@ -12,12 +12,24 @@ import mongoose from 'mongoose';
 //import axios from 'axios';
 //import connectDB from './config/database';
 
-//I would like to change all of the above to modular import style
-//it seems to work on all other files except for the server.js file
 
 const app = express();
 const port = 4000;
 
+let tasks = [
+  {
+    id: 1,
+    title: "The Rise of Decentralized Finance"
+  },
+  {
+    id: 2,
+    title: "The Impact of Artificial Intelligence on Modern Businesses"
+  },
+  {
+    id : 3,
+    title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle"
+  }
+]
 // middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -44,21 +56,23 @@ mongodb();
 
 app.get('/tasks', async (req, res) => {
   res.send(tasks);
+  console.log('tasks', tasks);
 });
 
 app.get('/tasks/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   const task = tasks.find((task) => task.id === id);
   res.send(task);
+  console.log('task', task);
 });
 
 app.post('/tasks', async (req, res) => {
-  const newTask = {
-    id: nextId++, 
+  const newTask = { 
     title: req.body.title,
   };
   tasks.push(newTask);
   res.send(tasks);
+  console.log('tasks', tasks);
 });
 
 app.put('/tasks/:id', async (req, res) => {
@@ -71,6 +85,7 @@ app.put('/tasks/:id', async (req, res) => {
         ...updatedTaskData
       };
     }
+    console.log('task', task);
     return task;
   });
   const updatedTask = tasks.find((task) => task.id === id);
@@ -81,6 +96,7 @@ app.delete('/tasks/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   tasks = tasks.filter((task) => task.id !== id);
   res.send(tasks);
+  console.log('Deleted id ' + id);
 });
 
 app.listen(port, () => {
