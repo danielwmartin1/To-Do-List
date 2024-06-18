@@ -10,12 +10,12 @@ import connectDB from './src/config/database.js';
 //const taskRepository = new TaskRepository();
 //import TaskService from './services/TaskService.js';
 //import TaskRoutes from './routes/TaskRoutes';
-//import axios from 'axios';
+import axios from 'axios';
 
 
 const app = express();
 const port = 4000;
-
+const BASE_URL = 'http://localhost:4000/tasks';
 let tasks = [
   {
     id: 1,
@@ -29,7 +29,9 @@ let tasks = [
     id : 3,
     title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle"
   }
-]
+];
+
+
 // middleware
 app.use(cors());
 app.use(bodyParser.json(tasks));
