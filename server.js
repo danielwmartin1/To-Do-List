@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import connectDB from './src/config/database.js';
+//import connectDB from './src/config/database.js';
 //import Tasks from './src/models/Tasks.js';
 //import Task from './models/Tasks.js';
 //import tasks from './models/tasks.json';
@@ -41,6 +41,15 @@ app.use((req, res, next) => {
   next()
 })
 // Connect to MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/Tasks', {});
+    console.log('MongoDB connected...');
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
 connectDB();
 
 // In-memory data store
