@@ -4,12 +4,12 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 //import connectDB from './src/config/database.js';
 //import Tasks from './src/models/Tasks.js';
-//import Task from './models/Tasks.js';
-//import tasks from './models/tasks.json';
-//import TaskRepository from './repositories/TaskRepository.js';
+//import Task from './src/models/Tasks.js';
+//import tasks from './src/models/tasks.json';
+//import TaskRepository from './src/repositories/TaskRepository.js';
 //const taskRepository = new TaskRepository();
-//import TaskService from './services/TaskService.js';
-//import TaskRoutes from './routes/TaskRoutes';
+//import TaskService from './src/services/TaskService.js';
+//import TaskRoutes from './src/routes/TaskRoutes';
 import axios from 'axios';
 
 
