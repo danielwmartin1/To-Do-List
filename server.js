@@ -1,45 +1,52 @@
+// Import required modules
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-//import connectDB from './src/config/database.js';
-//import Tasks from './src/models/Tasks.js';
-//import Task from './src/models/Tasks.js';
-//import tasks from './src/models/tasks.json';
-//import TaskRepository from './src/repositories/TaskRepository.js';
-//const taskRepository = new TaskRepository();
-//import TaskService from './src/services/TaskService.js';
-//import TaskRoutes from './src/routes/TaskRoutes';
-import axios from 'axios';
+// Existing imports from the snippet
+import { existsSync } from 'fs';
+import { readFile } from 'fs/promises';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-
+// Initialize Express application
 const app = express();
 const port = 4000;
-const BASE_URL = 'http://localhost:4000/tasks';
-let tasks = [
-  {
-    id: 1,
-    title: "The Rise of Decentralized Finance"
-  },
-  {
-    id: 2,
-    title: "The Impact of Artificial Intelligence on Modern Businesses"
-  },
-  {
-    id : 3,
-    title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle"
+// const BASE_URL = 'http://localhost:4000/tasks';
+
+// Define __dirname for ES modules
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const tasksFilePath = join(__dirname, './src/models/tasks.json');
+
+const loadTasks = async () => {
+  try {
+    // Check if the file exists before reading
+    if (!existsSync(tasksFilePath)) {
+      throw new Error(`File not found: ${tasksFilePath}`);
+    }
+
+    const data = await readFile(tasksFilePath, { encoding: 'utf8' });
+    // Try parsing the JSON data
+    const tasksData = JSON.parse(data);
+    console.log(tasksData);
+    return tasksData; // Return the parsed JSON data
+  } catch (err) {
+    // Handle errors related to file reading or JSON parsing
+    console.error('Error occurred:', err.message);
+    return null; // Return null in case of error
   }
-];
+};
 
 
 // middleware
 app.use(cors());
-app.use(bodyParser.json(tasks));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   console.log(req.method, req.path)
   next()
 })
+
 // Connect to MongoDB
 const connectDB = async () => {
   try {
@@ -50,9 +57,29 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-connectDB();
+
 
 // In-memory data store
+let tasks = []; // Initialize tasks as an empty array
+
+// Assuming loadTasks is an async function
+async function initTasks() {
+  try {
+    tasks = await loadTasks();
+    if (!tasks) {
+      tasks = []; // Initialize to an empty array if loadTasks returns undefined
+    }
+  } catch (error) {
+    console.error("Error loading tasks:", error);
+    tasks = []; // Fallback to an empty array in case of error
+  }
+}
+
+// Call initTasks at the start, ensuring tasks are loaded before the server starts handling requests
+await initTasks();
+
+// Start the server here or ensure it's ready to handle requests
+connectDB();
 
 app.get('/tasks', async (req, res) => {
   try {
@@ -126,7 +153,7 @@ app.delete('/tasks/:id', async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
 
 export default app;
