@@ -8,7 +8,6 @@ import TaskRepository from './src/repositories/TaskRepository.js';
 // Initialize Express application
 const app = express();
 const port = 4000;
-// const BASE_URL = 'http://localhost:4000/tasks';
 
 // middleware
 app.use(cors());
