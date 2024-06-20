@@ -1,20 +1,16 @@
 import mongoose from 'mongoose';
 
 const TaskSchema = new mongoose.Schema({
-  //id: {
-    //type: Number,
-    //required: true,
-  //},
   title: {
     type: String,
     required: true,
-  },
-  //completed: {
-    //type: Boolean,
-    //default: false,
-    //absent in the frontend
-  //},
+  }
 });
+//   completed: {
+//     type: Boolean,
+//     default: false,
+//   },
+// });
 
 const Tasks = mongoose.model('Tasks', TaskSchema);
 

@@ -4,26 +4,57 @@ import Tasks from '../models/Tasks.js';
 class TaskRepository {
   // Get all tasks
   async getAll() {
-    return await Tasks.find();
+    try {
+      return await Tasks.find();
+    } catch (error) {
+      console.error('Error retrieving tasks:', error);
+      throw error;
+    }
   }
-// Get a single task
+
+  // Get a single task
   async getById(id) {
-    return await Tasks.findById(id);
+    try {
+      return await Tasks.findById(id);
+    } catch (error) {
+      console.error(`Error retrieving task with id ${id}:`, error);
+      throw error;
+    }
   }
-// Add a new task
+
+  // Add a new task
   async add(taskData) {
-    const task = new Tasks(taskData);
-    return await task.save();
+    try {
+      const task = new Tasks(taskData);
+      return await task.save();
+    } catch (error) {
+      console.error('Error adding task:', error);
+      throw error;
+    }
   }
-// Update a task
+
+  // Update a task
   async update(id, taskData) {
-    return await Tasks.findByIdAndUpdate(id, taskData, { new: true });
+    try {
+      return await Tasks.findByIdAndUpdate(id, taskData, { new: true });
+    } catch (error) {
+      console.error(`Error updating task with id ${id}:`, error);
+      throw error;
+    }
   }
-// Delete a task
+
+  // Delete a task
   async delete(id) {
-    return await Tasks.findByIdAndDelete(id);
+    try {
+      return await Tasks.findByIdAndDelete(id);
+    } catch (error) {
+      console.error(`Error deleting task with id ${id}:`, error);
+      throw error;
+    }
   }
 }
+
+export default TaskRepository;
 
 export default TaskRepository;
 
