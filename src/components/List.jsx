@@ -57,45 +57,34 @@ const editTask = async (id) => {
 };
   
 // update a task
+// update a task
 const updateTask = async (id) => {
   if (!editedTask.trim()) {
     console.error("edited task is empty");
     return;
   }
   try {
-    // Send the updated task details to the database
     await axios.put(`http://localhost:4000/tasks/${id}`, {
       title: editedTask,
     });
+    await fetchData(); // Refresh the task list from the backend
   } catch (error) {
     console.error("Error updating task:", error);
   } finally {
-    // Update the local task list state to reflect the changes
-    const updatedTasks = taskList.map(task => {
-      if (task.id === id) {
-        return { ...task, title: editedTask };
-      } else {
-        return task;
-      }
-    });
-    setTaskList(updatedTasks);
-    // Reset editing state
     setEditingId(null);
     setEditedTask('');
   }
 };
-// remove a task
-  const removeTask = async (id) => {
-    console.log(`removeTask called for id ${id}`);
-    const updatedTasks = taskList.filter(task => task.id !== id);
-    setTaskList(updatedTasks);
-    try {
-      await axios.delete(`http://localhost:4000/tasks/${id}`);
-    } catch (error) {
-      console.error("Error deleting task:", error);
-    }
-  };
 
+// remove a task
+const removeTask = async (id) => {
+  try {
+    await axios.delete(`http://localhost:4000/tasks/${id}`);
+    await fetchData(); // Refresh the task list from the backend after successful deletion
+  } catch (error) {
+    console.error("Error deleting task:", error);
+  }
+};
 // render the list
   return (
     <React.StrictMode>
@@ -107,9 +96,9 @@ const updateTask = async (id) => {
           <ul className="taskList"> {taskList.map((task) => (
               <li 
                 className='listItem' 
-                key={task.id} 
-                onClick={() => editTask(task.id)}> 
-                {editingId === task.id ? (
+                key={task._id} 
+                onClick={() => editTask(task._id)}> 
+                {editingId === task._id ? (
                   <input 
                     autoFocus
                     type="text" 
@@ -117,7 +106,7 @@ const updateTask = async (id) => {
                     onChange={(e) => setEditedTask(e.target.value)} // update edited task value
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        updateTask(task.id); // save changes on Enter key press
+                        updateTask(task._id); // save changes on Enter key press
                       }
                     }}
                   />) : ( 
@@ -125,7 +114,7 @@ const updateTask = async (id) => {
                     )}
                 <button 
                   className="removeButton" 
-                  onClick={() => removeTask(task.id)}> Remove </button>
+                  onClick={() => removeTask(task._id)}> Remove </button>
               </li>
             ))};
           </ul>
