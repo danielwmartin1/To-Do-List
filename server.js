@@ -1,11 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+// Import required modules
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import TaskRepository from './src/repositories/TaskRepository.js';
 
-
+// Initialize Express application
 const app = express();
 const port = 4000;
+// const BASE_URL = 'http://localhost:4000/tasks';
+
 // middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,75 +20,90 @@ app.use((req, res, next) => {
 })
 
 // Connect to MongoDB
-const mongo_uri = 'mongodb://localhost:27017';
-const mongodb = async () => {
+const connectDB = async () => {
   try {
-    await mongoose.connect(mongo_uri, []);
-    console.log('Connected to MongoDB');
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    await mongoose.connect('mongodb://localhost:27017/Tasks', {});
+    console.log('MongoDB connected...');
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
   }
 };
-mongodb();
-
-
-
-
-// In-memory data store
-let tasks = [
-  {
-    id: 1,
-    title: "The Rise of Decentralized Finance",
-  },
-  {
-    id: 2,
-    title: "The Impact of Artificial Intelligence on Modern Businesses",
-  },
-  {
-    id: 3,
-    title: "Sustainable Living: Tips for an Eco-Friendly Lifestyle",
-  },
-];
-
-let nextId = 4;
-
-app.get('/tasks', (req, res) => {
-  res.send(tasks);
+// Start the server here or ensure it's ready to handle requests
+connectDB();
+// Get all tasks
+const taskRepository = new TaskRepository();
+app.get('/tasks', async (req, res) => {
+  try {
+    const taskList = await taskRepository.getAll();
+    res.send(taskList);
+    console.log('taskList', taskList);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
 });
-
-app.get('/tasks/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const task = tasks.find((task) => task.id === id);
-  res.send(task);
-});
-
-app.post('/tasks', (req, res) => {
-  const newTask = {
-    id: nextId++, 
-    title: req.body.title,
-  };
-  tasks.push(newTask);
-  res.send(tasks);
-});
-
-app.put('/tasks/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const updatedTask = req.body;
-  tasks = tasks.map((task) => {
-    if (task.id === id) {
-      return updatedTask;
+// Get a single task
+app.get('/tasks/:id', async (req, res) => {
+  try {
+    //const id = parseInt(req.params.id);
+    const id = req.params.id;
+    const task = await taskRepository.getById(id);
+    
+    if (!task) {
+      return res.status(404).send('Task not found');
     }
-    return task;
-  });
-  res.send(tasks);
+    console.log('task', task);
+    res.send(task);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+// Add a new task
+app.post('/tasks', async (req, res) => {
+  try {
+    const newTask = {  
+      title: req.body.title,
+    };
+    const task = await taskRepository.add(newTask);
+    res.send(task);
+    console.log('Posted a task titled', req.body.title);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+// Update a task
+app.put('/tasks/:id', async (req, res) => {
+  try {
+    //const id = parseInt(req.params.id);
+    const id = req.params.id;
+    const updatedTaskData = req.body;
+    const task = await taskRepository.update(id, updatedTaskData);
+    res.send(task); // Send back the updated tasks array as a response
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+// Delete a task
+app.delete('/tasks/:id', async (req, res) => { 
+  try {
+    //const id = parseInt(req.params.id);
+    const id = req.params.id;
+    const deleteTask = await taskRepository.delete(id);
+    res.send(deleteTask);
+    console.log('Deleted id' + id);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
 });
 
-app.delete('/tasks/:id', (req, res) => { 
-  const id = parseInt(req.params.id);
-  tasks = tasks.filter((task) => task.id !== id);
-  res.send(tasks);
-});
-
+// Start the server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
+
+export default app;
