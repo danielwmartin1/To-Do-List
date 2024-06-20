@@ -1,124 +1,109 @@
-import React, { useState , useEffect} from 'react';
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function List() {
+  // State variables
   const [newTask, setNewTask] = useState('');
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
-// get all tasks
+
+  // Fetch data from the server
+  useEffect(() => {
+    fetchData();
+  }, []);
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:4000/tasks");
-      console.log("response", response);
       setTaskList(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-
-// add a task  
-const addTask = async () => {
-  console.log("addTask called");
-  if (!newTask.trim()) {
-    alert('Please enter a task.');
-    return;
-  }
-  try {
-    await axios.post("http://localhost:4000/tasks", {
-      title: newTask,
-    });
-    setNewTask('');
-    fetchData();
-  } catch (error) {
-    console.error("Error adding task:", error);
-  }
-}
-// edit a task
-const editTask = async (id) => {
-  setEditingId(id);
-  try {
-    // Fetch the latest task details from the database
-    const response = await axios.get(`http://localhost:4000/tasks/${id}`);
-    const taskToEdit = response.data;
-    if (taskToEdit) {
-      setEditedTask(taskToEdit.title);
-    } else {
-      console.error(`No task found with id: ${id}`);
+  // CRUD operations
+  // Create a new task
+  const addTask = async () => {
+    if (!newTask.trim()) {
+      alert('Please enter a task.');
+      return;
     }
-  } catch (error) {
-    console.error("Error fetching task for edit:", error);
-  }
-};
-  
-// update a task
-// update a task
-const updateTask = async (id) => {
-  if (!editedTask.trim()) {
-    console.error("edited task is empty");
-    return;
-  }
-  try {
-    await axios.put(`http://localhost:4000/tasks/${id}`, {
-      title: editedTask,
-    });
-    await fetchData(); // Refresh the task list from the backend
-  } catch (error) {
-    console.error("Error updating task:", error);
-  } finally {
-    setEditingId(null);
-    setEditedTask('');
-  }
-};
+    try {
+      await axios.post('http://localhost:4000/tasks', { title: newTask });
+      setNewTask('');
+      fetchData();
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
 
-// remove a task
-const removeTask = async (id) => {
-  try {
-    await axios.delete(`http://localhost:4000/tasks/${id}`);
-    await fetchData(); // Refresh the task list from the backend after successful deletion
-  } catch (error) {
-    console.error("Error deleting task:", error);
-  }
-};
-// render the list
+  // Edit a task
+  const editTask = async (id) => {
+    setEditingId(id);
+    try {
+      const response = await axios.get(`http://localhost:4000/tasks/${id}`);
+      setEditedTask(response.data.title);
+    } catch (error) {
+      console.error('Error fetching task for edit:', error);
+    }
+  };
+
+  // Update a task
+  const updateTask = async (id) => {
+    if (!editedTask.trim()) {
+      console.error('Edited task is empty');
+      return;
+    }
+    try {
+      await axios.put(`http://localhost:4000/tasks/${id}`, { title: editedTask });
+      fetchData();
+    } catch (error) {
+      console.error('Error updating task:', error);
+    } finally {
+      setEditingId(null);
+      setEditedTask('');
+    }
+  };
+
+// Delete a task
+  const removeTask = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/tasks/${id}`);
+      fetchData();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  // Render
   return (
     <React.StrictMode>
       <div id='container'>
-        <div 
-          onBlur={() => editTask(null)}
-          className="todo-container"
-        >
-          <ul className="taskList"> {taskList.map((task) => (
-              <li 
-                className='listItem' 
-                key={task._id} 
-                onClick={() => editTask(task._id)}> 
+        <div className="todo-container">
+          {/* The list of tasks */}
+          <ul className="taskList">
+            {/* Loop through the taskList array and display each task */}
+            {taskList.map((task) => (
+              <li className='listItem' key={task._id} onClick={() => editTask(task._id)}>
+                {/* If the task is being edited, display an input field; otherwise, display the task title */}
                 {editingId === task._id ? (
-                  <input 
+                  // The input field for editing the task
+                  <input
                     autoFocus
-                    type="text" 
+                    type="text"
                     value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)} // update edited task value
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        updateTask(task._id); // save changes on Enter key press
-                      }
-                    }}
-                  />) : ( 
-                      <span>{task.title}</span> // display the task
-                    )}
-                <button 
-                  className="removeButton" 
-                  onClick={() => removeTask(task._id)}> Remove </button>
+                    onChange={(e) => setEditedTask(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
+                  />
+                ) : (
+                  <span>{task.title}</span>
+                )}
+                {/* Remove button */}
+                <button className="removeButton" onClick={() => removeTask(task._id)}>Remove</button>
               </li>
-            ))};
+            ))}
           </ul>
-    
+          {/* The input field and the Add Task button */}
           <div className="inputContainer">
             <input
               autoFocus
@@ -126,13 +111,9 @@ const removeTask = async (id) => {
               type="text"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  addTask();
-                  console.log("Add task");
-                }
-              }}
+              onKeyDown={(e) => e.key === 'Enter' && addTask()}
             />
+            {/* Add Task button */}
             <button className='addButton' onClick={addTask}>Add Task</button>
           </div>
         </div>
