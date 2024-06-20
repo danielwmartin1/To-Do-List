@@ -23,60 +23,72 @@ function List() {
 
 
 // add a task  
-  const addTask = async (req, res, next) => {
-    console.log("addTask called");
-    if (!newTask.trim()) {
-      alert('Please enter a task.');
-      return;
-    }
-    try {
-      await axios.post("http://localhost:4000/tasks", {
-        title: newTask,
-      });
-      setNewTask('');
-      fetchData();
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
+const addTask = async () => {
+  console.log("addTask called");
+  if (!newTask.trim()) {
+    alert('Please enter a task.');
+    return;
   }
+  try {
+    await axios.post("http://localhost:4000/tasks", {
+      title: newTask,
+    });
+    setNewTask('');
+    fetchData();
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
+}
 // edit a task
-   const editTask = async (id) => {
-      setEditingId(id);
-      const taskToEdit = taskList.find(task => task.id === id);
-      if (taskToEdit) {
-        setEditedTask(taskToEdit.title);
-      } else {
+const editTask = async (id) => {
+  setEditingId(id);
+  try {
+    // Fetch the latest task details from the database
+    const response = await axios.get(`http://localhost:4000/tasks/${id}`);
+    const taskToEdit = response.data;
+    if (taskToEdit) {
+      setEditedTask(taskToEdit.title);
+    } else {
       console.error(`No task found with id: ${id}`);
-      }
-  };
+    }
+  } catch (error) {
+    console.error("Error fetching task for edit:", error);
+  }
+};
   
 // update a task
-  const updateTask = async (id) => {
-    console.log(`updateTask called for id ${id}`);
-    const updatedTasks = taskList.map(task => 
-      task.id === id ? { ...task, title: editedTask } : task
-    );
+const updateTask = async (id) => {
+  if (!editedTask.trim()) {
+    console.error("edited task is empty");
+    return;
+  }
+  try {
+    // Send the updated task details to the database
+    await axios.put(`http://localhost:4000/tasks/${id}`, {
+      title: editedTask,
+    });
+  } catch (error) {
+    console.error("Error updating task:", error);
+  } finally {
+    // Update the local task list state to reflect the changes
+    const updatedTasks = taskList.map(task => {
+      if (task.id === id) {
+        return { ...task, title: editedTask };
+      } else {
+        return task;
+      }
+    });
     setTaskList(updatedTasks);
+    // Reset editing state
     setEditingId(null);
     setEditedTask('');
-    if (editedTask) {
-      try {
-        await axios.put(`http://localhost:4000/tasks/${id}`, {
-          title: editedTask,
-        });
-      } catch (error) {
-        console.error("Error updating task:", error);
-      }
-    } else {
-      console.error("edited task is empty");
-    }
-  };
+  }
+};
 // remove a task
-  const removeTask = async (e, id) => {
+  const removeTask = async (id) => {
     console.log(`removeTask called for id ${id}`);
     const updatedTasks = taskList.filter(task => task.id !== id);
     setTaskList(updatedTasks);
-    e.stopPropagation();
     try {
       await axios.delete(`http://localhost:4000/tasks/${id}`);
     } catch (error) {
@@ -113,9 +125,9 @@ function List() {
                     )}
                 <button 
                   className="removeButton" 
-                  onClick={(e) => removeTask(e, task.id)}> Remove </button>
+                  onClick={() => removeTask(task.id)}> Remove </button>
               </li>
-            ))}
+            ))};
           </ul>
     
           <div className="inputContainer">
