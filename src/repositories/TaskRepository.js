@@ -55,6 +55,3 @@ class TaskRepository {
 }
 
 export default TaskRepository;
-
-export default TaskRepository;
-
