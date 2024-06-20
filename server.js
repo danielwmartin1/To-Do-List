@@ -83,6 +83,7 @@ const connectDB = async () => {
 
 // Start the server here or ensure it's ready to handle requests
 connectDB();
+// Get all tasks
 const taskRepository = new TaskRepository();
 app.get('/tasks', async (req, res) => {
   try {
@@ -94,7 +95,7 @@ app.get('/tasks', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
+// Get a single task
 app.get('/tasks/:id', async (req, res) => {
   try {
     //const id = parseInt(req.params.id);
@@ -111,7 +112,7 @@ app.get('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
+// Add a new task
 app.post('/tasks', async (req, res) => {
   try {
     const newTask = {  
@@ -125,7 +126,7 @@ app.post('/tasks', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
+// Update a task
 app.put('/tasks/:id', async (req, res) => {
   try {
     //const id = parseInt(req.params.id);
@@ -138,7 +139,7 @@ app.put('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
+// Delete a task
 app.delete('/tasks/:id', async (req, res) => { 
   try {
     //const id = parseInt(req.params.id);
@@ -152,7 +153,7 @@ app.delete('/tasks/:id', async (req, res) => {
   }
 });
 
-
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

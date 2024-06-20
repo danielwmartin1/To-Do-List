@@ -6,7 +6,7 @@ function List() {
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
-
+// get all tasks
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:4000/tasks");
@@ -21,6 +21,8 @@ function List() {
     fetchData();
   }, []);
 
+
+// add a task  
   const addTask = async () => {
     console.log("addTask called");
     if (!newTask.trim()) {
@@ -38,7 +40,7 @@ function List() {
       console.error("Error adding task:", error);
     }
   }
-
+// edit a task
    const editTask = async (id) => {
       setEditingId(id);
       const taskToEdit = taskList.find(task => task.id === id);
@@ -49,7 +51,7 @@ function List() {
       }
   };
   
-
+// update a task
   const updateTask = async (id) => {
     console.log(`updateTask called for id ${id}`);
     const updatedTasks = taskList.map(task => 
@@ -70,7 +72,7 @@ function List() {
       console.error("edited task is empty");
     }
   };
-
+// remove a task
   const removeTask = async (e, id) => {
     console.log(`removeTask called for id ${id}`);
     const updatedTasks = taskList.filter(task => task.id !== id);
@@ -83,6 +85,7 @@ function List() {
     }
   };
 
+// render the list
   return (
     <React.StrictMode>
       <div id='container'>
