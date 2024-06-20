@@ -3,41 +3,12 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-// Existing imports from the snippet
-//import { existsSync } from 'fs';
-//import { readFile } from 'fs/promises';
-//import { join, dirname } from 'path';
-//import { fileURLToPath } from 'url';
 import TaskRepository from './src/repositories/TaskRepository.js';
 
 // Initialize Express application
 const app = express();
 const port = 4000;
 // const BASE_URL = 'http://localhost:4000/tasks';
-
-// Define __dirname for ES modules
-//const __dirname = dirname(fileURLToPath(import.meta.url));
-//const tasksFilePath = join(__dirname, './src/models/tasks.json');
-
-// const loadTasks = async () => {
-//   try {
-//     // Check if the file exists before reading
-//     if (!existsSync(tasksFilePath)) {
-//       throw new Error(`File not found: ${tasksFilePath}`);
-//     }
-
-//     const data = await readFile(tasksFilePath, { encoding: 'utf8' });
-//     // Try parsing the JSON data
-//     const tasksData = JSON.parse(data);
-//     console.log(tasksData);
-//     return tasksData; // Return the parsed JSON data
-//   } catch (err) {
-//     // Handle errors related to file reading or JSON parsing
-//     console.error('Error occurred:', err.message);
-//     return null; // Return null in case of error
-//   }
-// };
-
 
 // middleware
 app.use(cors());
@@ -58,29 +29,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-// // Load tasks from the file
-// // In-memory data store
-// let tasks = []; // Initialize tasks as an empty array
-
-// // Assuming loadTasks is an async function
-// async function initTasks() {
-//   try {
-//     tasks = await loadTasks();
-//     if (!tasks) {
-//       tasks = []; // Initialize to an empty array if loadTasks returns undefined
-//     }
-//   } catch (error) {
-//     console.error("Error loading tasks:", error);
-//     tasks = []; // Fallback to an empty array in case of error
-//   }
-// }
-
-// // Call initTasks at the start, ensuring tasks are loaded before the server starts handling requests
-// await initTasks();
-
-
-
 // Start the server here or ensure it's ready to handle requests
 connectDB();
 // Get all tasks
