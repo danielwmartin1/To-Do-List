@@ -23,19 +23,18 @@ function List() {
 
 
 // add a task  
-  const addTask = async () => {
+  const addTask = async (req, res, next) => {
     console.log("addTask called");
     if (!newTask.trim()) {
       alert('Please enter a task.');
       return;
     }
     try {
-      const response = await axios.post("http://localhost:4000/tasks", {
+      await axios.post("http://localhost:4000/tasks", {
         title: newTask,
       });
-      setTaskList(response.data);
-      //console.log(response.data);
       setNewTask('');
+      fetchData();
     } catch (error) {
       console.error("Error adding task:", error);
     }
