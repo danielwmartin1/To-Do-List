@@ -86,6 +86,18 @@ app.put('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+// Completed a task
+app.patch('/tasks/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const completedTaskData = req.body;
+    const completedTask = await taskRepository.completed(id, completedTaskData);
+    res.send(completedTask); // Send back the updated tasks array as a response
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
 // Delete a task
 app.delete('/tasks/:id', async (req, res) => { 
   try {

@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function List() {
-  // State variables
   const [newTask, setNewTask] = useState('');
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
 
-  // Fetch data from the server
-  useEffect(() => {
-    fetchData();
-  }, []);
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:4000/tasks");
@@ -21,8 +16,11 @@ function List() {
     }
   };
 
-  // CRUD operations
-  // Create a new task
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
   const addTask = async () => {
     if (!newTask.trim()) {
       alert('Please enter a task.');
@@ -37,18 +35,14 @@ function List() {
     }
   };
 
-  // Edit a task
-  const editTask = async (id) => {
+  const editTask = (id) => {
     setEditingId(id);
-    try {
-      const response = await axios.get(`http://localhost:4000/tasks/${id}`);
-      setEditedTask(response.data.title);
-    } catch (error) {
-      console.error('Error fetching task for edit:', error);
+    const taskToEdit = taskList.find(task => task._id === id);
+    if (taskToEdit) {
+      setEditedTask(taskToEdit.title);
     }
   };
 
-  // Update a task
   const updateTask = async (id) => {
     if (!editedTask.trim()) {
       console.error('Edited task is empty');
@@ -65,7 +59,15 @@ function List() {
     }
   };
 
-// Delete a task
+  const toggleTaskCompletion = async (id, completed) => {
+    try {
+      await axios.patch(`http://localhost:4000/tasks/${id}`, { completed: !completed });
+      fetchData();
+    } catch (error) {
+      console.error('Error toggling task completion:', error);
+    }
+  };
+
   const removeTask = async (id) => {
     try {
       await axios.delete(`http://localhost:4000/tasks/${id}`);
@@ -75,19 +77,21 @@ function List() {
     }
   };
 
-  // Render
   return (
     <React.StrictMode>
       <div id='container'>
         <div className="todo-container">
-          {/* The list of tasks */}
           <ul className="taskList">
-            {/* Loop through the taskList array and display each task */}
             {taskList.map((task) => (
-              <li className='listItem' key={task._id} onClick={() => editTask(task._id)}>
-                {/* If the task is being edited, display an input field; otherwise, display the task title */}
+              <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => editTask(task._id)}>
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
+                />
                 {editingId === task._id ? (
-                  // The input field for editing the task
                   <input
                     autoFocus
                     type="text"
@@ -96,14 +100,20 @@ function List() {
                     onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
                   />
                 ) : (
-                  <span>{task.title}</span>
+                  task.completed ? (
+                    <span style={{ textDecoration: 'line-through', opacity: 0.5 }}>{task.title}</span>
+                  ) : (
+                    <span>{task.title}</span>
+                  )
                 )}
-                {/* Remove button */}
-                <button className="removeButton" onClick={() => removeTask(task._id)}>Remove</button>
+                <button 
+                  className="removeButton" 
+                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }} 
+                  aria-label={`Remove task "${task.title}"`}
+                >Remove</button>
               </li>
             ))}
           </ul>
-          {/* The input field and the Add Task button */}
           <div className="inputContainer">
             <input
               autoFocus
@@ -112,8 +122,8 @@ function List() {
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && addTask()}
+              placeholder="Add a new task"
             />
-            {/* Add Task button */}
             <button className='addButton' onClick={addTask}>Add Task</button>
           </div>
         </div>

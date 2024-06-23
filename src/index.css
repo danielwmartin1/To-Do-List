@@ -40,6 +40,13 @@ ul {
   border: 1px solid black ;
 }
 
+.checkbox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+}
 
 .container {
   height: 100vh;

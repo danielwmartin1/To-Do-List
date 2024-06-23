@@ -36,7 +36,18 @@ class TaskRepository {
   // Update a task
   async update(id, taskData) {
     try {
-      return await Tasks.findByIdAndUpdate(id, taskData, { new: true });
+      return Tasks.findByIdAndUpdate(id, taskData, { new: true });
+    } catch (error) {
+      console.error(`Error updating task with id ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async completed(id, taskData) {
+    try {
+      console.log('completedTask', id, taskData);
+      const completedTask = await Tasks.findByIdAndUpdate(id, taskData, { new: true });
+      return completedTask;
     } catch (error) {
       console.error(`Error updating task with id ${id}:`, error);
       throw error;
