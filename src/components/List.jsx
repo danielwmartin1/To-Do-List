@@ -91,21 +91,21 @@ function List() {
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
                   onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
                 />
-                {editingId === task._id ? (
-                  <input
-                    autoFocus
-                    type="text"
-                    value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
-                  />
+              {editingId === task._id ? (
+                <input
+                  autoFocus
+                  type="text"
+                  value={editedTask}
+                  onChange={(e) => setEditedTask(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
+                />
+              ) : (
+                task.completed ? (
+                  <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
                 ) : (
-                  task.completed ? (
-                    <span style={{ textDecoration: 'line-through', opacity: 0.5 }}>{task.title}</span>
-                  ) : (
                     <span>{task.title}</span>
-                  )
-                )}
+                )
+            )}
                 <button 
                   className="removeButton" 
                   onClick={(e) => { e.stopPropagation(); removeTask(task._id); }} 
