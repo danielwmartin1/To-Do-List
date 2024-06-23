@@ -54,8 +54,7 @@ function List() {
     } catch (error) {
       console.error('Error updating task:', error);
     } finally {
-      setEditingId(null);
-      setEditedTask('');
+      stopEdit();
     }
   };
 
@@ -77,11 +76,16 @@ function List() {
     }
   };
 
+  function stopEdit() {
+    setEditingId(null);
+    setEditedTask('');
+  }
+
   return (
     <React.StrictMode>
       <div id='container'>
-        <div className="todo-container">
-          <ul className="taskList">
+        <div className="todo-container" onClick={stopEdit}>
+          <ul className="taskList" onClick={(e)=>e.stopPropagation()}>
             {taskList.map((task) => (
               <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => editTask(task._id)}>
                 <input
@@ -105,7 +109,8 @@ function List() {
                 ) : (
                     <span>{task.title}</span>
                 )
-            )}
+              )
+            }
                 <button 
                   className="removeButton" 
                   onClick={(e) => { e.stopPropagation(); removeTask(task._id); }} 
