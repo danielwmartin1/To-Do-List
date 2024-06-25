@@ -93,7 +93,7 @@ function List() {
                   type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
+                  onClick={(e) => { e.stopPropagation()}}
                 />
               {editingId === task._id ? (
                 <input
