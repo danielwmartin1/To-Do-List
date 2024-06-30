@@ -54,8 +54,7 @@ function List() {
     } catch (error) {
       console.error('Error updating task:', error);
     } finally {
-      setEditingId(null);
-      setEditedTask('');
+      stopEdit();
     }
   };
 
@@ -77,11 +76,16 @@ function List() {
     }
   };
 
+  function stopEdit() {
+    setEditingId(null);
+    setEditedTask('');
+  }
+
   return (
     <React.StrictMode>
       <div id='container'>
-        <div className="todo-container">
-          <ul className="taskList">
+        <div className="todo-container" onClick={stopEdit}>
+          <ul className="taskList" onClick={(e)=>e.stopPropagation()}>
             {taskList.map((task) => (
               <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => editTask(task._id)}>
                 <input
@@ -89,23 +93,24 @@ function List() {
                   type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}
+                  onClick={(e) => { e.stopPropagation()}}
                 />
-                {editingId === task._id ? (
-                  <input
-                    autoFocus
-                    type="text"
-                    value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
-                  />
+              {editingId === task._id ? (
+                <input
+                  autoFocus
+                  type="text"
+                  value={editedTask}
+                  onChange={(e) => setEditedTask(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
+                />
+              ) : (
+                task.completed ? (
+                  <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
                 ) : (
-                  task.completed ? (
-                    <span style={{ textDecoration: 'line-through', opacity: 0.5 }}>{task.title}</span>
-                  ) : (
                     <span>{task.title}</span>
-                  )
-                )}
+                )
+              )
+            }
                 <button 
                   className="removeButton" 
                   onClick={(e) => { e.stopPropagation(); removeTask(task._id); }} 
