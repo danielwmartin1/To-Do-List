@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import TaskRepository from './Backend/repositories/TaskRepository.js';
+import TaskRepository from './repositories/TaskRepository.js';
 
 // Initialize Express application
 const app = express();
