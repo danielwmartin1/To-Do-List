@@ -6,10 +6,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start`
+For backend.
+### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the backend.
+Open [http://localhost:4000/tasks](http://localhost:4000/tasks) to view it in your browser.
+
+For frontend.
+### `npm start`
+Compiles code and launches [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.

@@ -3,12 +3,11 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import TaskRepository from './src/repositories/TaskRepository.js';
+import TaskRepository from './repositories/TaskRepository.js';
 
 // Initialize Express application
 const app = express();
 const port = 4000;
-// const BASE_URL = 'http://localhost:4000/tasks';
 
 // middleware
 app.use(cors());
@@ -74,7 +73,7 @@ app.post('/tasks', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-// Update a task
+//  Update a task
 app.put('/tasks/:id', async (req, res) => {
   try {
     //const id = parseInt(req.params.id);
@@ -82,6 +81,18 @@ app.put('/tasks/:id', async (req, res) => {
     const updatedTaskData = req.body;
     const task = await taskRepository.update(id, updatedTaskData);
     res.send(task); // Send back the updated tasks array as a response
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+// Completed a task
+app.patch('/tasks/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const completedTaskData = req.body;
+    const completedTask = await taskRepository.completed(id, completedTaskData);
+    res.send(completedTask); // Send back the updated tasks array as a response
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -107,3 +118,4 @@ app.listen(port, () => {
 });
 
 export default app;
+

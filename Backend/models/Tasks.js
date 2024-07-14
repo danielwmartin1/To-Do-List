@@ -5,11 +5,10 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  completed: {
-    type: Boolean,
-    default: false,
-    //absent in the frontend
-  },
+   completed: {
+     type: Boolean,
+     default: false,
+   },
 });
 
 const Tasks = mongoose.model('Tasks', TaskSchema);
