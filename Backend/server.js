@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/', {});
+    await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
     console.log('MongoDB connected...');
   } catch (err) {
     console.error(err.message);
