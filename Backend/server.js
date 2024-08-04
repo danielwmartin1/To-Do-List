@@ -7,7 +7,7 @@ import TaskRepository from './repositories/TaskRepository.js';
 
 // Initialize Express application
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // middleware
 app.use(cors());
@@ -32,6 +32,9 @@ const connectDB = async () => {
 connectDB();
 // Get all tasks
 const taskRepository = new TaskRepository();
+app.get('/', async (req, res) => {
+  res.send("hello world");
+});
 app.get('/tasks', async (req, res) => {
   try {
     const taskList = await taskRepository.getAll();
