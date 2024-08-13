@@ -6,10 +6,11 @@ function List() {
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
+  const uri = 'https://todolist-frontend-tau.vercel.app/tasks';
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/tasks");
+      const response = await axios.get(uri);
       setTaskList(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -27,7 +28,7 @@ function List() {
       return;
     }
     try {
-      await axios.post('http://localhost:4000/tasks', { title: newTask });
+      await axios.post(uri, { title: newTask });
       setNewTask('');
       fetchData();
     } catch (error) {
@@ -49,7 +50,7 @@ function List() {
       return;
     }
     try {
-      await axios.put(`http://localhost:4000/tasks/${id}`, { title: editedTask });
+      await axios.put(`${uri}/${id}`, { title: editedTask });
       fetchData();
     } catch (error) {
       console.error('Error updating task:', error);
@@ -60,7 +61,7 @@ function List() {
 
   const toggleTaskCompletion = async (id, completed) => {
     try {
-      await axios.patch(`http://localhost:4000/tasks/${id}`, { completed: !completed });
+      await axios.patch(`${uri}/${id}`, { completed: !completed });
       fetchData();
     } catch (error) {
       console.error('Error toggling task completion:', error);
@@ -69,7 +70,7 @@ function List() {
 
   const removeTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/tasks/${id}`);
+      await axios.delete(`${uri}/${id}`);
       fetchData();
     } catch (error) {
       console.error('Error deleting task:', error);
