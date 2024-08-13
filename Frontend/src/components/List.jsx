@@ -7,7 +7,7 @@ function List() {
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
   const [error, setError] = useState(null);
-  const uri = process.env.REACT_APP_BACKEND_URI || 'https://todolist-backend-six-woad.vercel.app/';
+  const uri = 'https://todolist-backend-six-woad.vercel.app/';
 
   const fetchData = async () => {
     try {
