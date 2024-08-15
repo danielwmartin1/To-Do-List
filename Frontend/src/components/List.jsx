@@ -6,12 +6,12 @@ function List() {
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const uri = 'https://todolist-backend-six-woad.vercel.app/';
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(uri);
+      const response = await axios.get(`${uri}/tasks`);
       setTaskList(response.data);
     } catch (error) {
       if (error.response) {
@@ -55,7 +55,7 @@ function List() {
   
   const updateTask = async (taskId) => {
     try {
-      const response = await axios.put(`${uri}tasks/${taskId}`, { title: editedTask });
+      await axios.put(`${uri}tasks/${taskId}`, { title: editedTask });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { ...task, title: editedTask };
