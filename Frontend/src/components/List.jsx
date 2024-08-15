@@ -52,12 +52,20 @@ function List() {
       console.error("Error adding task:", error);
     }
   };
-
-  // Other functions (editTask, updateTask, toggleTaskCompletion, removeTask) would follow the same pattern for error handling
   
   const updateTask = async (taskId) => {
     try {
-      // Implement the logic to update the task
+      const response = await axios.put(`${uri}tasks/${taskId}`, { title: editedTask });
+      const updatedTaskList = taskList.map((task) => {
+        if (task._id === taskId) {
+          return { ...task, title: editedTask };
+        }
+        return task;
+      });
+      setTaskList(updatedTaskList);
+      setEditingId(null);
+      setEditedTask('');
+      
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
