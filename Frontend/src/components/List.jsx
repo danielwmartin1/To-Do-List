@@ -7,7 +7,7 @@ function List() {
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
   const [error, setError] = useState('');
-  const uri = 'https://todolist-backend-six-woad.vercel.app/';
+  const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
     try {
@@ -38,7 +38,7 @@ function List() {
       return;
     }
     try {
-      const response = await axios.post(`${uri}tasks`, { title: newTask });
+      const response = await axios.post(`${uri}/tasks`, { title: newTask });
       setTaskList([...taskList, response.data]);
       setNewTask('');
     } catch (error) {
@@ -55,7 +55,7 @@ function List() {
   
   const updateTask = async (taskId) => {
     try {
-      await axios.put(`${uri}tasks/${taskId}`, { title: editedTask });
+      await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { ...task, title: editedTask };
@@ -65,7 +65,6 @@ function List() {
       setTaskList(updatedTaskList);
       setEditingId(null);
       setEditedTask('');
-      
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -80,7 +79,7 @@ function List() {
   
   const removeTask = async (taskId) => {
     try {
-      await axios.delete(`${uri}tasks/${taskId}`);
+      await axios.delete(`${uri}/tasks/${taskId}`);
       const updatedTaskList = taskList.filter((task) => task._id !== taskId);
       setTaskList(updatedTaskList);
     } catch (error) {
@@ -97,7 +96,7 @@ function List() {
   
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.put(`${uri}tasks/${taskId}`, { completed: !completed });
+      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { ...task, completed: !completed };

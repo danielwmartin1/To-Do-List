@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // middleware
-app.use(cors("https://todolist-frontend-tau.vercel.app/"));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
