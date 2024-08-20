@@ -6,12 +6,24 @@ function List() {
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
+  const [error, setError] = useState('');
+  const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/tasks");
+      const response = await axios.get(`${uri}/tasks`);
       setTaskList(response.data);
     } catch (error) {
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        // Request was made but no response received
+        setError("Network error: No response received from server");
+      } else {
+        // Something else happened while setting up the request
+        setError(`Error: ${error.message}`);
+      }
       console.error("Error fetching data:", error);
     }
   };
@@ -20,100 +32,123 @@ function List() {
     fetchData();
   }, []);
 
-
   const addTask = async () => {
     if (!newTask.trim()) {
       alert('Please enter a task.');
       return;
     }
     try {
-      await axios.post('http://localhost:4000/tasks', { title: newTask });
+      const response = await axios.post(`${uri}/tasks`, { title: newTask });
+      setTaskList([...taskList, response.data]);
       setNewTask('');
-      fetchData();
     } catch (error) {
-      console.error('Error adding task:', error);
+      if (error.response) {
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        setError("Network error: No response received from server");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+      console.error("Error adding task:", error);
     }
   };
-
-  const editTask = (id) => {
-    setEditingId(id);
-    const taskToEdit = taskList.find(task => task._id === id);
-    if (taskToEdit) {
-      setEditedTask(taskToEdit.title);
-    }
-  };
-
-  const updateTask = async (id) => {
-    if (!editedTask.trim()) {
-      console.error('Edited task is empty');
-      return;
-    }
+  
+  const updateTask = async (taskId) => {
     try {
-      await axios.put(`http://localhost:4000/tasks/${id}`, { title: editedTask });
-      fetchData();
+      await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
+      const updatedTaskList = taskList.map((task) => {
+        if (task._id === taskId) {
+          return { ...task, title: editedTask };
+        }
+        return task;
+      });
+      setTaskList(updatedTaskList);
+      setEditingId(null);
+      setEditedTask('');
     } catch (error) {
-      console.error('Error updating task:', error);
-    } finally {
-      stopEdit();
+      if (error.response) {
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        setError("Network error: No response received from server");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+      console.error("Error updating task:", error);
     }
   };
-
-  const toggleTaskCompletion = async (id, completed) => {
+  
+  const removeTask = async (taskId) => {
     try {
-      await axios.patch(`http://localhost:4000/tasks/${id}`, { completed: !completed });
-      fetchData();
+      await axios.delete(`${uri}/tasks/${taskId}`);
+      const updatedTaskList = taskList.filter((task) => task._id !== taskId);
+      setTaskList(updatedTaskList);
     } catch (error) {
-      console.error('Error toggling task completion:', error);
+      if (error.response) {
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        setError("Network error: No response received from server");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+      console.error("Error removing task:", error);
     }
   };
-
-  const removeTask = async (id) => {
+  
+  const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.delete(`http://localhost:4000/tasks/${id}`);
-      fetchData();
+      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      const updatedTaskList = taskList.map((task) => {
+        if (task._id === taskId) {
+          return { ...task, completed: !completed };
+        }
+        return task;
+      });
+      setTaskList(updatedTaskList);
     } catch (error) {
-      console.error('Error deleting task:', error);
+      if (error.response) {
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        setError("Network error: No response received from server");
+      } else {
+        setError(`Error: ${error.message}`);
+      }
+      console.error("Error toggling task completion:", error);
     }
   };
-
-  function stopEdit() {
-    setEditingId(null);
-    setEditedTask('');
-  }
 
   return (
     <React.StrictMode>
       <div id='container'>
-        <div className="todo-container" onClick={stopEdit}>
-          <ul className="taskList" onClick={(e)=>e.stopPropagation()}>
+        {error && <div className="error">{error}</div>}
+        <div className="todo-container" onClick={() => setEditingId(null)}>
+          <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.map((task) => (
-              <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => editTask(task._id)}>
+              <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => setEditingId(task._id)}>
                 <input
                   className="checkbox"
                   type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation()}}
+                  onClick={(e) => { e.stopPropagation() }}
                 />
-              {editingId === task._id ? (
-                <input
-                  autoFocus
-                  type="text"
-                  value={editedTask}
-                  onChange={(e) => setEditedTask(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
-                />
-              ) : (
-                task.completed ? (
-                  <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
+                {editingId === task._id ? (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={editedTask}
+                    onChange={(e) => setEditedTask(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
+                  />
                 ) : (
+                  task.completed ? (
+                    <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
+                  ) : (
                     <span>{task.title}</span>
-                )
-              )
-            }
-                <button 
-                  className="removeButton" 
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }} 
+                  )
+                )}
+                <button
+                  className="removeButton"
+                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
