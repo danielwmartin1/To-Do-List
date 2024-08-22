@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Create a schema
 const TaskSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -11,6 +12,7 @@ const TaskSchema = new mongoose.Schema({
    },
 });
 
+// Create a model
 const Tasks = mongoose.model('Tasks', TaskSchema);
 
 export default Tasks;

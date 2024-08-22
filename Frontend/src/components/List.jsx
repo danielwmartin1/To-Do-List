@@ -9,6 +9,7 @@ function List() {
   const [error, setError] = useState('');
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
+  // Fetch data from the server
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
@@ -28,10 +29,12 @@ function List() {
     }
   };
 
+  // Fetch data on initial render
   useEffect(() => {
     fetchData();
   }, []);
 
+  // Add a task
   const addTask = async () => {
     if (!newTask.trim()) {
       alert('Please enter a task.');
@@ -53,6 +56,7 @@ function List() {
     }
   };
   
+  // Update a task
   const updateTask = async (taskId) => {
     try {
       await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
@@ -76,7 +80,8 @@ function List() {
       console.error("Error updating task:", error);
     }
   };
-  
+
+  // Remove a task
   const removeTask = async (taskId) => {
     try {
       await axios.delete(`${uri}/tasks/${taskId}`);
@@ -93,7 +98,8 @@ function List() {
       console.error("Error removing task:", error);
     }
   };
-  
+
+  // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
       await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
@@ -116,6 +122,7 @@ function List() {
     }
   };
 
+  // Render the component
   return (
     <React.StrictMode>
       <div id='container'>

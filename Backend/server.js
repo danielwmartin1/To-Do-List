@@ -30,6 +30,7 @@ const connectDB = async () => {
 };
 // Start the server here or ensure it's ready to handle requests
 connectDB();
+
 // Get all tasks
 const taskRepository = new TaskRepository();
 app.get('/', async (req, res) => {
@@ -46,13 +47,13 @@ app.get('/tasks', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 // Get a single task
 app.get('/tasks/:id', async (req, res) => {
   try {
     //const id = parseInt(req.params.id);
     const id = req.params.id;
     const task = await taskRepository.getById(id);
-    
     if (!task) {
       return res.status(404).send('Task not found');
     }
@@ -63,6 +64,7 @@ app.get('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 // Add a new task
 app.post('/tasks', async (req, res) => {
   try {
@@ -77,6 +79,7 @@ app.post('/tasks', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 //  Update a task
 app.put('/tasks/:id', async (req, res) => {
   try {
@@ -90,6 +93,7 @@ app.put('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 // Completed a task
 app.patch('/tasks/:id', async (req, res) => {
   try {
@@ -102,6 +106,7 @@ app.patch('/tasks/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 // Delete a task
 app.delete('/tasks/:id', async (req, res) => { 
   try {
