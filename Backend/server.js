@@ -33,7 +33,8 @@ connectDB();
 // Get all tasks
 const taskRepository = new TaskRepository();
 app.get('/', async (req, res) => {
-  res.send("hello world");
+  const taskList = await taskRepository.getAll();
+  res.send(taskList);
 });
 app.get('/tasks', async (req, res) => {
   try {
