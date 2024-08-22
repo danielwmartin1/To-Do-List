@@ -10,15 +10,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // middleware
-// CORS configuration
-const corsOptions = {
-  origin: '*', // Allow requests from all origins
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization',
-};
-
-// middleware
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
