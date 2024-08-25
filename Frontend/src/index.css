@@ -30,14 +30,39 @@ ul {
 } 
 
 .listItem {
-  font-family: "Architects Daughter", cursive;
+  font-family: 'Times New Roman', Times, serif;
   color: black;
   text-indent: 42.5%;
-  font-size: 1.30rem;
-  background-image: url('./notepad.jpg');
+  font-size: 1.5rem;
+  font-weight: 500;
+  background-position: center;
+  background-color: antiquewhite;
+  background-repeat: no-repeat;
+  background-size: contain;
   list-style-type: disc;
   list-style-position: inside;
-  border: 1px solid black ;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .listItem {
+    font-size: 1.1rem;
+  }
+}
+.listItem > span {
+  flex: 1;
+  margin-right: 2rem;
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-right: 4rem;
+  }
 }
 
 .checkbox {
