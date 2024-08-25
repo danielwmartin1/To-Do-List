@@ -14,6 +14,7 @@ function List() {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
+      // Sort the task list in descending order based on the _id field
       const sortedTaskList = response.data.sort((a, b) => b._id.localeCompare(a._id));
       setTaskList(sortedTaskList);
     } catch (error) {
