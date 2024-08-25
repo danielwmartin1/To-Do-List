@@ -7,22 +7,21 @@ function List() {
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
   const [error, setError] = useState('');
+  const [isAscending, setIsAscending] = useState(false); // State to keep track of sort order
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   // Fetch data from the server
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
-      setTaskList(response.data);
+      const sortedTaskList = response.data.sort((a, b) => b._id.localeCompare(a._id));
+      setTaskList(sortedTaskList);
     } catch (error) {
       if (error.response) {
-        // Server responded with a status other than 200 range
         setError(`Error: ${error.response.status} - ${error.response.data}`);
       } else if (error.request) {
-        // Request was made but no response received
         setError("Network error: No response received from server");
       } else {
-        // Something else happened while setting up the request
         setError(`Error: ${error.message}`);
       }
       console.error("Error fetching data:", error);
@@ -30,9 +29,10 @@ function List() {
   };
 
   // Fetch data on initial render
-  useEffect(() => {
-    fetchData();
-  }, []);
+    useEffect(() => {
+        fetchData();
+        setIsAscending(() => true); // Set the initial sort order to descending
+      }, []);
 
   // Add a task
   const addTask = async () => {
@@ -55,7 +55,7 @@ function List() {
       console.error("Error adding task:", error);
     }
   };
-  
+
   // Update a task
   const updateTask = async (taskId) => {
     try {
@@ -122,10 +122,26 @@ function List() {
     }
   };
 
+  // Toggle sort order
+  const toggleSort = () => {
+    const sortedTaskList = [...taskList].sort((a, b) => {
+      if (!isAscending) {
+        return a._id < b._id ? -1 : 1;
+      } else {
+        return a._id > b._id ? -1 : 1;
+      }
+    });
+    setTaskList(sortedTaskList);
+    setIsAscending(!isAscending); // Toggle the sort order
+  };
+
   // Render the component
   return (
     <React.StrictMode>
       <div id='container'>
+        <nav className="navBar"> 
+          <button className="sortButton" onClick={toggleSort}>Sort <span className="arrows">&#8645;</span></button>
+        </nav>
         {error && <div className="error">{error}</div>}
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
@@ -136,7 +152,7 @@ function List() {
                   type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation() }}
+                  onClick={(e) => { e.stopPropagation(); }}
                 />
                 {editingId === task._id ? (
                   <input

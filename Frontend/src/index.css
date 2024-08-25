@@ -23,6 +23,23 @@ h1 {
   border-bottom: 1px solid white;
 }
 
+.navBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sortButton {
+  background-color: rgb(0, 17, 255);
+  color: white;
+  border: none;
+  padding: 1rem;
+  margin: 0rem;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 10px;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -43,7 +60,7 @@ ul {
   list-style-position: inside;
   border: 1px solid black;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   white-space: nowrap;
@@ -80,7 +97,6 @@ ul {
 .inputContainer {
   text-align: center;
 }
-
 
 .newTask {
   margin: 1rem;
