@@ -30,10 +30,10 @@ function List() {
   };
 
   // Fetch data on initial render
-    useEffect(() => {
-        fetchData();
-        setIsAscending(() => true); // Set the initial sort order to descending
-      }, []);
+  useEffect(() => {
+    fetchData();
+    setIsAscending(() => true); // Set the initial sort order to descending
+  }, []);
 
   // Add a task
   const addTask = async () => {
@@ -43,7 +43,7 @@ function List() {
     }
     try {
       const response = await axios.post(`${uri}/tasks`, { title: newTask });
-      setTaskList([...taskList, response.data]);
+      setTaskList([response.data, ...taskList]); // Prepend the new task to the task list
       setNewTask('');
     } catch (error) {
       if (error.response) {
@@ -67,7 +67,10 @@ function List() {
         }
         return task;
       });
-      setTaskList(updatedTaskList);
+      // Move the updated task to the top of the list
+      const updatedTask = updatedTaskList.find(task => task._id === taskId);
+      const sortedTaskList = [updatedTask, ...updatedTaskList.filter(task => task._id !== taskId)];
+      setTaskList(sortedTaskList);
       setEditingId(null);
       setEditedTask('');
     } catch (error) {
@@ -110,7 +113,15 @@ function List() {
         }
         return task;
       });
-      setTaskList(updatedTaskList);
+      // Move the task to the appropriate list
+      const updatedTask = updatedTaskList.find(task => task._id === taskId);
+      const incompleteTasks = updatedTaskList.filter(task => !task.completed);
+      const completedTasks = updatedTaskList.filter(task => task.completed);
+      if (updatedTask.completed) {
+        setTaskList([...incompleteTasks, updatedTask, ...completedTasks.filter(task => task._id !== taskId)]);
+      } else {
+        setTaskList([updatedTask, ...incompleteTasks.filter(task => task._id !== taskId), ...completedTasks]);
+      }
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -146,13 +157,15 @@ function List() {
         {error && <div className="error">{error}</div>}
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
-            {taskList.map((task) => (
+            {taskList.filter(task => !task.completed).map((task) => (
               <li
                 className={`listItem ${task.completed ? 'completedTask' : ''}`}
                 key={task._id}
                 onClick={() => {
-                  setEditingId(task._id);
-                  setEditedTask(task.title); // Set the editedTask state with the current task's title
+                  if (!task.completed) {
+                    setEditingId(task._id);
+                    setEditedTask(task.title); // Set the editedTask state with the current task's title
+                  }
                 }}
               >
                 <input
@@ -162,13 +175,20 @@ function List() {
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
                   onClick={(e) => { e.stopPropagation(); }}
                 />
-                {editingId === task._id ? (
+                {editingId === task._id && !task.completed ? (
                   <input
                     autoFocus
                     type="text"
                     value={editedTask}
                     onChange={(e) => setEditedTask(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        updateTask(task._id);
+                      } else if (e.key === 'Escape') {
+                        setEditedTask(task.title); // Reset to the current task's title
+                        setEditingId(null); // Stop editing
+                      }
+                    }}
                   />
                 ) : (
                   task.completed ? (
@@ -197,6 +217,56 @@ function List() {
             />
             <button className='addButton' onClick={addTask}>Add Task</button>
           </div>
+          <h2 className="completedTaskList">Completed Tasks</h2>
+          <ul className="taskList" onClick={(e) => e.stopPropagation()}>
+            {taskList.filter(task => task.completed).map((task) => (
+              <li
+                className={`listItem ${task.completed ? 'completedTask' : ''}`}
+                key={task._id}
+                onClick={() => {
+                  if (!task.completed) {
+                    setEditingId(task._id);
+                    setEditedTask(task.title); // Set the editedTask state with the current task's title
+                  }
+                }}
+              >
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                  onClick={(e) => { e.stopPropagation(); }}
+                />
+                {editingId === task._id && !task.completed ? (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={editedTask}
+                    onChange={(e) => setEditedTask(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        updateTask(task._id);
+                      } else if (e.key === 'Escape') {
+                        setEditedTask(task.title); // Reset to the current task's title
+                        setEditingId(null); // Stop editing
+                      }
+                    }}
+                  />
+                ) : (
+                  task.completed ? (
+                    <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
+                  ) : (
+                    <span>{task.title}</span>
+                  )
+                )}
+                <button
+                  className="removeButton"
+                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                  aria-label={`Remove task "${task.title}"`}
+                >Remove</button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </React.StrictMode>
