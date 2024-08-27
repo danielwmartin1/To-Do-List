@@ -217,7 +217,8 @@ function List() {
             />
             <button className='addButton' onClick={addTask}>Add Task</button>
           </div>
-          <h2 className="completedTaskList">Completed Tasks</h2>
+          <hr className="divider" />
+          <h2 className="completedTaskTitle">Completed Tasks</h2>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.filter(task => task.completed).map((task) => (
               <li
