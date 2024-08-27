@@ -147,7 +147,14 @@ function List() {
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.map((task) => (
-              <li className={`listItem ${task.completed ? 'completedTask' : ''}`} key={task._id} onClick={() => setEditingId(task._id)}>
+              <li
+                className={`listItem ${task.completed ? 'completedTask' : ''}`}
+                key={task._id}
+                onClick={() => {
+                  setEditingId(task._id);
+                  setEditedTask(task.title); // Set the editedTask state with the current task's title
+                }}
+              >
                 <input
                   className="checkbox"
                   type="checkbox"
