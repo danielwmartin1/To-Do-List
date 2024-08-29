@@ -67,10 +67,7 @@ function List() {
         }
         return task;
       });
-      // Move the updated task to the top of the list
-      const updatedTask = updatedTaskList.find(task => task._id === taskId);
-      const sortedTaskList = [updatedTask, ...updatedTaskList.filter(task => task._id !== taskId)];
-      setTaskList(sortedTaskList);
+      setTaskList(updatedTaskList);
       setEditingId(null);
       setEditedTask('');
     } catch (error) {
