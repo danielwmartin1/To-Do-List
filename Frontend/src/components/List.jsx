@@ -131,27 +131,24 @@ function List() {
     }
   };
 
-  // Toggle sort order
-  const toggleSort = () => {
-    const sortedTaskList = [...taskList].sort((a, b) => {
-      if (!isAscending) {
-        return a._id < b._id ? -1 : 1;
-      } else {
-        return a._id > b._id ? -1 : 1;
-      }
-    });
-    setTaskList(sortedTaskList);
-    setIsAscending(!isAscending); // Toggle the sort order
-  };
-
   // Render the component
   return (
     <React.StrictMode>
       <div id='container'>
-        <nav className="navBar"> 
-          <button className="sortButton" onClick={toggleSort}>Sort <span className="arrows">&#8645;</span></button>
-        </nav>
-        {error && <div className="error">{error}</div>}
+      {error && <div className="error">{error}</div>}
+        <div className="inputContainer">
+              <input
+                autoFocus
+                className="newTask"
+                type="text"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addTask()}
+                placeholder="Add a new task"
+              />
+              <button className='addButton' onClick={addTask}>Add Task</button>
+            </div>
+        
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.filter(task => !task.completed).map((task) => (
@@ -202,19 +199,9 @@ function List() {
               </li>
             ))}
           </ul>
-          <div className="inputContainer">
-            <input
-              autoFocus
-              className="newTask"
-              type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addTask()}
-              placeholder="Add a new task"
-            />
-            <button className='addButton' onClick={addTask}>Add Task</button>
-          </div>
+          
           <hr className="divider" />
+
           <h2 className="completedTaskTitle">Completed Tasks</h2>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.filter(task => task.completed).map((task) => (
