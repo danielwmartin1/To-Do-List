@@ -16,7 +16,11 @@ function List() {
       const response = await axios.get(`${uri}/tasks`);
       // Sort the task list in descending order based on the _id field
       const sortedTaskList = response.data.sort((a, b) => b._id.localeCompare(a._id));
-      setTaskList(sortedTaskList);
+      // Separate tasks into incomplete and completed lists
+      const incompleteTasks = sortedTaskList.filter(task => !task.completed);
+      const completedTasks = sortedTaskList.filter(task => task.completed);
+      // Combine the lists with incomplete tasks at the top
+      setTaskList([...incompleteTasks, ...completedTasks]);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
