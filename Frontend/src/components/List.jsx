@@ -175,6 +175,7 @@ function List() {
                 />
                 {editingId === task._id && !task.completed ? (
                   <input
+                    className='editTask'
                     autoFocus
                     type="text"
                     value={editedTask}
