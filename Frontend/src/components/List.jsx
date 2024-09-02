@@ -7,7 +7,7 @@ function List() {
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
   const [error, setError] = useState('');
-  const [isAscending, setIsAscending] = useState(false); // State to keep track of sort order
+  //const [isAscending, setIsAscending] = useState(false); // State to keep track of sort order
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   // Fetch data from the server
@@ -36,7 +36,7 @@ function List() {
   // Fetch data on initial render
   useEffect(() => {
     fetchData();
-    setIsAscending(() => true); // Set the initial sort order to descending
+    //setIsAscending(() => true); // Set the initial sort order to descending
   }, []);
 
   // Add a task
