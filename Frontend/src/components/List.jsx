@@ -190,7 +190,7 @@ function List() {
                   />
                 ) : (
                   task.completed ? (
-                    <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
+                    <span style={{opacity: 0.3 }}>{task.title}</span>
                   ) : (
                     <span>{task.title}</span>
                   )
@@ -242,11 +242,7 @@ function List() {
                     }}
                   />
                 ) : (
-                  task.completed ? (
-                    <span style={{ textDecoration: 'line-through', opacity: 0.3 }}>{task.title}</span>
-                  ) : (
-                    <span>{task.title}</span>
-                  )
+                  <span>{task.title}</span>
                 )}
                 <button
                   className="removeButton"
@@ -254,7 +250,7 @@ function List() {
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
-            ))}
+          ))}
           </ul>
         </div>
       </div>

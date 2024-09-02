@@ -55,6 +55,10 @@ ul {
   text-overflow: ellipsis;
 }
 
+.completedTask>span {
+  opacity: 0.3;
+}
+
 @media (max-width: 768px) {
   .listItem {
     flex: 1;
