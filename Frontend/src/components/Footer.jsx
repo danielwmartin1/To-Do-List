@@ -9,7 +9,6 @@ function Footer() {
   return (
     <React.StrictMode>
       <div className="footer">
-        <hr />
         <footer>
           <p>Copyright ⓒ {year}</p>
         </footer>
