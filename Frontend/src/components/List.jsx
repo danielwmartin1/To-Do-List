@@ -18,14 +18,7 @@ function List() {
       setTaskList(sortedTaskList);
       console.log('Fetched and sorted tasks:', sortedTaskList);
     } catch (error) {
-      if (error.response) {
-        setError(`Error: ${error.response.status} - ${error.response.data}`);
-      } else if (error.request) {
-        setError("Network error: No response received from server");
-      } else {
-        setError(`Error: ${error.message}`);
-      }
-      console.error("Error fetching data:", error);
+      handleError(error);
     }
   };
 
@@ -47,14 +40,7 @@ function List() {
       setNewTask('');
       console.log('Added new task:', response.data);
     } catch (error) {
-      if (error.response) {
-        setError(`Error: ${error.response.status} - ${error.response.data}`);
-      } else if (error.request) {
-        setError("Network error: No response received from server");
-      } else {
-        setError(`Error: ${error.message}`);
-      }
-      console.error("Error adding task:", error);
+      handleError(error);
     }
   };
 
@@ -73,14 +59,7 @@ function List() {
       setEditedTask('');
       console.log('Updated task:', taskId);
     } catch (error) {
-      if (error.response) {
-        setError(`Error: ${error.response.status} - ${error.response.data}`);
-      } else if (error.request) {
-        setError("Network error: No response received from server");
-      } else {
-        setError(`Error: ${error.message}`);
-      }
-      console.error("Error updating task:", error);
+      handleError(error);
     }
   };
 
@@ -92,14 +71,7 @@ function List() {
       setTaskList(updatedTaskList);
       console.log('Removed task:', taskId);
     } catch (error) {
-      if (error.response) {
-        setError(`Error: ${error.response.status} - ${error.response.data}`);
-      } else if (error.request) {
-        setError("Network error: No response received from server");
-      } else {
-        setError(`Error: ${error.message}`);
-      }
-      console.error("Error removing task:", error);
+      handleError(error);
     }
   };
 
@@ -116,34 +88,39 @@ function List() {
       setTaskList(updatedTaskList);
       console.log('Toggled task completion:', taskId);
     } catch (error) {
-      if (error.response) {
-        setError(`Error: ${error.response.status} - ${error.response.data}`);
-      } else if (error.request) {
-        setError("Network error: No response received from server");
-      } else {
-        setError(`Error: ${error.message}`);
-      }
-      console.error("Error toggling task completion:", error);
+      handleError(error);
     }
+  };
+
+  // Handle errors
+  const handleError = (error) => {
+    if (error.response) {
+      setError(`Error: ${error.response.status} - ${error.response.data}`);
+    } else if (error.request) {
+      setError("Network error: No response received from server");
+    } else {
+      setError(`Error: ${error.message}`);
+    }
+    console.error("API request error:", error);
   };
 
   // Render the component
   return (
     <React.StrictMode>
       <div id='container'>
-      {error && <div className="error">{error}</div>}
+        {error && <div className="error">{error}</div>}
         <div className="inputContainer">
-              <input
-                autoFocus
-                className="newTask"
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addTask()}
-                placeholder="Add a new task"
-              />
-              <button className='addButton' onClick={addTask}>Add Task</button>
-            </div>
+          <input
+            autoFocus
+            className="newTask"
+            type="text"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addTask()}
+            placeholder="Add a new task"
+          />
+          <button className='addButton' onClick={addTask}>Add Task</button>
+        </div>
         
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
