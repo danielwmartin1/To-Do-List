@@ -6,11 +6,11 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-   completed: {
-     type: Boolean,
-     default: false,
-   },
-});
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+}, { timestamps: true }); // Add timestamps option
 
 // Create a model
 const Tasks = mongoose.model('Tasks', TaskSchema);

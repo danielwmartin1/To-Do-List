@@ -7,20 +7,16 @@ function List() {
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
   const [error, setError] = useState('');
-  //const [isAscending, setIsAscending] = useState(false); // State to keep track of sort order
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   // Fetch data from the server
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
-      // Sort the task list in descending order based on the _id field
-      const sortedTaskList = response.data.sort((a, b) => b._id.localeCompare(a._id));
-      // Separate tasks into incomplete and completed lists
-      const incompleteTasks = sortedTaskList.filter(task => !task.completed);
-      const completedTasks = sortedTaskList.filter(task => task.completed);
-      // Combine the lists with incomplete tasks at the top
-      setTaskList([...incompleteTasks, ...completedTasks]);
+      // Sort the task list in descending order based on the updatedAt field
+      const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(sortedTaskList);
+      console.log('Fetched and sorted tasks:', sortedTaskList);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -36,7 +32,6 @@ function List() {
   // Fetch data on initial render
   useEffect(() => {
     fetchData();
-    //setIsAscending(() => true); // Set the initial sort order to descending
   }, []);
 
   // Add a task
@@ -47,8 +42,10 @@ function List() {
     }
     try {
       const response = await axios.post(`${uri}/tasks`, { title: newTask });
-      setTaskList([response.data, ...taskList]); // Prepend the new task to the task list
+      const updatedTaskList = [response.data, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(updatedTaskList); // Prepend the new task to the task list
       setNewTask('');
+      console.log('Added new task:', response.data);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -67,13 +64,14 @@ function List() {
       await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, title: editedTask };
+          return { ...task, title: editedTask, updatedAt: new Date().toISOString() };
         }
         return task;
-      });
+      }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setEditingId(null);
       setEditedTask('');
+      console.log('Updated task:', taskId);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -92,6 +90,7 @@ function List() {
       await axios.delete(`${uri}/tasks/${taskId}`);
       const updatedTaskList = taskList.filter((task) => task._id !== taskId);
       setTaskList(updatedTaskList);
+      console.log('Removed task:', taskId);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -110,19 +109,12 @@ function List() {
       await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, completed: !completed };
+          return { ...task, completed: !completed, updatedAt: new Date().toISOString() };
         }
         return task;
-      });
-      // Move the task to the appropriate list
-      const updatedTask = updatedTaskList.find(task => task._id === taskId);
-      const incompleteTasks = updatedTaskList.filter(task => !task.completed);
-      const completedTasks = updatedTaskList.filter(task => task.completed);
-      if (updatedTask.completed) {
-        setTaskList([...incompleteTasks, updatedTask, ...completedTasks.filter(task => task._id !== taskId)]);
-      } else {
-        setTaskList([updatedTask, ...incompleteTasks.filter(task => task._id !== taskId), ...completedTasks]);
-      }
+      }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(updatedTaskList);
+      console.log('Toggled task completion:', taskId);
     } catch (error) {
       if (error.response) {
         setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -179,11 +171,16 @@ function List() {
                     autoFocus
                     type="text"
                     value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
+                    onChange={(e) => {
+                      console.log('Edited task changed:', e.target.value);
+                      setEditedTask(e.target.value);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
+                        console.log('Enter key pressed, updating task:', task._id);
                         updateTask(task._id);
                       } else if (e.key === 'Escape') {
+                        console.log('Escape key pressed, resetting edited task to:', task.title);
                         setEditedTask(task.title); // Reset to the current task's title
                         setEditingId(null); // Stop editing
                       }
@@ -198,7 +195,7 @@ function List() {
                 )}
                 <button
                   className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                  onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
@@ -232,11 +229,16 @@ function List() {
                     autoFocus
                     type="text"
                     value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
+                    onChange={(e) => {
+                      console.log('Edited task changed:', e.target.value);
+                      setEditedTask(e.target.value);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
+                        console.log('Enter key pressed, updating task:', task._id);
                         updateTask(task._id);
                       } else if (e.key === 'Escape') {
+                        console.log('Escape key pressed, resetting edited task to:', task.title);
                         setEditedTask(task.title); // Reset to the current task's title
                         setEditingId(null); // Stop editing
                       }
@@ -247,7 +249,7 @@ function List() {
                 )}
                 <button
                   className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                  onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>

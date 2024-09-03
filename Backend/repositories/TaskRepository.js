@@ -1,4 +1,3 @@
-// repositories/TaskRepository.js
 import Tasks from '../models/Tasks.js';
 
 class TaskRepository {
@@ -45,7 +44,6 @@ class TaskRepository {
 
   async completed(id, taskData) {
     try {
-      console.log('completedTask', id, taskData);
       const completedTask = await Tasks.findByIdAndUpdate(id, taskData, { new: true });
       return completedTask;
     } catch (error) {
@@ -66,4 +64,3 @@ class TaskRepository {
 }
 
 export default TaskRepository;
-
