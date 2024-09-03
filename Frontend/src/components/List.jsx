@@ -172,7 +172,7 @@ function List() {
                   ) : (
                     <span>{task.title}</span>
                   )
-                )};
+                )}
                 <button
                   className="removeButton"
                   onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
