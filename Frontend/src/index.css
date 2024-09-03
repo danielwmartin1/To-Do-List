@@ -73,19 +73,6 @@ ul {
   text-overflow: ellipsis;
 }
 
-.completedTask>span {
-  opacity: 0.3;
-  text-decoration: line-through;
-  font-style: italic;
-}
-
-@media (max-width: 768px) {
-  .listItem {
-    flex: 1;
-    flex-wrap: wrap;
-  }
-}
-
 .listItem > span {
   flex: 1;
   font-family: 'Times New Roman', Times, serif;
@@ -101,6 +88,21 @@ ul {
     font-size: 1rem;
   }
 }
+
+.completedTask {
+  opacity: 0.5;
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .completedTask>span,
+  .listItem {
+    flex: 1;
+    flex-wrap: wrap;
+  }
+}
+
 
 .editTask {
   background-color: rgb(255, 255, 255);

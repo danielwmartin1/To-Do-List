@@ -48,7 +48,7 @@ function List() {
   // Update a task
   const updateTask = async (taskId) => {
     try {
-      await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
+      const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { ...task, title: editedTask, updatedAt: new Date().toISOString() };
@@ -58,7 +58,7 @@ function List() {
       setTaskList(updatedTaskList);
       setEditingId(null);
       setEditedTask('');
-      console.log('Updated task:', taskId);
+      console.log('Updated task:', response.data, taskId);
     } catch (error) {
       handleError(error);
     }
@@ -67,10 +67,10 @@ function List() {
   // Remove a task
   const removeTask = async (taskId) => {
     try {
-      await axios.delete(`${uri}/tasks/${taskId}`);
+      const response = await axios.delete(`${uri}/tasks/${taskId}`);
       const updatedTaskList = taskList.filter((task) => task._id !== taskId);
       setTaskList(updatedTaskList);
-      console.log('Removed task:', taskId);
+      console.log('Removed task:', response.data, taskId);
     } catch (error) {
       handleError(error);
     }
@@ -79,7 +79,7 @@ function List() {
   // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      const response = await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { ...task, completed: !completed, updatedAt: new Date().toISOString() };
@@ -87,7 +87,7 @@ function List() {
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
-      console.log('Toggled task completion:', taskId);
+      console.log('Toggled task completion:', response.data, taskId);
     } catch (error) {
       handleError(error);
     }
