@@ -25,6 +25,24 @@ h1, h2 {
   border-bottom: 1px solid white;
 }
 
+button {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 1.25rem;
+  font-weight: 400;
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  button {
+    font-size: 1rem;
+  }
+}
+
 .divider {
   border: 0;
   height: 1px;
@@ -57,11 +75,14 @@ ul {
 
 .completedTask>span {
   opacity: 0.3;
+  text-decoration: line-through;
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
   .listItem {
     flex: 1;
+    flex-wrap: wrap;
   }
 }
 
@@ -70,9 +91,9 @@ ul {
   font-family: 'Times New Roman', Times, serif;
   color: black;
   text-align: left;
-  margin-left: 40%;
+  margin-left: 25%;
   margin-right: 25%;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 500;
   @media (max-width: 768px) {
     margin-left: 2rem;
@@ -168,8 +189,8 @@ ul {
   border-bottom: 1px solid white;
 }
 
-footer {
-  position: fixed;
+.footer {
+  position: hidden;
   left: 0;
   bottom: 0;
   width: 100%;

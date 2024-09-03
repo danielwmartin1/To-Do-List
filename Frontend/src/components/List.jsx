@@ -25,6 +25,7 @@ function List() {
   // Fetch data on initial render
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   // Add a task
@@ -165,11 +166,13 @@ function List() {
                   />
                 ) : (
                   task.completed ? (
-                    <span style={{opacity: 0.3 }}>{task.title}</span>
+                    <span 
+                      className="completeTaskList" 
+                      style={{opacity: 0.3 }}>{task.title}</span>
                   ) : (
                     <span>{task.title}</span>
                   )
-                )}
+                )};
                 <button
                   className="removeButton"
                   onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
