@@ -39,6 +39,10 @@ function List() {
       alert('Please enter a task.');
       return;
     }
+    if (new Date(dueDate) < new Date()) {
+      alert('Please choose a future date and time.');
+      return;
+    }
     try {
       const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate });
       const formattedTask = {
@@ -58,6 +62,10 @@ function List() {
 
   const updateTask = async (taskId) => {
     try {
+      if (new Date(editedDueDate) < new Date()) {
+        alert('Please choose a future date and time.');
+        return;
+      }
       // eslint-disable-next-line
       const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
       const updatedTaskList = taskList.map((task) => {
@@ -110,6 +118,11 @@ function List() {
     }
   };
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, 16);
+  };
+
   return (
     <React.StrictMode>
       <div id='container'>
@@ -130,6 +143,7 @@ function List() {
             type="datetime-local"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            min={getCurrentDateTime()}
             placeholder="Due Date"
           />
           <button className='addButton' onClick={addTask}>Add Task</button>
@@ -185,6 +199,7 @@ function List() {
                         type="datetime-local"
                         value={editedDueDate}
                         onChange={(e) => setEditedDueDate(e.target.value)}
+                        min={getCurrentDateTime()}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
@@ -270,6 +285,7 @@ function List() {
                         type="datetime-local"
                         value={editedDueDate}
                         onChange={(e) => setEditedDueDate(e.target.value)}
+                        min={getCurrentDateTime()}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
