@@ -70,18 +70,11 @@ ul {
 }
 
 .listItem:hover {
-  background-color: #ffed61; /* Change to your desired color */
+  background-color: #e3ef78;
 }
 
-.listItem > span,
-.listItem > .timestamp,
-.listItem > .removeButton,
-.listItem > .checkbox {
-  margin-right: 0.5rem; /* Add margin for spacing between elements */
-}
-
-.listItem > .removeButton {
-  margin-left: auto; /* Push the remove button to the end */
+.taskItem:hover {
+  background-color: #e3ef78;
 }
 
 .completedTask {
@@ -101,7 +94,8 @@ ul {
 .editContainer {
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Adjust the gap as needed */
+  justify-content: center;
+  min-width: 50rem;
 }
 
 .editTask {
@@ -215,14 +209,82 @@ ul {
 
 /* Timestamp styles */
 .timestamp {
-  font-size: 0.7rem; /* Decreased the font size */
-  font-family: 'Arial', sans-serif; /* Changed the font */
-  color: #555; /* Optional: Change text color */
-  font-style: italic; /* Optional: Italic style */
+  font-size: 0.85rem; 
+  font-family: 'Arial', sans-serif; 
+  color: #555; 
+  font-style: italic; 
+  margin: 1rem
 }
 
+.taskItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #faebd6;
+  transition: background-color 0.3s ease;
+}
+
+.taskTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timestampContainer {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.taskActions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.editLabel {
+  text-align: center;
+  margin-left: 1rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+
+
 /* Media Queries */
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
+  .taskTitle {
+    font-size: 1rem; /* Adjust the size as needed */
+  }
+}
+
+@media (min-width: 768px) {
+  .taskItem {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .taskTitle {
+    font-size: 1.5rem;
+  }
+
+  .timestampContainer {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .taskActions {
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
   .container {
     justify-content: center;
     align-items: center;
@@ -292,20 +354,9 @@ ul {
   }
 
   .timestamp {
-    font-size: 0.7rem; /* Decreased the font size */
-    font-family: 'Arial', sans-serif; /* Changed the font */
-    color: #555; /* Optional: Change text color */
-    font-style: italic; /* Optional: Italic style */
+    font-size: 0.7rem; 
+    font-family: 'Arial', sans-serif; 
+    color: #555; 
+    font-style: italic; 
   }
-}
-
-/* New styles */
-.listItem .taskName {
-  font-weight: bold;
-  flex-grow: 1; /* Allow task name to take up available space */
-}
-
-.listItem .taskActions {
-  display: flex;
-  gap: 0.5rem; /* Space between buttons */
 }

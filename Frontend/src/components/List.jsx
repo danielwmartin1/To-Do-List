@@ -31,6 +31,7 @@ function List() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const addTask = async () => {
@@ -51,6 +52,7 @@ function List() {
 
   const updateTask = async (taskId) => {
     try {
+      // eslint-disable-next-line
       const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
@@ -105,9 +107,8 @@ function List() {
   return (
     <React.StrictMode>
       <div id='container'>
-        {error && <div className="error">{error}
-          </div>}
-          
+        {error && <div className="error">{error}</div>}
+
         <div className="inputContainer">
           <input
             autoFocus
@@ -188,12 +189,12 @@ function List() {
                     </div>
                   </>
                 ) : (
-                  <>
+                  <div className="taskItem">
                     <span className="taskTitle">{task.title}</span>
                     {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
                     <span className="timestamp">Created: {task.createdAt}</span>
                     <span className="timestamp">Updated: {task.updatedAt}</span>
-                  </>
+                  </div>
                 )}
                 <button
                   className="removeButton"
@@ -203,7 +204,7 @@ function List() {
               </li>
             ))}
           </ul>
-          
+
           <hr className="divider" />
 
           <h2 className="completedTaskTitle">Completed Tasks</h2>
@@ -266,12 +267,17 @@ function List() {
                     </div>
                   </>
                 ) : (
-                  <>
+                  <div className="taskItem">
                     <span className="taskTitle">{task.title}</span>
-                    {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
-                    <span className="timestamp">Created: {task.createdAt}</span>
-                    <span className="timestamp">Updated: {task.updatedAt}</span>
-                  </>
+                    <div className="timestampContainer">
+                      {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
+                      <span className="timestamp">Created: {task.createdAt}</span>
+                      <span className="timestamp">Updated: {task.updatedAt}</span>
+                    </div>
+                    <div className="taskActions">
+                      {/* Your remove button and other actions here */}
+                    </div>
+                  </div>
                 )}
                 <button
                   className="removeButton"
