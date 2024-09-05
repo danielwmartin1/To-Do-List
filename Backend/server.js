@@ -9,14 +9,14 @@ import TaskRepository from './repositories/TaskRepository.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
-// middleware
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  console.log(req.method, req.path)
+  console.log(req.method, req.path);
   next();
-})
+});
 
 // Connect to MongoDB
 const connectDB = async () => {
@@ -51,7 +51,6 @@ app.get('/tasks', async (req, res) => {
 // Get a single task
 app.get('/tasks/:id', async (req, res) => {
   try {
-    //const id = parseInt(req.params.id);
     const id = req.params.id;
     const task = await taskRepository.getById(id);
     if (!task) {
@@ -68,8 +67,9 @@ app.get('/tasks/:id', async (req, res) => {
 // Add a new task
 app.post('/tasks', async (req, res) => {
   try {
-    const newTask = {  
+    const newTask = {
       title: req.body.title,
+      dueDate: req.body.dueDate, // Add dueDate field
     };
     const task = await taskRepository.add(newTask);
     res.send(task);
@@ -80,27 +80,26 @@ app.post('/tasks', async (req, res) => {
   }
 });
 
-//  Update a task
+// Update a task
 app.put('/tasks/:id', async (req, res) => {
   try {
-    //const id = parseInt(req.params.id);
     const id = req.params.id;
     const updatedTaskData = req.body;
     const task = await taskRepository.update(id, updatedTaskData);
-    res.send(task); // Send back the updated tasks array as a response
+    res.send(task); // Send back the updated task as a response
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
   }
 });
 
-// Completed a task
+// Complete a task
 app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const completedTaskData = req.body;
     const completedTask = await taskRepository.completed(id, completedTaskData);
-    res.send(completedTask); // Send back the updated tasks array as a response
+    res.send(completedTask); // Send back the updated task as a response
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -108,9 +107,8 @@ app.patch('/tasks/:id', async (req, res) => {
 });
 
 // Delete a task
-app.delete('/tasks/:id', async (req, res) => { 
+app.delete('/tasks/:id', async (req, res) => {
   try {
-    //const id = parseInt(req.params.id);
     const id = req.params.id;
     const deleteTask = await taskRepository.delete(id);
     res.send(deleteTask);
@@ -127,4 +125,3 @@ app.listen(port, () => {
 });
 
 export default app;
-

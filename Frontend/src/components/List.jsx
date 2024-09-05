@@ -1,99 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { format } from 'date-fns';
+import '../index.css';
 
 function List() {
   const [newTask, setNewTask] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
+  const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
-  // Fetch data from the server
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
-      // Sort the task list in descending order based on the updatedAt field
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setTaskList(sortedTaskList);
-      console.log('Fetched and sorted tasks:', sortedTaskList);
+      const formattedTaskList = sortedTaskList.map(task => ({
+        ...task,
+        updatedAt: format(new Date(task.updatedAt), 'PPpp'),
+        createdAt: format(new Date(task.createdAt), 'PPpp'),
+        dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+      }));
+      setTaskList(formattedTaskList);
     } catch (error) {
       handleError(error);
     }
   };
 
-  // Fetch data on initial render
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
-  // Add a task
   const addTask = async () => {
     if (!newTask.trim()) {
       alert('Please enter a task.');
       return;
     }
     try {
-      const response = await axios.post(`${uri}/tasks`, { title: newTask });
+      const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate });
       const updatedTaskList = [response.data, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setTaskList(updatedTaskList); // Prepend the new task to the task list
+      setTaskList(updatedTaskList);
       setNewTask('');
-      console.log('Added new task:', response.data);
+      setDueDate('');
     } catch (error) {
       handleError(error);
     }
   };
 
-  // Update a task
   const updateTask = async (taskId) => {
     try {
-      const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask });
+      const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, title: editedTask, updatedAt: new Date().toISOString() };
+          return { ...task, title: editedTask, dueDate: editedDueDate, updatedAt: format(new Date(), 'PPpp') };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setEditingId(null);
       setEditedTask('');
-      console.log('Updated task:', response.data, taskId);
+      setEditedDueDate('');
     } catch (error) {
       handleError(error);
     }
   };
 
-  // Remove a task
   const removeTask = async (taskId) => {
     try {
-      const response = await axios.delete(`${uri}/tasks/${taskId}`);
+      await axios.delete(`${uri}/tasks/${taskId}`);
       const updatedTaskList = taskList.filter((task) => task._id !== taskId);
       setTaskList(updatedTaskList);
-      console.log('Removed task:', response.data, taskId);
     } catch (error) {
       handleError(error);
     }
   };
 
-  // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      const response = await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, completed: !completed, updatedAt: new Date().toISOString() };
+          return { ...task, completed: !completed, updatedAt: format(new Date(), 'PPpp') };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
-      console.log('Toggled task completion:', response.data, taskId);
     } catch (error) {
       handleError(error);
     }
   };
 
-  // Handle errors
   const handleError = (error) => {
     if (error.response) {
       setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -102,14 +100,14 @@ function List() {
     } else {
       setError(`Error: ${error.message}`);
     }
-    console.error("API request error:", error);
   };
 
-  // Render the component
   return (
     <React.StrictMode>
       <div id='container'>
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error">{error}
+          </div>}
+          
         <div className="inputContainer">
           <input
             autoFocus
@@ -120,9 +118,16 @@ function List() {
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
             placeholder="Add a new task"
           />
+          <input
+            className="newTask"
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            placeholder="Due Date"
+          />
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
-        
+
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {taskList.filter(task => !task.completed).map((task) => (
@@ -132,7 +137,8 @@ function List() {
                 onClick={() => {
                   if (!task.completed) {
                     setEditingId(task._id);
-                    setEditedTask(task.title); // Set the editedTask state with the current task's title
+                    setEditedTask(task.title);
+                    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : '');
                   }
                 }}
               >
@@ -144,38 +150,54 @@ function List() {
                   onClick={(e) => { e.stopPropagation(); }}
                 />
                 {editingId === task._id && !task.completed ? (
-                  <input
-                    className='editTask'
-                    autoFocus
-                    type="text"
-                    value={editedTask}
-                    onChange={(e) => {
-                      console.log('Edited task changed:', e.target.value);
-                      setEditedTask(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        console.log('Enter key pressed, updating task:', task._id);
-                        updateTask(task._id);
-                      } else if (e.key === 'Escape') {
-                        console.log('Escape key pressed, resetting edited task to:', task.title);
-                        setEditedTask(task.title); // Reset to the current task's title
-                        setEditingId(null); // Stop editing
-                      }
-                    }}
-                  />
+                  <>
+                    <div className="editContainer">
+                      <label className="editLabel">Edit Task:</label>
+                      <input
+                        className='editTask'
+                        autoFocus
+                        type="text"
+                        value={editedTask}
+                        onChange={(e) => setEditedTask(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            updateTask(task._id);
+                          } else if (e.key === 'Escape') {
+                            setEditedTask(task.title);
+                            setEditingId(null);
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="editContainer">
+                      <label className="editLabel">Edit Due Date:</label>
+                      <input
+                        className='editTask'
+                        type="date"
+                        value={editedDueDate}
+                        onChange={(e) => setEditedDueDate(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            updateTask(task._id);
+                          } else if (e.key === 'Escape') {
+                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : '');
+                            setEditingId(null);
+                          }
+                        }}
+                      />
+                    </div>
+                  </>
                 ) : (
-                  task.completed ? (
-                    <span 
-                      className="completeTaskList" 
-                      style={{opacity: 0.3 }}>{task.title}</span>
-                  ) : (
-                    <span>{task.title}</span>
-                  )
+                  <>
+                    <span className="taskTitle">{task.title}</span>
+                    {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
+                    <span className="timestamp">Created: {task.createdAt}</span>
+                    <span className="timestamp">Updated: {task.updatedAt}</span>
+                  </>
                 )}
                 <button
                   className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
+                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
@@ -193,7 +215,8 @@ function List() {
                 onClick={() => {
                   if (!task.completed) {
                     setEditingId(task._id);
-                    setEditedTask(task.title); // Set the editedTask state with the current task's title
+                    setEditedTask(task.title);
+                    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : '');
                   }
                 }}
               >
@@ -205,35 +228,58 @@ function List() {
                   onClick={(e) => { e.stopPropagation(); }}
                 />
                 {editingId === task._id && !task.completed ? (
-                  <input
-                    autoFocus
-                    type="text"
-                    value={editedTask}
-                    onChange={(e) => {
-                      console.log('Edited task changed:', e.target.value);
-                      setEditedTask(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        console.log('Enter key pressed, updating task:', task._id);
-                        updateTask(task._id);
-                      } else if (e.key === 'Escape') {
-                        console.log('Escape key pressed, resetting edited task to:', task.title);
-                        setEditedTask(task.title); // Reset to the current task's title
-                        setEditingId(null); // Stop editing
-                      }
-                    }}
-                  />
+                  <>
+                    <div className="editContainer">
+                      <label className="editLabel">Edit Task:</label>
+                      <input
+                        className='editTask'
+                        autoFocus
+                        type="text"
+                        value={editedTask}
+                        onChange={(e) => setEditedTask(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            updateTask(task._id);
+                          } else if (e.key === 'Escape') {
+                            setEditedTask(task.title);
+                            setEditingId(null);
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="editContainer">
+                      <label className="editLabel">Edit Due Date:</label>
+                      <input
+                        className='editTask'
+                        type="date"
+                        value={editedDueDate}
+                        onChange={(e) => setEditedDueDate(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            updateTask(task._id);
+                          } else if (e.key === 'Escape') {
+                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : '');
+                            setEditingId(null);
+                          }
+                        }}
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <span>{task.title}</span>
+                  <>
+                    <span className="taskTitle">{task.title}</span>
+                    {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
+                    <span className="timestamp">Created: {task.createdAt}</span>
+                    <span className="timestamp">Updated: {task.updatedAt}</span>
+                  </>
                 )}
                 <button
                   className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); console.log('Remove button clicked, removing task:', task._id); removeTask(task._id); }}
+                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
-          ))}
+            ))}
           </ul>
         </div>
       </div>
