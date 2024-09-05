@@ -69,7 +69,7 @@ app.post('/tasks', async (req, res) => {
   try {
     const newTask = {
       title: req.body.title,
-      dueDate: req.body.dueDate, // Add dueDate field
+      dueDate: new Date(req.body.dueDate).toISOString(),
     };
     const task = await taskRepository.add(newTask);
     res.send(task);

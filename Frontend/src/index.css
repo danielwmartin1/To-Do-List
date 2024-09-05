@@ -192,6 +192,7 @@ body {
   align-items: center;
   justify-content: center;
   min-width: 50rem;
+  margin: 5rem;
 }
 
 .editLabel {
@@ -240,6 +241,7 @@ body {
   text-align: center;
   text-indent: 2.5rem;
 }
+
 .listItem {
   background-position: center;
   background-color: antiquewhite;
@@ -256,6 +258,7 @@ body {
   font-family: 'Roboto', sans-serif;
   transition: background-color 0.3s ease; /* Add transition for hover effect */
 }
+
 .listItem:hover,
 .listItem:hover > * {
   background-color: #ebf79f;
@@ -309,7 +312,6 @@ body {
   align-items: center;
   width: 100%;
   padding: 1rem;
-  margin: 1rem;
   background-color: #faebd6;
   transition: background-color 0.3s ease;
 }
@@ -325,6 +327,14 @@ body {
   flex-direction: column;
   font-size: 0.85rem;
   color: #555;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  font-family: 'Arial', sans-serif;
+  color: #555;
+  font-style: italic;
+  margin: 1rem;
 }
 
 ul {
