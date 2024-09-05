@@ -8,205 +8,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.architects-daughter-regular {
-  font-family: 'Roboto', cursive;
-  font-weight: 400;
-  font-style: normal;
-}
-
-h1, h2 {
-  color: white;
-  text-align: center;
-  font-size: 2.5rem;
-  margin: 0;
-  padding: 1rem;
-  background-color: black;
-  border-bottom: 1px solid white;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
-}
-
-button {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  background-color: #4CAF50;
-  color: white;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.divider {
-  border: 0;
-  height: 1px;
-  background: #ccc;
-  margin: 2rem 0;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 1;
-}
-
-.listItem {
-  background-position: center;
-  background-color: antiquewhite;
-  background-repeat: no-repeat;
-  background-size: contain;
-  list-style-type: disc;
-  list-style-position: inside;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: row; /* Align items horizontally */
-  justify-content: space-between; /* Distribute space between elements */
-  align-items: center; /* Align items to the center vertically */
-  padding: 1rem; /* Add padding for spacing */
-  font-family: 'Roboto', sans-serif;
-  transition: background-color 0.3s ease; /* Add transition for hover effect */
-}
-
-.listItem:hover {
-  background-color: #e3ef78;
-}
-
-.taskItem:hover {
-  background-color: #e3ef78;
-}
-
-.completedTask {
-  opacity: 0.5;
-  text-decoration: line-through;
-  font-style: italic;
-}
-
-.checkbox {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  cursor: pointer;
-}
-
-.editContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 50rem;
-}
-
-.editTask {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  cursor: text;
-  width: 100%;
-  max-width: 25rem; /* Adjusted max-width */
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-.container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.inputContainer {
-  text-align: center;
-  text-indent: 2.5rem;
-}
-
-.newTask {
-  margin: 1rem;
-  padding: 1rem;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 20rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  text-align: center;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-.addButton {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.addButton:hover {
-  background-color: rgb(4, 213, 220);
-}
-
-.addButton:active {
-  background-color: rgb(0, 220, 0);
-  color: blue;
-  border: 1px solid black;
-}
-
-.removeButton {
-  background-color: rgb(220, 4, 4);
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.removeButton:hover {
-  background-color: rgb(180, 0, 0);
-}
-
-.removeButton:active {
-  background-color: rgb(255, 10, 255);
-  border: 1px solid black;
-  color: blue;
-}
-
-.createdAt, .updatedAt {
-  font-family: 'Arial', sans-serif; /* Change to desired font */
-  font-size: 0.8rem; /* Change to desired size */
-  color: #333; /* Optional: Change text color */
-  font-style: italic; /* Optional: Italic style */
-  text-align: center; /* Center the text horizontally */
-}
-
-.completedTaskTitle {
-  color: white;
-  text-align: center;
-  font-size: 1.5rem;
-  margin: 0;
-  padding: 1rem;
-  background-color: black;
-  border-bottom: 1px solid white;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
-}
-
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: black;
-  color: white;
-  text-align: center;
-  font-family: 'Roboto', sans-serif;
-}
-
 /* Timestamp styles */
 .timestamp {
   font-size: 0.85rem; 
@@ -216,120 +17,14 @@ ul {
   margin: 1rem
 }
 
-.taskItem {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #faebd6;
-  transition: background-color 0.3s ease;
-}
-
-.taskTitle {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.timestampContainer {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.85rem;
-  color: #555;
-}
-
-.taskActions {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.editLabel {
-  text-align: center;
-  margin-left: 1rem;
-  font-size: 1rem;
-  color: #555;
-}
-
-
-
 /* Media Queries */
-@media (min-width: 1024px) {
-  .taskTitle {
-    font-size: 1rem; /* Adjust the size as needed */
-  }
-}
-
-@media (min-width: 768px) {
-  .taskItem {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .taskTitle {
-    font-size: 1.5rem;
-  }
-
-  .timestampContainer {
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .taskActions {
-    justify-content: flex-start;
-    margin-top: 0;
-  }
-
-  .container {
-    justify-content: center;
-    align-items: center;
-  }
-
-  h1, h2 {
-    font-size: 2rem;
-  }
-
-  button {
-    font-size: 1.2rem;
-  }
-
-  .listItem > span {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    font-size: 1.5rem;
-  }
-
-  .footer {
-    font-size: 1.2rem;
-  }
-
-  .newTask {
-    width: 80%;
-    font-size: 1.2rem;
-  }
-
-  .addButton, .removeButton {
-    font-size: 1.2rem;
-    padding: 0.5rem;
-  }
-
-  .completedTaskTitle {
-    font-size: 1.5rem;
-  }
-}
-
 @media (max-width: 480px) {
   .container {
     justify-content: center;
     align-items: center;
   }
 
-  h1, h2 {
+  .h1, .h2 {
     font-size: 1.5rem;
   }
 
@@ -359,4 +54,261 @@ ul {
     color: #555; 
     font-style: italic; 
   }
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  .container {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .h1, .h2 {
+    font-size: 2rem;
+  }
+
+  button {
+    font-size: 1.2rem;
+  }
+
+  .listItem > span {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .footer {
+    font-size: 1.2rem;
+  }
+
+  .newTask {
+    width: 80%;
+    font-size: 1.2rem;
+  }
+
+  .completedTaskTitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* Media Queries */
+@media (min-width: 1024px) {
+  .taskTitle {
+    font-size: 1rem; /* Adjust the size as needed */
+  }
+}
+
+.architects-daughter-regular {
+  font-family: 'Roboto', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.button {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.checkbox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Add transition for smooth effect */
+}
+
+.completedTask {
+  opacity: 0.5;
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+.completedTaskTitle {
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 0;
+  padding: 1rem;
+  background-color: black;
+  border-bottom: 1px solid white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.createdAt, .updatedAt {
+  font-family: 'Arial', sans-serif; /* Change to desired font */
+  font-size: 0.8rem; /* Change to desired size */
+  color: #333; /* Optional: Change text color */
+  font-style: italic; /* Optional: Italic style */
+  text-align: center; /* Center the text horizontally */
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #ccc;
+  margin: 2rem 0;
+}
+
+.editContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50rem;
+}
+
+.editLabel {
+  text-align: center;
+  margin-left: 1rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.editTask {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  cursor: text;
+  width: 100%;
+  max-width: 25rem; /* Adjusted max-width */
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.h1, .h2 {
+  color: white;
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 1rem;
+  background-color: black;
+  border-bottom: 1px solid white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
+.inputContainer {
+  text-align: center;
+  text-indent: 2.5rem;
+}
+.listItem {
+  background-position: center;
+  background-color: antiquewhite;
+  background-repeat: no-repeat;
+  background-size: contain;
+  list-style-type: disc;
+  list-style-position: inside;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row; /* Change flex-direction to row */
+  justify-content: space-between;
+  align-items: center; /* Align items to the center vertically */
+  padding: 1rem;
+  font-family: 'Roboto', sans-serif;
+  transition: background-color 0.3s ease; /* Add transition for hover effect */
+}
+.listItem:hover,
+.listItem:hover > * {
+  background-color: #ebf79f;
+}
+
+/* Override for the remove button */
+.listItem:hover .removeButton {
+  background-color: rgb(195, 3, 3); 
+}
+
+.newTask {
+  margin: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 20rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  text-align: center;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+.removeButton {
+  background-color: rgb(220, 4, 4);
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.removeButton:active {
+  background-color: rgb(255, 10, 255);
+  border: 1px solid black;
+  color: blue;
+}
+
+.taskActions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.taskItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem;
+  background-color: #faebd6;
+  transition: background-color 0.3s ease;
+}
+
+.taskTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timestampContainer {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 1;
 }

@@ -190,10 +190,12 @@ function List() {
                   </>
                 ) : (
                   <div className="taskItem">
-                    <span className="taskTitle">{task.title}</span>
-                    {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
-                    <span className="timestamp">Created: {task.createdAt}</span>
-                    <span className="timestamp">Updated: {task.updatedAt}</span>
+                      <span className="taskTitle">{task.title}</span>
+                      <div className="timestampContainer">
+                        {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
+                        <span className="timestamp">Created: {task.createdAt}</span>
+                        <span className="timestamp">Updated: {task.updatedAt}</span>
+                      </div>
                   </div>
                 )}
                 <button
@@ -273,9 +275,6 @@ function List() {
                       {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
                       <span className="timestamp">Created: {task.createdAt}</span>
                       <span className="timestamp">Updated: {task.updatedAt}</span>
-                    </div>
-                    <div className="taskActions">
-                      {/* Your remove button and other actions here */}
                     </div>
                   </div>
                 )}
