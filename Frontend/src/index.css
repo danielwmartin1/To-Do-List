@@ -104,6 +104,27 @@ body {
   font-style: normal;
 }
 
+.addButton {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #419c46;
+}
+
+.addButton:active {
+  background-color: #50ea58;
+}
+
 .button {
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;
@@ -128,7 +149,6 @@ body {
 
 .completedTask {
   opacity: 0.5;
-  text-decoration: line-through;
   font-style: italic;
 }
 
@@ -311,4 +331,15 @@ ul {
   list-style-type: none;
   padding: 0;
   margin: 1;
+}
+
+.projectTitle {
+  text-align: center;
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem;
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
 }
