@@ -151,83 +151,86 @@ function List() {
 
         <div className="todo-container" onClick={() => setEditingId(null)}>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
-            {taskList.filter(task => !task.completed).map((task) => (
-              <li
-                className={`listItem ${task.completed ? 'completedTask' : ''}`}
-                key={task._id}
-                onClick={() => {
-                  if (!task.completed) {
-                    setEditingId(task._id);
-                    setEditedTask(task.title);
-                    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                  } else if (editingId === task._id) {
-                    setEditingId(null);
-                  }
-                }}
-              >
-                <input
-                  className="checkbox"
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation(); }}
-                />
-                {editingId === task._id && !task.completed ? (
-                  <>
-                    <div className="editContainer">
-                      <label className="editLabel">Edit Task:</label>
-                      <input
-                        className='editTask'
-                        autoFocus
-                        type="text"
-                        value={editedTask}
-                        onChange={(e) => setEditedTask(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            updateTask(task._id);
-                          } else if (e.key === 'Escape') {
-                            setEditedTask(task.title);
-                            setEditingId(null);
-                          }
-                        }}
-                      />
+            {taskList.filter(task => !task.completed).map((task) => {
+              const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
+              return (
+                <li
+                  className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
+                  key={task._id}
+                  onClick={() => {
+                    if (!task.completed) {
+                      setEditingId(task._id);
+                      setEditedTask(task.title);
+                      setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+                    } else if (editingId === task._id) {
+                      setEditingId(null);
+                    }
+                  }}
+                >
+                  <input
+                    className="checkbox"
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                    onClick={(e) => { e.stopPropagation(); }}
+                  />
+                  {editingId === task._id && !task.completed ? (
+                    <>
+                      <div className="editContainer">
+                        <label className="editLabel">Edit Task:</label>
+                        <input
+                          className='editTask'
+                          autoFocus
+                          type="text"
+                          value={editedTask}
+                          onChange={(e) => setEditedTask(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              updateTask(task._id);
+                            } else if (e.key === 'Escape') {
+                              setEditedTask(task.title);
+                              setEditingId(null);
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="editContainer">
+                        <label className="editLabel">Edit Due Date:</label>
+                        <input
+                          className='editTask'
+                          type="datetime-local"
+                          value={editedDueDate}
+                          onChange={(e) => setEditedDueDate(e.target.value)}
+                          min={getCurrentDateTime()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              updateTask(task._id);
+                            } else if (e.key === 'Escape') {
+                              setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+                              setEditingId(null);
+                            }
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
+                      <span className="taskTitle">{task.title}</span>
+                      <div className="timestampContainer">
+                        {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdueDueDate' : ''}`}>Due: {task.dueDate}</span>}
+                        <span className="timestamp">Created: {task.createdAt}</span>
+                        <span className="timestamp">Updated: {task.updatedAt}</span>
+                      </div>
                     </div>
-                    <div className="editContainer">
-                      <label className="editLabel">Edit Due Date:</label>
-                      <input
-                        className='editTask'
-                        type="datetime-local"
-                        value={editedDueDate}
-                        onChange={(e) => setEditedDueDate(e.target.value)}
-                        min={getCurrentDateTime()}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            updateTask(task._id);
-                          } else if (e.key === 'Escape') {
-                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                            setEditingId(null);
-                          }
-                        }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className={`taskItem ${editingId === task._id ? 'editing' : ''}`}>
-                    <span className="taskTitle">{task.title}</span>
-                    <div className="timestampContainer">
-                      {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
-                      <span className="timestamp">Created: {task.createdAt}</span>
-                      <span className="timestamp">Updated: {task.updatedAt}</span>
-                    </div>
-                  </div>
-                )}
-                <button
-                  className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
-                  aria-label={`Remove task "${task.title}"`}
-                >Remove</button>
-              </li>
-            ))}
+                  )}
+                  <button
+                    className="removeButton"
+                    onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                    aria-label={`Remove task "${task.title}"`}
+                  >Remove</button>
+                </li>
+              );
+            })}
           </ul>
 
           <hr className="divider" />

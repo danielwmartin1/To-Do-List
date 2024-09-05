@@ -282,6 +282,11 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.overdueIncompleteTask {
+  font-style: italic;
+  color: red;
+}
+
 .removeButton {
   background-color: rgb(220, 4, 4);
   color: white;
