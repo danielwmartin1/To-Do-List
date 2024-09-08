@@ -6,9 +6,9 @@ class TaskRepository {
     const tasks = await Tasks.find();
     return tasks.map(task => ({
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     }));
   }
 
@@ -17,9 +17,9 @@ class TaskRepository {
     if (!task) return null;
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     };
   }
 
@@ -28,9 +28,9 @@ class TaskRepository {
     await task.save();
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     };
   }
 
@@ -39,9 +39,9 @@ class TaskRepository {
     if (!task) return null;
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     };
   }
 
@@ -50,9 +50,9 @@ class TaskRepository {
     if (!task) return null;
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     };
   }
 
@@ -61,9 +61,9 @@ class TaskRepository {
     if (!task) return null;
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
     };
   }
 }

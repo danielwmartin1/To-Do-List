@@ -35,8 +35,10 @@ const TaskSchema = new mongoose.Schema({
 
 // Pre-save hook to format dueDate as ISO string
 TaskSchema.pre('save', function (next) {
+  const timeZone = 'America/New_York'; // Specify your desired timezone
   if (this.dueDate) {
-    this.dueDate = new Date(this.dueDate).toISOString();
+    this.dueDate = formatInTimeZone(new Date(this.dueDate), 
+      timeZone, 'yyyy-MM-dd HH:mm:ssXXX');
   }
   next();
 });
