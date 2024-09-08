@@ -6,67 +6,49 @@ class TaskRepository {
     const tasks = await Tasks.find();
     return tasks.map(task => ({
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
     }));
   }
 
   async getById(id) {
-      const task = await Tasks.findById(id);
-      if (!task) return null;
-      const taskId = task._id;
-      const formattedDueDate = task.getFormattedDueDate();
-      console.log(formattedDueDate);
-      return {
-        ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      };
-    }
+    const task = await Tasks.findById(id);
+    if (!task) return null;
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
+  }
 
   async add(newTask) {
-    const task = new Tasks(newTask);
+    const task = new Tasks({
+      ...newTask,
+      dueDate: newTask.dueDate ? formatInTimeZone(new Date(newTask.dueDate), 'America/New_York', 'PPpp') : null,
+    });
     await task.save();
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
     };
   }
 
-  async update(id, updatedTaskData) {
-    const task = await Tasks.findByIdAndUpdate(id, updatedTaskData, { new: true });
+  async update(taskId, updatedTask) {
+    const task = await Tasks.findByIdAndUpdate(taskId, {
+      ...updatedTask,
+      dueDate: updatedTask.dueDate ? formatInTimeZone(new Date(updatedTask.dueDate), 'America/New_York', 'PPpp') : null,
+      updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'),
+    }, { new: true });
     if (!task) return null;
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-    };
-  }
-
-  async completed(id, completedTaskData) {
-    const task = await Tasks.findByIdAndUpdate(id, completedTaskData, { new: true });
-    if (!task) return null;
-    return {
-      ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-    };
-  }
-
-  async delete(id) {
-    const task = await Tasks.findByIdAndDelete(id);
-    if (!task) return null;
-    return {
-      ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
     };
   }
 }
