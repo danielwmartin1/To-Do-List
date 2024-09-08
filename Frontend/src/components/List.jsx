@@ -123,6 +123,12 @@ function List() {
     return now.toISOString().slice(0, 16);
   };
 
+  const startEditing = (task) => {
+    setEditingId(task._id);
+    setEditedTask(task.title);
+    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+  };
+
   return (
     <React.StrictMode>
       <div id='container'>
@@ -157,15 +163,6 @@ function List() {
                 <li
                   className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                   key={task._id}
-                  onClick={() => {
-                    if (!task.completed) {
-                      setEditingId(task._id);
-                      setEditedTask(task.title);
-                      setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                    } else if (editingId === task._id) {
-                      setEditingId(null);
-                    }
-                  }}
                 >
                   <input
                     className="checkbox"
@@ -223,11 +220,22 @@ function List() {
                       </div>
                     </div>
                   )}
-                  <button
-                    className="removeButton"
-                    onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
-                    aria-label={`Remove task "${task.title}"`}
-                  >Remove</button>
+                  <div className="taskActions">
+                    {editingId !== task._id && (
+                      <>
+                        <button
+                          className="editButton"
+                          onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                          aria-label={`Edit task "${task.title}"`}
+                        >Edit</button>
+                        <button
+                          className="removeButton"
+                          onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                          aria-label={`Remove task "${task.title}"`}
+                        >Remove</button>
+                      </>
+                    )}
+                  </div>
                 </li>
               );
             })}
@@ -241,15 +249,6 @@ function List() {
               <li
                 className={`listItem ${task.completed ? 'completedTask' : ''}`}
                 key={task._id}
-                onClick={() => {
-                  if (!task.completed) {
-                    setEditingId(task._id);
-                    setEditedTask(task.title);
-                    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                  } else {
-                    setEditingId(null);
-                  }
-                }}
               >
                 <input
                   className="checkbox"
@@ -310,11 +309,22 @@ function List() {
                     </div>
                   </div>
                 )}
-                <button
-                  className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
-                  aria-label={`Remove task "${task.title}"`}
-                >Remove</button>
+                <div className="taskActions">
+                  {editingId !== task._id && (
+                    <>
+                      <button
+                        className="editButton"
+                        onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                        aria-label={`Edit task "${task.title}"`}
+                      >Edit</button>
+                      <button
+                        className="removeButton"
+                        onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                        aria-label={`Remove task "${task.title}"`}
+                      >Remove</button>
+                    </>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
