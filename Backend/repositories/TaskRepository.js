@@ -13,15 +13,18 @@ class TaskRepository {
   }
 
   async getById(id) {
-    const task = await Tasks.findById(id);
-    if (!task) return null;
-    return {
-      ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
-      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
-    };
-  }
+      const task = await Tasks.findById(id);
+      if (!task) return null;
+      const taskId = task._id;
+      const formattedDueDate = task.getFormattedDueDate();
+      console.log(formattedDueDate);
+      return {
+        ...task.toObject(),
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MM/dd/yyyy HH:mm:ss') : null,
+        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MM/dd/yyyy HH:mm:ss'),
+      };
+    }
 
   async add(newTask) {
     const task = new Tasks(newTask);

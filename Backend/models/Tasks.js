@@ -1,11 +1,10 @@
-import mongoose, { get } from 'mongoose';
-import { format, formatInTimeZone } from 'date-fns';
+import mongoose from 'mongoose';
 import { formatInTimeZone } from 'date-fns-tz';
 
 // Function to get the current date in a specific timezone
-const getFormattedDate = () => {
+const getFormattedDate = (date) => {
   const timeZone = 'America/New_York'; // Specify your desired timezone
-  return formatInTimeZone(new Date(), timeZone, 'yyyy-MM-dd HH:mm:ssXXX');
+  return formatInTimeZone(date, timeZone, 'MM:dd:yyyy hh:mm a \'EST\'');
 };
 
 // Create a schema
@@ -20,28 +19,39 @@ const TaskSchema = new mongoose.Schema({
   },
   createdAt: {
     type: String,
-    default: getFormattedDate,
+    default: () => getFormattedDate(new Date()),
   },
   updatedAt: {
     type: String,
-    default: getFormattedDate,
+    default: () => getFormattedDate(new Date()),
   },
   dueDate: {
-    type: String, // Change to String to store ISO string
+    type: String, // Change to String to store formatted string
     required: false,
-    default: getFormattedDate,
+    default: () => getFormattedDate(new Date()),
   },
 }, { timestamps: true }); // Add timestamps option
 
-// Pre-save hook to format dueDate as ISO string
+// Pre-save hook to format dueDate, createdAt, and updatedAt as formatted strings
 TaskSchema.pre('save', function (next) {
-  const timeZone = 'America/New_York'; // Specify your desired timezone
   if (this.dueDate) {
-    this.dueDate = formatInTimeZone(new Date(this.dueDate), 
-      timeZone, 'yyyy-MM-dd HH:mm:ssXXX');
+    this.dueDate = getFormattedDate(new Date(this.dueDate));
   }
+  this.createdAt = getFormattedDate(new Date(this.createdAt));
+  this.updatedAt = getFormattedDate(new Date());
   next();
 });
+
+// Add a toJSON method to format dates before sending to frontend
+TaskSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  obj.createdAt = getFormattedDate(new Date(obj.createdAt));
+  obj.updatedAt = getFormattedDate(new Date(obj.updatedAt));
+  if (obj.dueDate) {
+    obj.dueDate = getFormattedDate(new Date(obj.dueDate));
+  }
+  return obj;
+};
 
 // Create a model
 const Tasks = mongoose.model('Tasks', TaskSchema);

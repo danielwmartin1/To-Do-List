@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import '../index.css';
 
 function List() {
@@ -19,9 +19,9 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: format(new Date(task.updatedAt), 'PPpp'),
-        createdAt: format(new Date(task.createdAt), 'PPpp'),
-        dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -47,9 +47,9 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate });
       const formattedTask = {
         ...response.data,
-        updatedAt: format(new Date(response.data.updatedAt), 'PPpp'),
-        createdAt: format(new Date(response.data.createdAt), 'PPpp'),
-        dueDate: response.data.dueDate ? format(new Date(response.data.dueDate), 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
@@ -70,7 +70,12 @@ function List() {
       const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, title: editedTask, dueDate: editedDueDate ? format(new Date(editedDueDate), 'PPpp') : null, updatedAt: format(new Date(), 'PPpp') };
+          return { 
+            ...task, 
+            title: editedTask, 
+            dueDate: editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'PPpp') : null, 
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
+          };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -98,7 +103,11 @@ function List() {
       await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, completed: !completed, updatedAt: format(new Date(), 'PPpp') };
+          return { 
+            ...task, 
+            completed: !completed, 
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
+          };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -120,20 +129,20 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    return now.toISOString().slice(0, 16);
+    const estTime = formatInTimeZone(now, 'America/New_York', 'PPpp'); // Human-readable format
+    return estTime;
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : '');
   };
 
   return (
     <React.StrictMode>
       <div id='container'>
         {error && <div className="error">{error}</div>}
-
         <div className="inputContainer">
           <input
             autoFocus
@@ -203,7 +212,7 @@ function List() {
                             if (e.key === 'Enter') {
                               updateTask(task._id);
                             } else if (e.key === 'Escape') {
-                              setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+                              setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
                               setEditingId(null);
                             }
                           }}
@@ -270,7 +279,7 @@ function List() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
-                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+                            setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
                           } else if (e.key === 'Escape') {
                             setEditedTask(task.title);
                             setEditingId(null);
@@ -292,7 +301,7 @@ function List() {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
                           } else if (e.key === 'Escape') {
-                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
+                            setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
                             setEditingId(null);
                           }
                         }}
