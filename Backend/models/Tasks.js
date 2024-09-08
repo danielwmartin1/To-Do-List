@@ -1,5 +1,5 @@
 import mongoose, { get } from 'mongoose';
-import { format } from 'date-fns';
+import { format, formatInTimeZone } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 
 // Function to get the current date in a specific timezone
