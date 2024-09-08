@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import moment from 'moment-timezone';
 import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import '../index.css';
 
 function List() {
@@ -19,9 +21,9 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: format(new Date(task.updatedAt), 'PPpp'),
-        createdAt: format(new Date(task.createdAt), 'PPpp'),
-        dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+        updatedAt: moment(task.updatedAt).tz('America/New_York').format('PPpp'),
+        createdAt: moment(task.createdAt).tz('America/New_York').format('PPpp'),
+        dueDate: task.dueDate ? moment(task.dueDate).tz('America/New_York').format('PPpp') : null,
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -47,9 +49,9 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate });
       const formattedTask = {
         ...response.data,
-        updatedAt: format(new Date(response.data.updatedAt), 'PPpp'),
-        createdAt: format(new Date(response.data.createdAt), 'PPpp'),
-        dueDate: response.data.dueDate ? format(new Date(response.data.dueDate), 'PPpp') : null,
+        updatedAt: moment(response.data.updatedAt).tz('America/New_York').format('PPpp'),
+        createdAt: moment(response.data.createdAt).tz('America/New_York').format('PPpp'),
+        dueDate: response.data.dueDate ? moment(response.data.dueDate).tz('America/New_York').format('PPpp') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
@@ -66,18 +68,19 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-      // eslint-disable-next-line
       const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, title: editedTask, dueDate: editedDueDate ? format(new Date(editedDueDate), 'PPpp') : null, updatedAt: format(new Date(), 'PPpp') };
+          return {
+            ...response.data,
+            updatedAt: moment(response.data.updatedAt).tz('America/New_York').format('PPpp'),
+            createdAt: moment(response.data.createdAt).tz('America/New_York').format('PPpp'),
+            dueDate: response.data.dueDate ? moment(response.data.dueDate).tz('America/New_York').format('PPpp') : null,
+          };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
-      setEditingId(null);
-      setEditedTask('');
-      setEditedDueDate('');
     } catch (error) {
       handleError(error);
     }
@@ -86,7 +89,7 @@ function List() {
   const removeTask = async (taskId) => {
     try {
       await axios.delete(`${uri}/tasks/${taskId}`);
-      const updatedTaskList = taskList.filter((task) => task._id !== taskId);
+      const updatedTaskList = taskList.filter(task => task._id !== taskId);
       setTaskList(updatedTaskList);
     } catch (error) {
       handleError(error);
@@ -95,10 +98,15 @@ function List() {
 
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      const response = await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
-          return { ...task, completed: !completed, updatedAt: format(new Date(), 'PPpp') };
+          return {
+            ...response.data,
+            updatedAt: moment(response.data.updatedAt).tz('America/New_York').format('PPpp'),
+            createdAt: moment(response.data.createdAt).tz('America/New_York').format('PPpp'),
+            dueDate: response.data.dueDate ? moment(response.data.dueDate).tz('America/New_York').format('PPpp') : null,
+          };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -110,11 +118,9 @@ function List() {
 
   const handleError = (error) => {
     if (error.response) {
-      setError(`Error: ${error.response.status} - ${error.response.data}`);
-    } else if (error.request) {
-      setError("Network error: No response received from server");
+      setError(error.response.data);
     } else {
-      setError(`Error: ${error.message}`);
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -122,7 +128,12 @@ function List() {
     const now = new Date();
     return now.toISOString().slice(0, 16);
   };
-
+// eslint-disable-next-line
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, 'PPpp');
+  };
+  
   return (
     <React.StrictMode>
       <div id='container'>
@@ -157,22 +168,14 @@ function List() {
                 <li
                   className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                   key={task._id}
-                  onClick={() => {
-                    if (!task.completed) {
-                      setEditingId(task._id);
-                      setEditedTask(task.title);
-                      setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                    } else if (editingId === task._id) {
-                      setEditingId(null);
-                    }
-                  }}
+                  onClick={() => setEditingId(task._id)}
                 >
                   <input
                     className="checkbox"
                     type="checkbox"
                     checked={task.completed}
                     onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                    onClick={(e) => { e.stopPropagation(); }}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   {editingId === task._id && !task.completed ? (
                     <>
@@ -187,9 +190,6 @@ function List() {
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedTask(task.title);
-                              setEditingId(null);
                             }
                           }}
                         />
@@ -205,9 +205,6 @@ function List() {
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                              setEditingId(null);
                             }
                           }}
                         />
@@ -225,7 +222,10 @@ function List() {
                   )}
                   <button
                     className="removeButton"
-                    onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeTask(task._id);
+                    }}
                     aria-label={`Remove task "${task.title}"`}
                   >Remove</button>
                 </li>
@@ -241,22 +241,14 @@ function List() {
               <li
                 className={`listItem ${task.completed ? 'completedTask' : ''}`}
                 key={task._id}
-                onClick={() => {
-                  if (!task.completed) {
-                    setEditingId(task._id);
-                    setEditedTask(task.title);
-                    setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                  } else {
-                    setEditingId(null);
-                  }
-                }}
+                onClick={() => setEditingId(task._id)}
               >
                 <input
                   className="checkbox"
                   type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                  onClick={(e) => { e.stopPropagation(); }}
+                  onClick={(e) => e.stopPropagation()}
                 />
                 {editingId === task._id && !task.completed ? (
                   <>
@@ -271,12 +263,6 @@ function List() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
-                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                          } else if (e.key === 'Escape') {
-                            setEditedTask(task.title);
-                            setEditingId(null);
-                          } else if (e.key === 'Tab') {
-                            setEditingId(null);
                           }
                         }}
                       />
@@ -292,9 +278,6 @@ function List() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             updateTask(task._id);
-                          } else if (e.key === 'Escape') {
-                            setEditedDueDate(task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd\'T\'HH:mm') : '');
-                            setEditingId(null);
                           }
                         }}
                       />
@@ -312,7 +295,10 @@ function List() {
                 )}
                 <button
                   className="removeButton"
-                  onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeTask(task._id);
+                  }}
                   aria-label={`Remove task "${task.title}"`}
                 >Remove</button>
               </li>
