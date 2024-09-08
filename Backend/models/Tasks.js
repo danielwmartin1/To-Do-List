@@ -27,11 +27,19 @@ const TaskSchema = new mongoose.Schema({
     default: getFormattedDate,
   },
   dueDate: {
-    type: Date,
+    type: String, // Change to String to store ISO string
     required: false,
     default: getFormattedDate,
   },
 }, { timestamps: true }); // Add timestamps option
+
+// Pre-save hook to format dueDate as ISO string
+TaskSchema.pre('save', function (next) {
+  if (this.dueDate) {
+    this.dueDate = new Date(this.dueDate).toISOString();
+  }
+  next();
+});
 
 // Create a model
 const Tasks = mongoose.model('Tasks', TaskSchema);
