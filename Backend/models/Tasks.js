@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { get } from 'mongoose';
 import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 
@@ -24,11 +24,12 @@ const TaskSchema = new mongoose.Schema({
   },
   updatedAt: {
     type: String,
-    default: getFormattedDate
+    default: getFormattedDate,
   },
   dueDate: {
     type: Date,
     required: false,
+    default: getFormattedDate,
   },
 }, { timestamps: true }); // Add timestamps option
 

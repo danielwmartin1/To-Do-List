@@ -1,65 +1,70 @@
+import { formatInTimeZone } from 'date-fns-tz';
 import Tasks from '../models/Tasks.js';
 
 class TaskRepository {
-  // Get all tasks
   async getAll() {
-    try {
-      return await Tasks.find();
-    } catch (error) {
-      console.error('Error retrieving tasks:', error);
-      throw error;
-    }
+    const tasks = await Tasks.find();
+    return tasks.map(task => ({
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    }));
   }
 
-  // Get a single task
   async getById(id) {
-    try {
-      return await Tasks.findById(id);
-    } catch (error) {
-      console.error(`Error retrieving task with id ${id}:`, error);
-      throw error;
-    }
+    const task = await Tasks.findById(id);
+    if (!task) return null;
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
   }
 
-  // Add a new task
-  async add(taskData) {
-    try {
-      const task = new Tasks(taskData);
-      return await task.save();
-    } catch (error) {
-      console.error('Error adding task:', error);
-      throw error;
-    }
+  async add(newTask) {
+    const task = new Tasks(newTask);
+    await task.save();
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
   }
 
-  // Update a task
-  async update(id, taskData) {
-    try {
-      return Tasks.findByIdAndUpdate(id, taskData, { new: true });
-    } catch (error) {
-      console.error(`Error updating task with id ${id}:`, error);
-      throw error;
-    }
+  async update(id, updatedTaskData) {
+    const task = await Tasks.findByIdAndUpdate(id, updatedTaskData, { new: true });
+    if (!task) return null;
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
   }
 
-  async completed(id, taskData) {
-    try {
-      const completedTask = await Tasks.findByIdAndUpdate(id, taskData, { new: true });
-      return completedTask;
-    } catch (error) {
-      console.error(`Error updating task with id ${id}:`, error);
-      throw error;
-    }
+  async completed(id, completedTaskData) {
+    const task = await Tasks.findByIdAndUpdate(id, completedTaskData, { new: true });
+    if (!task) return null;
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
   }
 
-  // Delete a task
   async delete(id) {
-    try {
-      return await Tasks.findByIdAndDelete(id);
-    } catch (error) {
-      console.error(`Error deleting task with id ${id}:`, error);
-      throw error;
-    }
+    const task = await Tasks.findByIdAndDelete(id);
+    if (!task) return null;
+    return {
+      ...task.toObject(),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
+      createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
+      updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+    };
   }
 }
 
