@@ -191,8 +191,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 50rem;
-  margin: 5rem;
 }
 
 .editLabel {
@@ -208,8 +206,6 @@ body {
   border-radius: 5px;
   border: 1px solid black;
   cursor: text;
-  width: 100%;
-  max-width: 25rem; /* Adjusted max-width */
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
 }
@@ -254,7 +250,8 @@ body {
   flex-direction: row; /* Change flex-direction to row */
   justify-content: space-between;
   align-items: center; /* Align items to the center vertically */
-  padding: 1rem;
+  margin: 0rem;
+  padding: 0rem;
   font-family: 'Roboto', sans-serif;
   transition: background-color 0.3s ease; /* Add transition for hover effect */
 }
@@ -316,7 +313,8 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 1rem;
+  padding: 0rem;
+  margin: 0rem;
   background-color: #faebd6;
   transition: background-color 0.3s ease;
 }
