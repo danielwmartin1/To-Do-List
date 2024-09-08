@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import { format } from 'date-fns';
 import TaskRepository from './repositories/TaskRepository.js';
 
 // Initialize Express application
@@ -35,13 +36,25 @@ connectDB();
 const taskRepository = new TaskRepository();
 app.get('/', async (req, res) => {
   const taskList = await taskRepository.getAll();
-  res.send(taskList);
+  const formattedTaskList = taskList.map(task => ({
+    ...task,
+    createdAt: format(new Date(task.createdAt), 'PPpp'),
+    updatedAt: format(new Date(task.updatedAt), 'PPpp'),
+    dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+  }));
+  res.send(formattedTaskList);
 });
 app.get('/tasks', async (req, res) => {
   try {
     const taskList = await taskRepository.getAll();
-    res.send(taskList);
-    console.log('taskList', taskList);
+    const formattedTaskList = taskList.map(task => ({
+      ...task,
+      createdAt: format(new Date(task.createdAt), 'PPpp'),
+      updatedAt: format(new Date(task.updatedAt), 'PPpp'),
+      dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+    }));
+    res.send(formattedTaskList);
+    console.log('taskList', formattedTaskList);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -56,8 +69,14 @@ app.get('/tasks/:id', async (req, res) => {
     if (!task) {
       return res.status(404).send('Task not found');
     }
-    console.log('task', task);
-    res.send(task);
+    const formattedTask = {
+      ...task,
+      createdAt: format(new Date(task.createdAt), 'PPpp'),
+      updatedAt: format(new Date(task.updatedAt), 'PPpp'),
+      dueDate: task.dueDate ? format(new Date(task.dueDate), 'PPpp') : null,
+    };
+    console.log('task', formattedTask);
+    res.send(formattedTask);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -69,7 +88,9 @@ app.post('/tasks', async (req, res) => {
   try {
     const newTask = {
       title: req.body.title,
-      dueDate: new Date(req.body.dueDate).toISOString(),
+      dueDate: req.body.dueDate ? format(new Date(req.body.dueDate), 'PPpp') : null,
+      createdAt: format(new Date(), 'PPpp'),
+      updatedAt: format(new Date(), 'PPpp'),
     };
     const task = await taskRepository.add(newTask);
     res.send(task);
@@ -84,7 +105,10 @@ app.post('/tasks', async (req, res) => {
 app.put('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedTaskData = req.body;
+    const updatedTaskData = {
+      ...req.body,
+      updatedAt: format(new Date(), 'PPpp'),
+    };
     const task = await taskRepository.update(id, updatedTaskData);
     res.send(task); // Send back the updated task as a response
   } catch (error) {
@@ -97,7 +121,10 @@ app.put('/tasks/:id', async (req, res) => {
 app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const completedTaskData = req.body;
+    const completedTaskData = {
+      ...req.body,
+      updatedAt: format(new Date(), 'PPpp'),
+    };
     const completedTask = await taskRepository.completed(id, completedTaskData);
     res.send(completedTask); // Send back the updated task as a response
   } catch (error) {
