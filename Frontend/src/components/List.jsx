@@ -11,6 +11,7 @@ function List() {
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
+  const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
@@ -139,6 +140,28 @@ function List() {
     setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : '');
   };
 
+  const handleSortChange = (e) => {
+    const order = e.target.value;
+    setSortOrder(order);
+    const sorted = [...taskList].sort((a, b) => {
+      const [key, direction] = order.split('-');
+      if (key === 'title') {
+        if (direction === 'asc') {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else {
+        if (direction === 'asc') {
+          return new Date(a[key]) - new Date(b[key]);
+        } else {
+          return new Date(b[key]) - new Date(a[key]);
+        }
+      }
+    });
+    setTaskList(sorted);
+  };
+
   return (
     <React.StrictMode>
       <div id='container'>
@@ -162,6 +185,20 @@ function List() {
             placeholder="Due Date"
           />
           <button className='addButton' onClick={addTask}>Add Task</button>
+        </div>
+
+        <div className="sortSection">
+          <label htmlFor="sortTasks">Sort by: </label>
+          <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
+            <option value="updatedAt-desc">Updated Date Descending</option>
+            <option value="updatedAt-asc">Updated Date Ascending</option>
+            <option value="dueDate-desc">Due Date Descending</option>
+            <option value="dueDate-asc">Due Date Ascending</option>
+            <option value="createdAt-desc">Created Date Descending</option>
+            <option value="createdAt-asc">Created Date Ascending</option>
+            <option value="title-asc">Title Ascending</option>
+            <option value="title-desc">Title Descending</option>
+          </select>
         </div>
 
         <div className="todo-container" onClick={() => setEditingId(null)}>

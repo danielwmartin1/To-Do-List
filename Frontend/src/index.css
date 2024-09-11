@@ -330,6 +330,25 @@ body {
   color: blue;
 }
 
+.sortSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.sortSection label {
+  margin-right: 0.5rem;
+}
+
+.sortSection select {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+
 .taskActions {
   display: flex;
   justify-content: flex-end;
