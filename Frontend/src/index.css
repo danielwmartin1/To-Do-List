@@ -14,18 +14,31 @@ body {
   font-family: 'Arial', sans-serif; 
   color: #555; 
   font-style: italic; 
-  margin: 1rem
+  margin: 1rem;
 }
 
 /* Media Queries */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .container {
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+  }
+
+  .editContainer {
+    flex-direction: column !important;
+    max-width: fit-content;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
   }
 
   .h1, .h2 {
     font-size: 1.5rem;
+  }
+
+  .listItem {
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
   }
 
   .listItem > span {
@@ -54,6 +67,12 @@ body {
     color: #555; 
     font-style: italic; 
   }
+
+  .inputContainer {
+    width: 90%; /* Adjust width for smaller screens */
+    padding: 0.5rem; /* Add padding for better spacing */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+  }
 }
 
 /* Media Queries */
@@ -61,6 +80,10 @@ body {
   .container {
     justify-content: center;
     align-items: center;
+  }
+
+  .editContainer {
+    max-width: fit-content;
   }
 
   .h1, .h2 {
@@ -257,7 +280,6 @@ body {
 
 .inputContainer {
   text-align: center;
-  text-indent: 2.5rem;
 }
 
 .listItem {
@@ -305,13 +327,14 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-.overdueIncompleteTask {
-  font-style: italic;
-  color: red;
+.overdue {
+  color: red !important;
+  font-weight: bold !important;
+  font-size: 1rem !important;
 }
 
 .removeButton {
-  background-color: red ;
+  background-color: red;
   color: white;
   border: none;
   padding: 0.5rem;
@@ -377,6 +400,7 @@ body {
 .timestampContainer {
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* Align items to the start of the container */
   font-size: 0.85rem;
   color: #555;
 }

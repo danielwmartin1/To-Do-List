@@ -11,7 +11,7 @@ function List() {
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
-  const [sortOrder, setSortOrder] = useState('updatedAt-desc');
+  const [sortOrder, setSortOrder] = useState('editedDueDate-asc');  // Default sort order
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
@@ -236,7 +236,6 @@ function List() {
                             }
                           }}
                         />
-                        />
                       </div>
                       <div className="editContainer">
                         <label className="editLabel">Edit Due Date:</label>
@@ -261,7 +260,7 @@ function List() {
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
                       <span className="taskTitle">{task.title}</span>
                       <div className="timestampContainer">
-                        {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdueDueDate' : ''}`}>Due: {task.dueDate}</span>}
+                        {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                         <span className="timestamp">Created: {task.createdAt}</span>
                         <span className="timestamp">Updated: {task.updatedAt}</span>
                       </div>
@@ -350,7 +349,7 @@ function List() {
                   <div className="taskItem">
                     <span className="taskTitle">{task.title}</span>
                     <div className="timestampContainer">
-                      {task.dueDate && <span className="timestamp">Due: {task.dueDate}</span>}
+                      {task.dueDate && <span className={`timestamp ${task.completed ? 'completed' : ''}`}>Due: {task.dueDate}</span>}
                       <span className="timestamp">Created: {task.createdAt}</span>
                       <span className="timestamp">Updated: {task.updatedAt}</span>
                     </div>
