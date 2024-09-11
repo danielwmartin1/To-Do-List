@@ -3,6 +3,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
+import { formatInTimeZone } from 'date-fns-tz';
+import Task from './models/Tasks.js'; // Ensure you import the Task model
 
 // Initialize Express application
 const app = express();
@@ -74,16 +76,18 @@ app.post('/tasks', async (req, res) => {
 });
 
 // Update a task
-app.put('/tasks/:id', async (req, res) => {
+app.put('/tasks/:id/toggleCompletion', async (req, res) => {
   try {
-    const id = req.params.id;
-    const updatedTaskData = {
-      ...req.body,
-      dueDate: req.body.dueDate ? formatInTimeZone(new Date(req.body.dueDate), 'America/New_York', 'PPpp') : null,
-      updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'),
-    };
-    const task = await taskRepository.update(id, updatedTaskData);
-    res.send(task);
+    const taskId = req.params.id;
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).send('Task not found');
+    }
+    task.completed = !task.completed;
+    task.completedAt = task.completed ? formatInTimeZone(new Date(), 'America/New_York', 'PPpp') : null; // Set or clear the completedAt timestamp
+    task.updatedAt = formatInTimeZone(new Date(), 'America/New_York', 'PPpp');
+    await task.save();
+    res.send(task); // Return the updated task
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
@@ -96,9 +100,11 @@ app.patch('/tasks/:id', async (req, res) => {
     const id = req.params.id;
     const completedTaskData = {
       ...req.body,
+      completed: true,
+      completedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'), // Set the completedAt timestamp
       updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'),
     };
-    const completedTask = await taskRepository.completed(id, completedTaskData);
+    const completedTask = await taskRepository.update(id, completedTaskData);
     res.send(completedTask);
   } catch (error) {
     console.error(error);

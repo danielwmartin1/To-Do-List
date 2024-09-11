@@ -30,6 +30,10 @@ const TaskSchema = new mongoose.Schema({
     required: false,
     default: () => getFormattedDate(new Date()),
   },
+  completedAt: {
+    type: String, // Change to String to store formatted string
+    default: () => getFormattedDate(new Date()),
+  },
 }, { timestamps: true }); // Add timestamps option
 
 // Pre-save hook to format dueDate, createdAt, and updatedAt as formatted strings
@@ -39,6 +43,9 @@ TaskSchema.pre('save', function (next) {
   }
   this.createdAt = getFormattedDate(new Date(this.createdAt));
   this.updatedAt = getFormattedDate(new Date());
+  if (this.completed && !this.completedAt) {
+    this.completedAt = getFormattedDate(new Date());
+  }
   next();
 });
 
@@ -49,6 +56,9 @@ TaskSchema.methods.toJSON = function () {
   obj.updatedAt = getFormattedDate(new Date(obj.updatedAt));
   if (obj.dueDate) {
     obj.dueDate = getFormattedDate(new Date(obj.dueDate));
+  }
+  if (obj.completedAt) {
+    obj.completedAt = getFormattedDate(new Date(obj.completedAt));
   }
   return obj;
 };

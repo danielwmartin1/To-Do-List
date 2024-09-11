@@ -9,6 +9,7 @@ class TaskRepository {
       dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
       createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
       updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'PPpp') : null,
     }));
   }
 
@@ -20,6 +21,7 @@ class TaskRepository {
       dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
       createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
       updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'PPpp') : null,
     };
   }
 
@@ -34,6 +36,7 @@ class TaskRepository {
       dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
       createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
       updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'PPpp') : null,
     };
   }
 
@@ -49,6 +52,7 @@ class TaskRepository {
       dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
       createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
       updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'PPpp') : null,
     };
   }
 }
