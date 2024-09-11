@@ -190,14 +190,14 @@ function List() {
         <div className="sortSection">
           <label htmlFor="sortTasks">Sort by: </label>
           <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
-            <option value="updatedAt-desc">Updated Date Descending</option>
-            <option value="updatedAt-asc">Updated Date Ascending</option>
-            <option value="dueDate-desc">Due Date Descending</option>
-            <option value="dueDate-asc">Due Date Ascending</option>
-            <option value="createdAt-desc">Created Date Descending</option>
-            <option value="createdAt-asc">Created Date Ascending</option>
-            <option value="title-asc">Title Ascending</option>
-            <option value="title-desc">Title Descending</option>
+            <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
+            <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
+            <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
+            <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
+            <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
+            <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
+            <option className="sortOption" value="title-asc">Title Ascending</option>
+            <option className="sortOption" value="title-desc">Title Descending</option>
           </select>
         </div>
 
@@ -235,6 +235,7 @@ function List() {
                               setEditingId(null);
                             }
                           }}
+                        />
                         />
                       </div>
                       <div className="editContainer">
