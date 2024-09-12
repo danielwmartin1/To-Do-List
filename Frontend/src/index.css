@@ -89,7 +89,7 @@ body {
 
   .editDiv {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     align-items: center;
   }
 
@@ -194,6 +194,14 @@ body {
   background-color: #0056b3; /* Even darker blue on active */
 }
 
+.editDiv {
+  display: flex;
+  flex-direction: row;
+  margin-left: 25vw;
+  justify-content: center;
+  align-items: center;
+}
+
 .checkbox {
   margin: 0.5rem;
   padding: 0.5rem;
@@ -205,10 +213,10 @@ body {
 
 .completedTask {
   opacity: 0.5;
-  font-style: italic;
 }
 
 .completedTaskTitle {
+  font-style: italic;
   color: white;
   text-align: center;
   font-size: 1.5rem;
@@ -300,7 +308,6 @@ h1, h2 {
   margin: 0;
   padding: 1rem;
   background-color: black;
-  border-bottom: 1px solid white;
   font-family: 'Roboto', sans-serif;
   font-weight: 700;
 }
@@ -318,7 +325,7 @@ h1, h2 {
   list-style-position: inside;
   border: 1px solid black;
   display: flex;
-  flex-direction: row; /* Change flex-direction to row */
+  flex-direction: row; /* Flex direction is row */
   justify-content: space-between;
   align-items: center; /* Align items to the center vertically */
   margin: 0rem;
@@ -425,11 +432,11 @@ h1, h2 {
 }
 
 .timestampContainer {
+  margin-left: 20vw;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the start of the container */
-  font-size: 0.85rem;
-  color: #555;
+  align-items: flex-start; /* Align items to the start (left) */
+  width: 200px; /* Set a fixed width */
 }
 
 .timestamp {
@@ -437,7 +444,7 @@ h1, h2 {
   font-family: 'Arial', sans-serif;
   color: #555;
   font-style: italic;
-  margin: 1rem;
+  margin: 1rem 0; /* Adjust margin to add spacing between timestamps */
 }
 
 ul {
