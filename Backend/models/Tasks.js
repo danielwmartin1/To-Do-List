@@ -13,6 +13,7 @@ const TaskSchema = new mongoose.Schema({
   dueDate: { type: Date },
   completed: { type: Boolean, default: false },
   completedAt: { type: Date },
+  attachment: { type: String }, // Add attachment field
 }, { timestamps: true });
 
 // Pre-save hook to format dates

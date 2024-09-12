@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import multer from 'multer'; // Import Multer
 import TaskRepository from './repositories/TaskRepository.js';
 import { formatInTimeZone, format, utcToZonedTime } from 'date-fns-tz';
 import Task from './models/Tasks.js'; // Ensure you import the Task model
@@ -12,8 +13,8 @@ const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((req, _, next) => {
   console.log(req.method, req.path);
   next();
@@ -30,6 +31,19 @@ const connectDB = async () => {
   }
 };
 connectDB();
+
+// Configure Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the directory to save the uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Specify the filename format
+  }
+});
+
+// Create a Multer instance with the storage configuration
+const upload = multer({ storage: storage });
 
 // Get all tasks
 const taskRepository = new TaskRepository();
@@ -60,7 +74,7 @@ app.get('/tasks/:id', async (req, res) => {
 });
 
 // Add a new task
-app.post('/tasks', async (req, res) => {
+app.post('/tasks', upload.single('attachment'), async (req, res) => {
   try {
     const now = new Date();
     const timeZone = 'America/New_York';
@@ -72,6 +86,7 @@ app.post('/tasks', async (req, res) => {
       dueDate: req.body.dueDate ? format(utcToZonedTime(new Date(req.body.dueDate), timeZone), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone }) : null,
       createdAt: formattedDate,
       updatedAt: formattedDate,
+      attachment: req.file ? req.file.path : null // Save the file path if a file is uploaded
     };
     const task = await taskRepository.add(newTask);
     res.send(task);
