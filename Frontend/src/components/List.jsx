@@ -39,25 +39,35 @@ function List() {
 
   const addTask = async () => {
     if (!newTask.trim()) {
-      alert('Please enter a task.');
+      setError('Task title cannot be empty');
       return;
     }
     if (new Date(dueDate) < new Date()) {
-      alert('Please choose a future date and time.');
+      setError('Due date cannot be in the past');
       return;
     }
     try {
-      const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate });
-      const formattedTask = {
+      const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
+      const response = await axios.post(`${uri}/tasks`, {
+        title: newTask,
+        dueDate: formattedDueDate,
+      });
+      const newTaskData = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
+        dueDate: formattedDueDate,
         createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
       };
-      const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setTaskList(updatedTaskList);
+      console.log('New Task Data:', newTaskData); // Debugging log
+      setTaskList((prevTaskList) => {
+        const updatedList = [...prevTaskList, newTaskData];
+        updatedList.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        console.log('Updated Task List:', updatedList); // Debugging log
+        return updatedList;
+      });
       setNewTask('');
       setDueDate('');
+      setError('');
     } catch (error) {
       handleError(error);
     }

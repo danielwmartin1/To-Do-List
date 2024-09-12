@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
-import { formatInTimeZone } from 'date-fns-tz';
+import { formatInTimeZone, format, utcToZonedTime } from 'date-fns-tz';
 import Task from './models/Tasks.js'; // Ensure you import the Task model
 
 // Initialize Express application
@@ -14,7 +14,7 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   console.log(req.method, req.path);
   next();
 });
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
+    await mongoose.connect('mongodb+srv://<username>:<password>@<cluster-url>/?retryWrites=true&w=majority&appName=Cluster0', {});
     console.log('MongoDB connected...');
   } catch (err) {
     console.error(err.message);
@@ -33,7 +33,7 @@ connectDB();
 
 // Get all tasks
 const taskRepository = new TaskRepository();
-app.get('/tasks', async (req, res) => {
+app.get('/tasks', async (_, res) => {
   try {
     const taskList = await taskRepository.getAll();
     res.send(taskList);
@@ -62,9 +62,16 @@ app.get('/tasks/:id', async (req, res) => {
 // Add a new task
 app.post('/tasks', async (req, res) => {
   try {
+    const now = new Date();
+    const timeZone = 'America/New_York';
+    const zonedDate = utcToZonedTime(now, timeZone);
+    const formattedDate = format(zonedDate, 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone });
+
     const newTask = {
       title: req.body.title,
-      dueDate: req.body.dueDate ? formatInTimeZone(new Date(req.body.dueDate), 'America/New_York', 'PPpp') : null,
+      dueDate: req.body.dueDate ? format(utcToZonedTime(new Date(req.body.dueDate), timeZone), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone }) : null,
+      createdAt: formattedDate,
+      updatedAt: formattedDate,
     };
     const task = await taskRepository.add(newTask);
     res.send(task);
@@ -75,7 +82,7 @@ app.post('/tasks', async (req, res) => {
   }
 });
 
-// Update a task
+// Toggle task completion
 app.put('/tasks/:id/toggleCompletion', async (req, res) => {
   try {
     const taskId = req.params.id;
@@ -84,8 +91,13 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
       return res.status(404).send('Task not found');
     }
     task.completed = !task.completed;
-    task.completedAt = task.completed ? formatInTimeZone(new Date(), 'America/New_York', 'PPpp') : null; // Set or clear the completedAt timestamp
-    task.updatedAt = formatInTimeZone(new Date(), 'America/New_York', 'PPpp');
+    const now = new Date();
+    const timeZone = 'America/New_York';
+    const zonedDate = utcToZonedTime(now, timeZone);
+    const formattedDate = format(zonedDate, 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone });
+
+    task.completedAt = task.completed ? formattedDate : null;
+    task.updatedAt = formattedDate;
     await task.save();
     res.send(task); // Return the updated task
   } catch (error) {
@@ -101,11 +113,14 @@ app.patch('/tasks/:id', async (req, res) => {
     const completedTaskData = {
       ...req.body,
       completed: true,
-      completedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'), // Set the completedAt timestamp
-      updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp'),
+      completedAt: format(utcToZonedTime(new Date(), 'America/New_York'), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone: 'America/New_York' }), // Set the completedAt timestamp
+      updatedAt: format(utcToZonedTime(new Date(), 'America/New_York'), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone: 'America/New_York' }),
     };
-    const completedTask = await taskRepository.update(id, completedTaskData);
-    res.send(completedTask);
+    const task = await Task.findByIdAndUpdate(id, completedTaskData, { new: true });
+    if (!task) {
+      return res.status(404).send('Task not found');
+    }
+    res.send(task); // Return the updated task
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
