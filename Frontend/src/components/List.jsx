@@ -70,8 +70,8 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-      const editedDueDateEDT = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
-      const response = await axios.patch(`${uri}/tasks/${taskId}`, { dueDate: editedDueDateEDT });
+      const editedDueDateEST = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+      const response = await axios.patch(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDateEST });
       const updatedTask = {
         ...response.data,
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
@@ -79,6 +79,8 @@ function List() {
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
       };
       setTaskList(taskList.map(task => (task._id === taskId ? updatedTask : task)));
+      setEditingId(null);
+      setEditedTask('');
       setEditedDueDate('');
     } catch (error) {
       handleError(error);
@@ -127,14 +129,14 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const estTime = formatInTimeZone(now, 'America/New_York', 'PPpp'); // Human-readable format
+    const estTime = formatInTimeZone(now, 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm'); // ISO format for input[type="datetime-local"]
     return estTime;
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
   };
 
   const handleSortChange = (e) => {
@@ -250,14 +252,6 @@ function List() {
                           type="text"
                           value={editedTask}
                           onChange={(e) => setEditedTask(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedTask(task.title);
-                              setEditingId(null);
-                            }
-                          }}
                         />
                       </div>
                       <div className="editContainer">
@@ -268,16 +262,12 @@ function List() {
                           value={editedDueDate}
                           onChange={(e) => setEditedDueDate(e.target.value)}
                           min={getCurrentDateTime()}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
-                              setEditingId(null);
-                            }
-                          }}
                         />
                       </div>
+                      <button
+                        className="saveButton"
+                        onClick={() => updateTask(task._id)}
+                      >Save</button>
                     </div>
                   ) : (
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
@@ -337,14 +327,6 @@ function List() {
                           type="text"
                           value={editedTask}
                           onChange={(e) => setEditedTask(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedTask(task.title);
-                              setEditingId(null);
-                            }
-                          }}
                         />
                       </div>
                       <div className="editContainer">
@@ -355,16 +337,12 @@ function List() {
                           value={editedDueDate}
                           onChange={(e) => setEditedDueDate(e.target.value)}
                           min={getCurrentDateTime()}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              updateTask(task._id);
-                            } else if (e.key === 'Escape') {
-                              setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
-                              setEditingId(null);
-                            }
-                          }}
                         />
                       </div>
+                      <button
+                        className="saveButton"
+                        onClick={() => updateTask(task._id)}
+                      >Save</button>
                     </div>
                   ) : (
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
