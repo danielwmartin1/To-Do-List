@@ -13,8 +13,6 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');  // Default sort order
   const [filterStatus, setFilterStatus] = useState('all'); // Add state for filter criteria
-  const [attachments, setAttachments] = useState([]);
-  const [editedAttachments, setEditedAttachments] = useState([]);
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
@@ -45,28 +43,24 @@ function List() {
       return;
     }
     if (new Date(dueDate) < new Date()) {
-      setError('Due date cannot be in the past');
+      setError('Please choose a future date and time.');
       return;
     }
     try {
-      const formData = new FormData();
-      formData.append('title', newTask);
-      formData.append('dueDate', dueDate ? formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null);
-      for (let i = 0; i < attachments.length; i++) {
-        formData.append('attachments', attachments[i]);
-      }
-  
-      const response = await axios.post(`${uri}/tasks`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-  
-      // Handle the response
-      console.log(response.data);
+      const dueDateEDT = formatInTimeZone(new Date(dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+      const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate: dueDateEDT });
+      const formattedTask = {
+        ...response.data,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
+      };
+      const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(updatedTaskList);
+      setNewTask('');
+      setDueDate('');
     } catch (error) {
-      console.error('Error adding task:', error.message);
-      setError('Failed to add task');
+      handleError(error);
     }
   };
 
@@ -76,37 +70,16 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-
-      const formData = new FormData();
-      formData.append('title', editedTask);
-      formData.append('dueDate', editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null);
-      for (let i = 0; i < editedAttachments.length; i++) {
-        formData.append('attachments', editedAttachments[i]);
-      }
-
-      const response = await axios.put(`${uri}/tasks/${taskId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      const updatedTaskList = taskList.map((task) => {
-        if (task._id === taskId) {
-          return { 
-            ...task, 
-            title: editedTask, 
-            dueDate: editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null, 
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-            attachments: response.data.attachments,
-          };
-        }
-        return task;
-      }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setTaskList(updatedTaskList);
-      setEditingId(null);
-      setEditedTask('');
+      const editedDueDateEDT = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+      const response = await axios.patch(`${uri}/tasks/${taskId}`, { dueDate: editedDueDateEDT });
+      const updatedTask = {
+        ...response.data,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
+      };
+      setTaskList(taskList.map(task => (task._id === taskId ? updatedTask : task)));
       setEditedDueDate('');
-      setEditedAttachments([]);
     } catch (error) {
       handleError(error);
     }
@@ -122,35 +95,16 @@ function List() {
     }
   };
 
-  const removeAttachment = async (taskId, attachmentId) => {
-    try {
-      await axios.delete(`${uri}/tasks/${taskId}/attachments/${attachmentId}`);
-      const updatedTaskList = taskList.map((task) => {
-        if (task._id === taskId) {
-          return {
-            ...task,
-            attachments: task.attachments.filter((attachment) => attachment._id !== attachmentId),
-          };
-        }
-        return task;
-      });
-      setTaskList(updatedTaskList);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      // eslint-disable-next-line
-      const response = await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed });
+      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { 
             ...task, 
             completed: !completed, 
-            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
+            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'PPpp') : null,
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
           };
         }
         return task;
@@ -173,14 +127,14 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    return now.toISOString().slice(0, 16);
+    const estTime = formatInTimeZone(now, 'America/New_York', 'PPpp'); // Human-readable format
+    return estTime;
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
-    setEditedAttachments([]);
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : '');
   };
 
   const handleSortChange = (e) => {
@@ -244,37 +198,29 @@ function List() {
             min={getCurrentDateTime()}
             placeholder="Due Date"
           />
-          <input
-            type="file"
-            multiple
-            onChange={(e) => setAttachments(e.target.files)}
-          />
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
+
         <div className="sortSection">
-          <div className="sortBy">
-            <label htmlFor="sortTasks">Sort by: </label>
-            <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
-              <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
-              <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
-              <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
-              <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
-              <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
-              <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
-              <option className="sortOption" value="title-asc">Title Ascending</option>
-              <option className="sortOption" value="title-desc">Title Descending</option>
-              <option className="sortOption" value="completedAt-asc">Completed Date Ascending</option>
-              <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
-            </select>
-          </div>
-          <div className="sortOrder">
-            <label htmlFor="filterTasks">Filter Status: </label>
-            <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
-              <option value="all">All</option>
-              <option value="completed">Completed</option>
-              <option value="incomplete">Incomplete</option>
-            </select>
-          </div>
+          <label htmlFor="sortTasks">Sort by: </label>
+          <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
+            <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
+            <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
+            <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
+            <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
+            <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
+            <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
+            <option className="sortOption" value="title-asc">Title Ascending</option>
+            <option className="sortOption" value="title-desc">Title Descending</option>
+            <option className="sortOption" value="completedAt-asc">Completed Date Ascending</option>
+            <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
+          </select>
+          <label htmlFor="filterTasks">Filter by: </label>
+          <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
+            <option value="all">All</option>
+            <option value="completed">Completed</option>
+            <option value="incomplete">Incomplete</option>
+          </select>
         </div>
 
         <div className="todo-container" onClick={() => setEditingId(null)}>
@@ -332,14 +278,6 @@ function List() {
                           }}
                         />
                       </div>
-                      <div className="editContainer">
-                        <label className="editLabel">Edit Attachments:</label>
-                        <input
-                          type="file"
-                          multiple
-                          onChange={(e) => setEditedAttachments(e.target.files)}
-                        />
-                      </div>
                     </div>
                   ) : (
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
@@ -350,51 +288,31 @@ function List() {
                         <span className="timestamp">Updated: {task.updatedAt}</span>
                         {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
                       </div>
-                      {task.attachments && task.attachments.length > 0 && (
-                        <div className="attachments">
-                          {task.attachments.map((file, index) => (
-                            <div key={index} className="attachmentItem">
-                              <a href={file.url} target="_blank" rel="noopener noreferrer">
-                                {file.name}
-                              </a>
-                              <button
-                                className="removeAttachmentButton"
-                                onClick={() => removeAttachment(task._id, file._id)}
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   )}
-
-                  {!task.completed && (
-                    <div className="taskActions">
-                      {editingId !== task._id && (
-                        <>
-                          <button
-                            className="editButton"
-                            onClick={(e) => { e.stopPropagation(); startEditing(task); }}
-                            aria-label={`Edit task "${task.title}"`}
-                          >Edit</button>
-                          <button
-                            className="removeButton"
-                            onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
-                            aria-label={`Remove task "${task.title}"`}
-                          >Remove</button>
-                        </>
-                      )}
-                    </div>
-                  )}
+                  <div className="taskActions">
+                    {editingId !== task._id && (
+                      <>
+                        <button
+                          className="editButton"
+                          onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                          aria-label={`Edit task "${task.title}"`}
+                        >Edit</button>
+                        <button
+                          className="removeButton"
+                          onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                          aria-label={`Remove task "${task.title}"`}
+                        >Remove</button>
+                      </>
+                    )}
+                  </div>
                 </li>
               );
             })}
           </ul>
 
           <h2>Completed Tasks</h2>
-          <ul className="taskList completedTaskList" onClick={(e) => e.stopPropagation()}>
+          <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {completedTasks.map((task) => {
               const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
               return (
@@ -451,31 +369,30 @@ function List() {
                   ) : (
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
                       <span className="taskTitle">{task.title}</span>
-                      <div className="timestampContainer completedTimestampContainer">
+                      <div className="timestampContainer">
                         {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                         <span className="timestamp">Created: {task.createdAt}</span>
                         <span className="timestamp">Updated: {task.updatedAt}</span>
                         {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
                       </div>
-                      {task.attachments && task.attachments.length > 0 && (
-                      <div className="attachments">
-                        {task.attachments.map((file, index) => (
-                          <div key={index} className="attachmentItem">
-                            <a href={file.url} target="_blank" rel="noopener noreferrer">
-                              {file.name}
-                            </a>
-                            <button
-                              className="removeAttachmentButton"
-                              onClick={() => removeAttachment(task._id, file._id)}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                     </div>
                   )}
+                  <div className="taskActions">
+                    {editingId !== task._id && (
+                      <>
+                        <button
+                          className="editButton"
+                          onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                          aria-label={`Edit task "${task.title}"`}
+                        >Edit</button>
+                        <button
+                          className="removeButton"
+                          onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                          aria-label={`Remove task "${task.title}"`}
+                        >Remove</button>
+                      </>
+                    )}
+                  </div>
                 </li>
               );
             })}

@@ -4,39 +4,28 @@ import { formatInTimeZone } from 'date-fns-tz';
 // Utility function to format dates in EST
 const getFormattedDate = (date) => {
   const timeZone = 'America/New_York';
-  return formatInTimeZone(date, timeZone, 'MMMM dd, yyyy hh:mm:ssa zzz');
+  return formatInTimeZone(date, timeZone, 'PPpp');
 };
 
 // Define the Task schema
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  dueDate: { type: Date },
+  dueDate: { type: String, set: (date) => getFormattedDate(date instanceof Date ? date : new Date(date)) },
   completed: { type: Boolean, default: false },
-  completedAt: { type: Date },
-  attachment: { type: String }, // Add attachment field
+  completedAt: { type: String, set: (date) => getFormattedDate(date instanceof Date ? date : new Date(date)) },
+  updatedAt: { type: String, default: getFormattedDate(new Date()) },
 }, { timestamps: true });
-
-// Pre-save hook to format dates
-TaskSchema.pre('save', function (next) {
-  if (this.dueDate) {
-    this.dueDate = getFormattedDate(new Date(this.dueDate));
-  }
-  if (this.completed && !this.completedAt) {
-    this.completedAt = getFormattedDate(new Date());
-  }
-  next();
-});
 
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  obj.createdAt = getFormattedDate(new Date(obj.createdAt));
-  obj.updatedAt = getFormattedDate(new Date(obj.updatedAt));
+  obj.createdAt = getFormattedDate(obj.createdAt);
+  obj.updatedAt = getFormattedDate(obj.updatedAt);
   if (obj.dueDate) {
-    obj.dueDate = getFormattedDate(new Date(obj.dueDate));
+    obj.dueDate = getFormattedDate(obj.dueDate);
   }
   if (obj.completedAt) {
-    obj.completedAt = getFormattedDate(new Date(obj.completedAt));
+    obj.completedAt = getFormattedDate(obj.completedAt);
   }
   return obj;
 };
