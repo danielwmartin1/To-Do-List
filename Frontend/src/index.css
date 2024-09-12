@@ -14,7 +14,7 @@ body {
   font-weight: 400;
 }
 
-.addButton{
+.addButton {
   background-color: #4CAF50;
   border: none;
   border-radius: 5px;
@@ -249,9 +249,9 @@ h1, h2 {
   border-radius: 5px;
   color: white;
   cursor: pointer;
+  font-size: 1rem;
   margin: 0.5rem;
   padding: 0.5rem;
-  font-size: 1rem;
 }
 
 .removeButton:active {
@@ -269,7 +269,6 @@ h1, h2 {
   display: flex;
   justify-content: center;
   margin: 1rem;
-  
 }
 
 .sortSection {
@@ -296,18 +295,11 @@ h1, h2 {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: 0.5rem;
-  width: 10%;
 }
 
 .taskItem {
   align-items: center;
   background-color: #faebd6;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 0rem;
-  padding: 0rem;
   transition: background-color 0.3s ease;
   width: 100%;
 }
@@ -421,7 +413,6 @@ ul {
 }
 
 @media (min-width: 431px) and (max-width: 767px) {
-
   .container {
     align-items: center;
     flex-direction: column;
@@ -464,7 +455,6 @@ ul {
     width: 100%;
   }
 
-
   .completedTaskTitle {
     font-size: 1.3rem;
   }
@@ -472,7 +462,7 @@ ul {
   .sortSection {
     flex-direction: column;
     align-items: start;
-    margin-left: 25vw
+    margin-left: 25vw;
   }
 
   .taskActions {
