@@ -1,214 +1,47 @@
 /* General styles */
 body {
   background-color: #afb2bc;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Timestamp styles */
-.timestamp {
-  font-size: 0.85rem; 
-  font-family: 'Arial', sans-serif; 
-  color: #555; 
-  font-style: italic; 
-  margin: 1rem;
-}
-
-/* Media Queries */
-@media (max-width: 430px) {
-  .container {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .editDiv {
-    display: flex;
-    flex-direction: column !important;
-    align-items: center; /* Center horizontally */
-  }
-
-  .editContainer {
-    max-width: fit-content;
-    align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically */
-  }
-
-  .h1, .h2 {
-    font-size: 1.5rem;
-  }
-
-  .listItem {
-    flex-direction: column;
-    align-items: center; /* Center horizontally */
-  }
-
-  .listItem > span {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    font-size: 1.2rem;
-  }
-
-  .newTask {
-    width: 90%;
-    font-size: 1rem;
-  }
-
-  .addButton, .removeButton {
-    font-size: 1rem;
-    padding: 0.4rem;
-  }
-
-  .completedTaskTitle {
-    font-size: 1.2rem;
-  }
-
-  .timestamp {
-    font-size: 0.7rem; 
-    font-family: 'Arial', sans-serif; 
-    color: #555; 
-    font-style: italic; 
-  }
-
-  .inputContainer {
-    width: 90%; /* Adjust width for smaller screens */
-    padding: 0.5rem; /* Add padding for better spacing */
-    box-sizing: border-box; /* Ensure padding is included in the width */
-  }
-}
-
-/* Media Queries */
-@media (min-width: 768px) {
-  .container {
-    justify-content: center;
-    align-items: center;
-  }
-
-  .editDiv {
-    display: flex;
-    flex-direction: column !important;
-    align-items: center;
-  }
-
-  .editContainer {
-    max-width: fit-content;
-  }
-
-  .h1, .h2 {
-    font-size: 2rem;
-  }
-
-  button {
-    font-size: 1.2rem;
-  }
-
-  .listItem > span {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    font-size: 1.5rem;
-  }
-
-  .footer {
-    font-size: 1.2rem;
-  }
-
-  .newTask {
-    width: 80%;
-    font-size: 1.2rem;
-  }
-
-  .completedTaskTitle {
-    font-size: 1.5rem;
-  }
-}
-
-/* Media Queries */
-@media (min-width: 1024px) {
-  .taskTitle {
-    font-size: 1rem; /* Adjust the size as needed */
-  }
-}
-
 .architects-daughter-regular {
   font-family: 'Roboto', cursive;
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
 }
 
-.addButton {
+.addButton, .button {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  background-color: #4CAF50;
-  color: white;
-  padding: 0.5rem 1rem;
   margin: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.addButton:hover {
-  background-color: #419c46;
+  padding: 0.5rem 1rem;
 }
 
 .addButton:active {
   background-color: #50ea58;
 }
 
-.button {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  background-color: #4CAF50;
-  color: white;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.editButton {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  background-color: #007BFF; /* Blue background color */
-  color: white;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Add transition for hover effect */
-}
-
-.editButton:hover {
-  background-color: #0069d9; /* Darker blue on hover */
-}
-
-.editButton:active {
-  background-color: #0056b3; /* Even darker blue on active */
-}
-
-.editDiv {
-  display: flex;
-  flex-direction: row;
-  margin-left: 25vw;
-  justify-content: center;
-  align-items: center;
+.addButton:hover {
+  background-color: #419c46;
 }
 
 .checkbox {
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
   margin: 0.5rem;
   padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease; /* Add transition for smooth effect */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .completedTask {
@@ -216,100 +49,132 @@ body {
 }
 
 .completedTaskTitle {
-  font-style: italic;
-  color: white;
-  text-align: center;
-  font-size: 1.5rem;
-  margin: 0;
-  padding: 1rem;
   background-color: black;
   border-bottom: 1px solid white;
+  color: white;
   font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-style: italic;
   font-weight: 700;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+.completedTimestampContainer {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 2rem;
 }
 
 .container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
   flex-direction: column;
+  height: 100vh;
+  justify-content: center;
 }
 
 .createdAt, .updatedAt {
-  font-family: 'Arial', sans-serif; /* Change to desired font */
-  font-size: 0.8rem; /* Change to desired size */
-  color: #333; /* Optional: Change text color */
-  font-style: italic; /* Optional: Italic style */
-  text-align: center; /* Center the text horizontally */
+  color: #333;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
 }
 
 .divider {
+  background: #ccc;
   border: 0;
   height: 1px;
-  background: #ccc;
   margin: 2rem 0;
 }
 
-div.error {
-  background-color: antiquewhite;
-  font-style: italic;
-  color: rgb(255, 0, 0);
-  font-size: 1.2rem;
+.editButton {
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
   margin: 0.5rem;
-  text-align: center;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.editDiv {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.editButton:active {
+  background-color: #0056b3;
+}
+
+.editButton:hover {
+  background-color: #0069d9;
 }
 
 .editContainer {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
+  max-width: fit-content;
+}
+
+.editDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: 25vw;
 }
 
 .editLabel {
-  text-align: center;
-  margin-left: 1rem;
-  font-size: 1rem;
   color: #555;
+  font-size: 1rem;
+  margin-left: 1rem;
+  text-align: center;
 }
 
 .editTask {
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: text;
+  font-family: 'Roboto', sans-serif;
   margin: 0.5rem;
   padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  cursor: text;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+}
+
+.error {
+  background-color: antiquewhite;
+  color: rgb(255, 0, 0);
+  font-size: 1.2rem;
+  font-style: italic;
+  margin: 0.5rem;
+  text-align: center;
 }
 
 .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
   background-color: black;
+  bottom: 0;
   color: white;
-  text-align: center;
   font-family: 'Roboto', sans-serif;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
 }
 
 h1, h2 {
+  background-color: black;
   color: white;
-  text-align: center;
+  font-family: 'Roboto', sans-serif;
   font-size: 2.5rem;
+  font-weight: 700;
   margin: 0;
   padding: 1rem;
-  background-color: black;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 700;
+  text-align: center;
 }
 
 .inputContainer {
@@ -317,21 +182,21 @@ h1, h2 {
 }
 
 .listItem {
-  background-position: center;
+  align-items: center;
   background-color: antiquewhite;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  list-style-type: disc;
-  list-style-position: inside;
   border: 1px solid black;
   display: flex;
-  flex-direction: row; /* Flex direction is row */
+  flex-direction: row;
+  font-family: 'Roboto', sans-serif;
   justify-content: space-between;
-  align-items: center; /* Align items to the center vertically */
+  list-style-position: inside;
+  list-style-type: disc;
   margin: 0rem;
   padding: 0rem;
-  font-family: 'Roboto', sans-serif;
-  transition: background-color 0.3s ease; /* Add transition for hover effect */
+  transition: background-color 0.3s ease;
 }
 
 .listItem:hover,
@@ -339,9 +204,8 @@ h1, h2 {
   background-color: #ebf79f;
 }
 
-/* Override for the remove button */
 .listItem:hover .removeButton {
-  background-color: red; 
+  background-color: red;
 }
 
 .listItem:hover .editButton {
@@ -349,36 +213,43 @@ h1, h2 {
 }
 
 .newTask {
-  margin: 1rem;
-  padding: 1rem;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 20rem;
-  border-radius: 5px;
   border: 1px solid black;
-  text-align: center;
+  border-radius: 5px;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  margin: 1rem;
+  max-width: 20rem;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
 }
 
 .overdue {
   color: red !important;
-  font-weight: bold !important;
   font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+.projectTitle {
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
 }
 
 .removeButton {
   background-color: red;
-  color: white;
   border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
   border-radius: 5px;
+  color: white;
   cursor: pointer;
-}
-
-.removeButton:hover {
-  background-color: rgb(255, 10, 10);
+  margin: 0.5rem;
+  padding: 0.5rem;
 }
 
 .removeButton:active {
@@ -387,79 +258,285 @@ h1, h2 {
   color: blue;
 }
 
-.sortSection {
+.removeButton:hover {
+  background-color: rgb(255, 10, 10);
+}
+
+.sortBy {
+  align-items: center;
   display: flex;
   justify-content: center;
+  margin: 1rem;
+  
+}
+
+.sortSection {
   align-items: center;
-  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+  transform: translateX(-4%);
 }
 
 .sortSection label {
-  margin-right: 0.5rem;
+  margin: 1rem;
 }
 
 .sortSection select {
-  padding: 0.5rem;
-  border-radius: 5px;
   border: 1px solid #ccc;
+  border-radius: 5px;
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;
+  padding: 0.5rem;
 }
 
 .taskActions {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
   margin-top: 0.5rem;
+  width: 100%;
 }
 
 .taskItem {
+  align-items: center;
+  background-color: #faebd6;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0rem;
   margin: 0rem;
-  background-color: #faebd6;
+  padding: 0rem;
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .taskTitle {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 0.5rem;
-}
-
-.timestampContainer {
-  margin-left: 20vw;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Align items to the start (left) */
-  width: 200px; /* Set a fixed width */
+  min-width: 35vw;
 }
 
 .timestamp {
-  font-size: 0.85rem;
-  font-family: 'Arial', sans-serif;
   color: #555;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8rem;
   font-style: italic;
-  margin: 1rem 0; /* Adjust margin to add spacing between timestamps */
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.timestampContainer {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 2rem;
 }
 
 ul {
   list-style-type: none;
-  padding: 0;
   margin: 1;
+  padding: 0;
 }
 
-.projectTitle {
-  text-align: center;
-  font-size: 4rem;
-  font-weight: 700;
-  margin: 0;
-  padding: 1rem;
-  background-color: black;
-  color: white;
-  font-family: 'Roboto', sans-serif;
+/* Media Queries */
+@media (max-width: 430px) {
+  .addButton, .editButton, .removeButton {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+
+  .container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .editContainer {
+    align-items: center;
+    justify-content: center;
+    max-width: fit-content;
+  }
+
+  .editDiv {
+    align-items: center;
+    display: flex;
+    flex-direction: column !important;
+    margin-left: 0;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
+  }
+
+  .inputContainer {
+    box-sizing: border-box;
+    padding: 0.5rem;
+    width: 90%;
+  }
+
+  .listItem > span {
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .newTask {
+    font-size: 1rem;
+    width: 90%;
+  }
+
+  .sortSection {
+    flex-direction: column;
+  }
+
+  .timestamp {
+    color: #555;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .completedTaskTitle {
+    font-size: 1.2rem;
+  }
+
+  .taskItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .taskActions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .timestampContainer {
+    margin: 0;
+  }
+}
+
+@media (min-width: 431px) and (max-width: 767px) {
+  .addButton, .editButton, .removeButton {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    width: 15%;
+  }
+
+  .container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .editButton, .removeButton {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    width: 50%;
+  }
+
+  .editContainer {
+    align-items: center;
+    justify-content: center;
+    max-width: fit-content;
+  }
+
+  .editDiv {
+    align-items: center;
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  h1, h2 {
+    font-size: 1.8rem;
+  }
+
+  .listItem > span {
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .footer {
+    font-size: 1rem;
+  }
+
+  .newTask {
+    font-size: 1rem;
+    width: 90%;
+  }
+
+  button {
+    font-size: 1rem;
+  }
+
+  .completedTaskTitle {
+    font-size: 1.3rem;
+  }
+
+  .sortSection {
+    flex-direction: column;
+    align-items: start;
+    margin-left: 25vw
+  }
+
+  .taskActions {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 768px) {
+  .addButton, .editButton {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .container {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .editContainer {
+    max-width: fit-content;
+  }
+
+  .editDiv {
+    align-items: center;
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  h1, h2 {
+    font-size: 2rem;
+  }
+
+  .listItem > span {
+    font-size: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .footer {
+    font-size: 1.2rem;
+  }
+
+  .newTask {
+    font-size: 1.2rem;
+    width: 80%;
+  }
+
+  button {
+    font-size: 1.2rem;
+  }
+
+  .completedTaskTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .taskTitle {
+    font-size: 1rem;
+  }
 }
