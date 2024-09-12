@@ -205,6 +205,10 @@ h1, h2 {
   background-color: #ebf79f;
 }
 
+.listItem:active,
+.listItem:active > * {
+  background-color: #bbefff;
+}
 .listItem:hover .removeButton {
   background-color: red;
 }
