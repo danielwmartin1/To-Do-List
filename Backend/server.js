@@ -74,7 +74,7 @@ app.get('/tasks/:id', async (req, res) => {
 });
 
 // Add a new task
-app.post('/tasks', upload.single('attachment'), async (req, res) => {
+app.post('/tasks', upload.array('attachments', 10), async (req, res) => {
   try {
     const now = new Date();
     const timeZone = 'America/New_York';
@@ -86,13 +86,14 @@ app.post('/tasks', upload.single('attachment'), async (req, res) => {
       dueDate: req.body.dueDate ? format(utcToZonedTime(new Date(req.body.dueDate), timeZone), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone }) : null,
       createdAt: formattedDate,
       updatedAt: formattedDate,
-      attachment: req.file ? req.file.path : null // Save the file path if a file is uploaded
+      attachments: req.files ? req.files.map(file => file.path) : [] // Save the file paths if files are uploaded
     };
+
     const task = await taskRepository.add(newTask);
     res.send(task);
     console.log('Posted a task titled', req.body.title);
   } catch (error) {
-    console.error(error);
+    console.error('Error adding task:', error.message);
     res.status(500).send('Server Error');
   }
 });

@@ -55,30 +55,18 @@ function List() {
       for (let i = 0; i < attachments.length; i++) {
         formData.append('attachments', attachments[i]);
       }
-
+  
       const response = await axios.post(`${uri}/tasks`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       });
-
-      const newTaskData = {
-        ...response.data,
-        dueDate: formData.get('dueDate'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-      };
-      setTaskList((prevTaskList) => {
-        const updatedList = [...prevTaskList, newTaskData];
-        updatedList.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        return updatedList;
-      });
-      setNewTask('');
-      setDueDate('');
-      setAttachments([]);
-      setError('');
+  
+      // Handle the response
+      console.log(response.data);
     } catch (error) {
-      handleError(error);
+      console.error('Error adding task:', error.message);
+      setError('Failed to add task');
     }
   };
 
