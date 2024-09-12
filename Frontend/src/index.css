@@ -14,7 +14,7 @@ body {
   font-weight: 400;
 }
 
-.addButton, .button {
+.addButton{
   background-color: #4CAF50;
   border: none;
   border-radius: 5px;
@@ -179,6 +179,7 @@ h1, h2 {
 
 .inputContainer {
   text-align: center;
+  margin: 0rem;
 }
 
 .listItem {
@@ -250,6 +251,7 @@ h1, h2 {
   cursor: pointer;
   margin: 0.5rem;
   padding: 0.5rem;
+  font-size: 1rem;
 }
 
 .removeButton:active {
@@ -274,7 +276,7 @@ h1, h2 {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 1rem;
+  margin-top: 0;
   transform: translateX(-4%);
 }
 
@@ -292,9 +294,10 @@ h1, h2 {
 
 .taskActions {
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
   margin-top: 0.5rem;
-  width: 100%;
+  width: 10%;
 }
 
 .taskItem {
@@ -310,8 +313,8 @@ h1, h2 {
 }
 
 .taskTitle {
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
   min-width: 35vw;
 }
@@ -341,9 +344,10 @@ ul {
 
 /* Media Queries */
 @media (max-width: 430px) {
-  .addButton, .editButton, .removeButton {
+  .editButton, .removeButton {
     font-size: 1rem;
     padding: 0.4rem;
+    width: 50%;
   }
 
   .container {
@@ -417,22 +421,11 @@ ul {
 }
 
 @media (min-width: 431px) and (max-width: 767px) {
-  .addButton, .editButton, .removeButton {
-    font-size: 0.75rem;
-    padding: 0.5rem;
-    width: 15%;
-  }
 
   .container {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-  }
-
-  .editButton, .removeButton {
-    font-size: 0.75rem;
-    padding: 0.5rem;
-    width: 50%;
   }
 
   .editContainer {
@@ -462,13 +455,15 @@ ul {
   }
 
   .newTask {
-    font-size: 1rem;
-    width: 90%;
+    font-size: 0.8rem;
+    width: 100%;
   }
 
-  button {
-    font-size: 1rem;
+  .editButton, .removeButton {
+    font-size: 0.8rem;
+    width: 100%;
   }
+
 
   .completedTaskTitle {
     font-size: 1.3rem;
