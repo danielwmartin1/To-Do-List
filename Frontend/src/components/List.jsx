@@ -13,6 +13,8 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');  // Default sort order
   const [filterStatus, setFilterStatus] = useState('all'); // Add state for filter criteria
+  const [attachments, setAttachments] = useState([]);
+  const [editedAttachments, setEditedAttachments] = useState([]);
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
@@ -47,14 +49,22 @@ function List() {
       return;
     }
     try {
-      const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
-      const response = await axios.post(`${uri}/tasks`, {
-        title: newTask,
-        dueDate: formattedDueDate,
+      const formData = new FormData();
+      formData.append('title', newTask);
+      formData.append('dueDate', dueDate ? formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null);
+      for (let i = 0; i < attachments.length; i++) {
+        formData.append('attachments', attachments[i]);
+      }
+
+      const response = await axios.post(`${uri}/tasks`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
+
       const newTaskData = {
         ...response.data,
-        dueDate: formattedDueDate,
+        dueDate: formData.get('dueDate'),
         createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
       };
@@ -65,6 +75,7 @@ function List() {
       });
       setNewTask('');
       setDueDate('');
+      setAttachments([]);
       setError('');
     } catch (error) {
       handleError(error);
@@ -77,15 +88,28 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-      // eslint-disable-next-line
-      const response = await axios.put(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDate });
+
+      const formData = new FormData();
+      formData.append('title', editedTask);
+      formData.append('dueDate', editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null);
+      for (let i = 0; i < editedAttachments.length; i++) {
+        formData.append('attachments', editedAttachments[i]);
+      }
+
+      const response = await axios.put(`${uri}/tasks/${taskId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { 
             ...task, 
             title: editedTask, 
             dueDate: editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null, 
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+            attachments: response.data.attachments,
           };
         }
         return task;
@@ -94,6 +118,7 @@ function List() {
       setEditingId(null);
       setEditedTask('');
       setEditedDueDate('');
+      setEditedAttachments([]);
     } catch (error) {
       handleError(error);
     }
@@ -111,7 +136,8 @@ function List() {
 
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      // eslint-disable-next-line
+      const response = await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { 
@@ -141,14 +167,14 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const estTime = formatInTimeZone(now, 'America/New_York', 'PPpp'); // Human-readable format
-    return estTime;
+    return now.toISOString().slice(0, 16);
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
+    setEditedAttachments([]);
   };
 
   const handleSortChange = (e) => {
@@ -212,9 +238,13 @@ function List() {
             min={getCurrentDateTime()}
             placeholder="Due Date"
           />
+          <input
+            type="file"
+            multiple
+            onChange={(e) => setAttachments(e.target.files)}
+          />
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
-
         <div className="sortSection">
           <div className="sortBy">
             <label htmlFor="sortTasks">Sort by: </label>
@@ -299,15 +329,24 @@ function List() {
                       </div>
                     ) : (
                       <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
-                        <span className="taskTitle">{task.title}</span>
-                        <div className="timestampContainer">
-                          {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
-                          <span className="timestamp">Created: {task.createdAt}</span>
-                          <span className="timestamp">Updated: {task.updatedAt}</span>
-                          {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
-                        </div>
-                      </div>
-                    )}
+                  <span className="taskTitle">{task.title}</span>
+                  <div className="timestampContainer">
+                    {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
+                    <span className="timestamp">Created: {task.createdAt}</span>
+                    <span className="timestamp">Updated: {task.updatedAt}</span>
+                    {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
+                  </div>
+                  {task.attachments && task.attachments.length > 0 && (
+                    <div className="attachments">
+                      {task.attachments.map((file, index) => (
+                        <a key={index} href={file.url} target="_blank" rel="noopener noreferrer">
+                          {file.name}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
                     {!task.completed && (
                       <div className="taskActions">
