@@ -4,7 +4,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 // Utility function to format dates in EST
 const getFormattedDate = (date) => {
   const timeZone = 'America/New_York';
-  return formatInTimeZone(date, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+  return formatInTimeZone(date, timeZone, 'MMMM dd, yyyy hh:mm:ssa zzz');
 };
 
 // Define the Task schema
@@ -31,7 +31,9 @@ TaskSchema.methods.toJSON = function () {
   const obj = this.toObject();
   obj.createdAt = getFormattedDate(new Date(obj.createdAt));
   obj.updatedAt = getFormattedDate(new Date(obj.updatedAt));
-  obj.dueDate = getFormattedDate(new Date(obj.dueDate));
+  if (obj.dueDate) {
+    obj.dueDate = getFormattedDate(new Date(obj.dueDate));
+  }
   if (obj.completedAt) {
     obj.completedAt = getFormattedDate(new Date(obj.completedAt));
   }

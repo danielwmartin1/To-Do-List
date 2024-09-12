@@ -21,10 +21,10 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'PPpp'),
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'PPpp'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'PPpp') : null,
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -55,14 +55,12 @@ function List() {
       const newTaskData = {
         ...response.data,
         dueDate: formattedDueDate,
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
       };
-      console.log('New Task Data:', newTaskData); // Debugging log
       setTaskList((prevTaskList) => {
         const updatedList = [...prevTaskList, newTaskData];
         updatedList.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        console.log('Updated Task List:', updatedList); // Debugging log
         return updatedList;
       });
       setNewTask('');
@@ -86,8 +84,8 @@ function List() {
           return { 
             ...task, 
             title: editedTask, 
-            dueDate: editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'PPpp') : null, 
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
+            dueDate: editedDueDate ? formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null, 
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
           };
         }
         return task;
@@ -119,8 +117,8 @@ function List() {
           return { 
             ...task, 
             completed: !completed, 
-            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'PPpp') : null,
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
+            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
           };
         }
         return task;
