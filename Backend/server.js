@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
-import { formatInTimeZone, format, utcToZonedTime } from 'date-fns-tz';
+import { formatInTimeZone, utcToZonedTime } from 'date-fns-tz';
 import Task from './models/Tasks.js'; // Ensure you import the Task model
 
 // Initialize Express application
@@ -65,11 +65,11 @@ app.post('/tasks', async (req, res) => {
     const now = new Date();
     const timeZone = 'America/New_York';
     const zonedDate = utcToZonedTime(now, timeZone);
-    const formattedDate = format(zonedDate, 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone });
+    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
 
     const newTask = {
       title: req.body.title,
-      dueDate: req.body.dueDate ? format(utcToZonedTime(new Date(req.body.dueDate), timeZone), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone }) : null,
+      dueDate: req.body.dueDate ? formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       createdAt: formattedDate,
       updatedAt: formattedDate,
     };
@@ -94,7 +94,7 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
     const now = new Date();
     const timeZone = 'America/New_York';
     const zonedDate = utcToZonedTime(now, timeZone);
-    const formattedDate = format(zonedDate, 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone });
+    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
 
     task.completedAt = task.completed ? formattedDate : null;
     task.updatedAt = formattedDate;
@@ -110,11 +110,15 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
 app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
+    const now = new Date();
+    const timeZone = 'America/New_York';
+    const zonedDate = utcToZonedTime(now, timeZone);
+    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
     const completedTaskData = {
       ...req.body,
       completed: true,
-      completedAt: format(utcToZonedTime(new Date(), 'America/New_York'), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone: 'America/New_York' }), // Set the completedAt timestamp
-      updatedAt: format(utcToZonedTime(new Date(), 'America/New_York'), 'MMMM dd, yyyy hh:mm:ss a zzz', { timeZone: 'America/New_York' }),
+      completedAt: formattedDate, // Set the completedAt timestamp
+      updatedAt: formattedDate, // Update the updatedAt timestamp
     };
     const task = await Task.findByIdAndUpdate(id, completedTaskData, { new: true });
     if (!task) {
