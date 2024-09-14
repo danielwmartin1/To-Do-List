@@ -4,7 +4,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 // Utility function to format dates in EST
 const getFormattedDate = (date) => {
   const timeZone = 'America/New_York';
-  return formatInTimeZone(date, timeZone, 'PPpp');
+  return formatInTimeZone(date, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
 };
 
 // Define the Task schema

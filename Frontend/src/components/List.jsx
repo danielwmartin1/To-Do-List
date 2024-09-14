@@ -47,13 +47,13 @@ function List() {
       return;
     }
     try {
-      const dueDateEDT = formatInTimeZone(new Date(dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+      const dueDateEDT = formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
       const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate: dueDateEDT });
       const formattedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
@@ -70,13 +70,13 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-      const editedDueDateEST = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+      const editedDueDateEST = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
       const response = await axios.patch(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDateEST });
       const updatedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'PPpp'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'PPpp'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'PPpp') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       };
       setTaskList(taskList.map(task => (task._id === taskId ? updatedTask : task)));
       setEditingId(null);
@@ -105,8 +105,8 @@ function List() {
           return { 
             ...task, 
             completed: !completed, 
-            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'PPpp') : null,
-            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'PPpp') 
+            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+            updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
           };
         }
         return task;
@@ -129,14 +129,14 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const estTime = formatInTimeZone(now, 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm'); // ISO format for input[type="datetime-local"]
+    const estTime = formatInTimeZone(now, 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'); // ISO format for input[type="datetime-local"]
     return estTime;
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'yyyy-MM-dd\'T\'HH:mm') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : '');
   };
 
   const handleSortChange = (e) => {
