@@ -310,13 +310,13 @@ function List() {
                   className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                   key={task._id}
                 >
-                  <input
-                    className="checkbox"
+                <input
+                  className="checkbox"
                     type="checkbox"
                     checked={task.completed}
                     onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                    onClick={(e) => { e.stopPropagation(); }}
-                  />
+                  onClick={(e) => { e.stopPropagation(); }}
+                />
                   {editingId === task._id && !task.completed ? (
                     <div className="editDiv">
                       <div className="editContainer">
@@ -344,7 +344,7 @@ function List() {
                         onClick={() => updateTask(task._id)}
                       >Save</button>
                     </div>
-                  ) : (
+                    ) : (
                     <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
                       <span className="taskTitle">{task.title}</span>
                       <div className="timestampContainer">
@@ -357,18 +357,20 @@ function List() {
                   )}
                   <div className="taskActions">
                     {editingId !== task._id && (
-                      <>
+                    <>
+                      {!task.completed && (
                         <button
                           className="editButton"
                           onClick={(e) => { e.stopPropagation(); startEditing(task); }}
                           aria-label={`Edit task "${task.title}"`}
                         >Edit</button>
-                        <button
-                          className="removeButton"
-                          onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
-                          aria-label={`Remove task "${task.title}"`}
-                        >Remove</button>
-                      </>
+                      )}
+                      <button
+                        className="removeButton"
+                        onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                        aria-label={`Remove task "${task.title}"`}
+                      >Remove</button>
+                    </>
                     )}
                   </div>
                 </li>
