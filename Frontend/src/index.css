@@ -442,11 +442,6 @@ ul {
     align-items: center;
   }
 
-  .taskActions {
-    justify-content: center;
-    width: 100%;
-  }
-
   .timestampContainer {
     margin: 0;
   }
