@@ -225,7 +225,7 @@ function List() {
           </select>
         </div>
 
-        <div className="todo-container" onClick={() => setEditingId(null)}>
+        <div className="todo-container incompleteTaskList" onClick={() => setEditingId(null)}>
           <h2>Incomplete Tasks</h2>
           <ul className="taskList" onClick={(e) => e.stopPropagation()}>
             {incompleteTasks.map((task) => {

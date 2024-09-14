@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
 import { formatInTimeZone, utcToZonedTime } from 'date-fns-tz';
-import Task from './models/Tasks.js'; // Ensure you import the Task model
+import Task from './models/Task.js'; // Ensure you import the Task model
 
 // Initialize Express application
 const app = express();
@@ -12,8 +12,8 @@ const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((req, _, next) => {
   console.log(req.method, req.path);
   next();
@@ -22,7 +22,7 @@ app.use((req, _, next) => {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://<username>:<password>@<cluster-url>/?retryWrites=true&w=majority&appName=Cluster0', {});
+    await mongoose.connect('mongodb+srv://<username>:<password>@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
     console.log('MongoDB connected...');
   } catch (err) {
     console.error(err.message);
@@ -40,7 +40,7 @@ app.get('/tasks', async (_, res) => {
     console.log('taskList', taskList);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 
@@ -50,12 +50,12 @@ app.get('/tasks/:id', async (req, res) => {
     const id = req.params.id;
     const task = await taskRepository.getById(id);
     if (!task) {
-      return res.status(404).send('Task not found');
+      return res.status(404).json({ error: 'Task not found' });
     }
     res.send(task);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 
@@ -67,9 +67,15 @@ app.post('/tasks', async (req, res) => {
     const zonedDate = utcToZonedTime(now, timeZone);
     const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
 
+    let dueDate = null;
+    if (req.body.dueDate) {
+      const dueDateZoned = utcToZonedTime(new Date(req.body.dueDate), timeZone);
+      dueDate = formatInTimeZone(dueDateZoned, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+    }
+
     const newTask = {
       title: req.body.title,
-      dueDate: req.body.dueDate ? formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+      dueDate: dueDate,
       createdAt: formattedDate,
       updatedAt: formattedDate,
     };
@@ -114,13 +120,17 @@ app.patch('/tasks/:id', async (req, res) => {
     const timeZone = 'America/New_York';
     const zonedDate = utcToZonedTime(now, timeZone);
     const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
-    const completedTaskData = {
+
+    const updateData = {
       ...req.body,
-      completed: true,
-      completedAt: formattedDate, // Set the completedAt timestamp
       updatedAt: formattedDate, // Update the updatedAt timestamp
     };
-    const task = await Task.findByIdAndUpdate(id, completedTaskData, { new: true });
+
+    if (req.body.completed !== undefined) {
+      updateData.completedAt = req.body.completed ? formattedDate : null; // Set or clear the completedAt timestamp
+    }
+
+    const task = await Task.findByIdAndUpdate(id, updateData, { new: true });
     if (!task) {
       return res.status(404).send('Task not found');
     }

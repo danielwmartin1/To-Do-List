@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import formatInTimeZone from '../../Frontend/src/dateUtils.js';
 import { formatInTimeZone } from 'date-fns-tz';
 
 // Define the Task schema
@@ -14,13 +13,13 @@ const TaskSchema = new mongoose.Schema({
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  obj.createdAt = formatInTimeZone((this.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
-  obj.updatedAt = formatInTimeZone((this.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
+  obj.createdAt = formatInTimeZone(new Date(this.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
+  obj.updatedAt = formatInTimeZone(new Date(this.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
   if (obj.dueDate) {
-    obj.dueDate = formatInTimeZone((this.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
+    obj.dueDate = formatInTimeZone(new Date(this.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
   }
   if (obj.completed) {
-    obj.completedAt = formatInTimeZone((this.completedAt)), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz';
+    obj.completedAt = formatInTimeZone(new Date(this.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
   }
   return obj;
 };
