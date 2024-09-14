@@ -19,8 +19,8 @@ const TaskSchema = new mongoose.Schema({
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  obj.createdAt = getFormattedDate(obj.createdAt);
-  obj.updatedAt = getFormattedDate(obj.updatedAt);
+  obj.createdAt = getFormattedDate(this.createdAt);
+  obj.updatedAt = getFormattedDate(this.updatedAt);
   if (obj.dueDate) {
     obj.dueDate = getFormattedDate(obj.dueDate);
   }
