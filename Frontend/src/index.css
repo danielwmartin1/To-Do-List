@@ -430,8 +430,16 @@ ul {
   }
 
   .taskItem {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
+  }
+
+  .taskTitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    min-width: 90%;
+    justify-content: center;
+    align-items: center;
   }
 
   .taskActions {
