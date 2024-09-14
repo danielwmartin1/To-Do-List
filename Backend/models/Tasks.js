@@ -4,10 +4,10 @@ import { formatInTimeZone } from 'date-fns-tz';
 // Define the Task schema
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  dueDate: { type: String, set: (date) => formatInTimeZone(date instanceof Date ? date : new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') },
+  dueDate: { type: String, set: (date) => formatInTimeZone(new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') },
   completed: { type: Boolean, default: false },
-  completedAt: { type: String, set: (date) => date ? formatInTimeZone(date instanceof Date ? date : new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null },
-  updatedAt: { type: String, default: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') },
+  completedAt: { type: String, set: (date) => date ? formatInTimeZone(new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null },
+  updatedAt: { type: String, default: () => formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') },
 }, { timestamps: true });
 
 // Add a toJSON method to format dates before sending to frontend

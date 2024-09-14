@@ -2,16 +2,18 @@
 import Tasks from '../models/Tasks.js';
 import { formatInTimeZone } from 'date-fns-tz';
 
+const formatDate = (date) => date ? formatInTimeZone(new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
+
 class TaskRepository {
   async getAll() {
     try {
       const tasks = await Tasks.find();
       return tasks.map(task => ({
         ...task.toObject(),
-        dueDate: task.dueDate && !isNaN(new Date(task.dueDate)) ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        createdAt: !isNaN(new Date(task.createdAt)) ? formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        updatedAt: !isNaN(new Date(task.updatedAt)) ? formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        completedAt: task.completedAt && !isNaN(new Date(task.completedAt)) ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        dueDate: formatDate(task.dueDate),
+        createdAt: formatDate(task.createdAt),
+        updatedAt: formatDate(task.updatedAt),
+        completedAt: formatDate(task.completedAt),
       }));
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -25,10 +27,10 @@ class TaskRepository {
       if (!task) return null;
       return {
         ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        dueDate: formatDate(task.dueDate),
+        createdAt: formatDate(task.createdAt),
+        updatedAt: formatDate(task.updatedAt),
+        completedAt: formatDate(task.completedAt),
       };
     } catch (error) {
       console.error(`Error fetching task with id ${id}:`, error);
@@ -45,10 +47,10 @@ class TaskRepository {
       await task.save();
       return {
         ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        dueDate: formatDate(task.dueDate),
+        createdAt: formatDate(task.createdAt),
+        updatedAt: formatDate(task.updatedAt),
+        completedAt: formatDate(task.completedAt),
       };
     } catch (error) {
       console.error('Error adding task:', error);
@@ -66,10 +68,10 @@ class TaskRepository {
       if (!task) return null;
       return {
         ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        dueDate: formatDate(task.dueDate),
+        createdAt: formatDate(task.createdAt),
+        updatedAt: formatDate(task.updatedAt),
+        completedAt: formatDate(task.completedAt),
       };
     } catch (error) {
       console.error(`Error updating task with id ${taskId}:`, error);
