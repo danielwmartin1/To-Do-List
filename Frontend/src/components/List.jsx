@@ -13,6 +13,8 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');  // Default sort order
   const [filterStatus, setFilterStatus] = useState('all'); // Add state for filter criteria
+  // eslint-disable-next-line
+  const [completedAt, setCompletedAt] = useState(null); // Add state for completed timestamp
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
   const fetchData = async () => {
@@ -99,19 +101,21 @@ function List() {
 
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed });
+      const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
+      await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed, completedAt: completedAtTimestamp });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return { 
             ...task, 
             completed: !completed, 
-            completedAt: !completed ? formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+            completedAt: completedAtTimestamp,
             updatedAt: formatInTimeZone(new Date(), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') 
           };
         }
         return task;
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
+      setCompletedAt(completedAtTimestamp); // Update the completedAt state
     } catch (error) {
       handleError(error);
     }

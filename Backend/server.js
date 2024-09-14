@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+// Removed unused bodyParser import
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
-import { formatInTimeZone, utcToZonedTime } from 'date-fns-tz';
+import { formatInTimeZone } from 'date-fns-tz';
 import Task from './models/Task.js'; // Ensure you import the Task model
 
 // Initialize Express application
@@ -22,7 +22,7 @@ app.use((req, _, next) => {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://<username>:<password>@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
+    await mongoose.connect('mongodb+srv://<username>:<password>@cluster0.<cluster-id>.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
     console.log('MongoDB connected...');
   } catch (err) {
     console.error(err.message);
@@ -30,6 +30,9 @@ const connectDB = async () => {
   }
 };
 connectDB();
+
+// Helper function to format dates
+const formatDate = (date) => date ? formatInTimeZone(new Date(date), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
 
 // Get all tasks
 const taskRepository = new TaskRepository();
@@ -63,23 +66,16 @@ app.get('/tasks/:id', async (req, res) => {
 app.post('/tasks', async (req, res) => {
   try {
     const now = new Date();
-    const timeZone = 'America/New_York';
-    const zonedDate = utcToZonedTime(now, timeZone);
-    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+    // Removed unused formattedDate variable
 
-    let dueDate = null;
-    if (req.body.dueDate) {
-      const dueDateZoned = utcToZonedTime(new Date(req.body.dueDate), timeZone);
-      dueDate = formatInTimeZone(dueDateZoned, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
-    }
-
-    const newTask = {
+    const newTask = new Task({
       title: req.body.title,
-      dueDate: dueDate,
-      createdAt: formattedDate,
-      updatedAt: formattedDate,
-    };
-    const task = await taskRepository.add(newTask);
+      dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    const task = await newTask.save();
     res.send(task);
     console.log('Posted a task titled', req.body.title);
   } catch (error) {
@@ -98,9 +94,7 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
     }
     task.completed = !task.completed;
     const now = new Date();
-    const timeZone = 'America/New_York';
-    const zonedDate = utcToZonedTime(now, timeZone);
-    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+    const formattedDate = formatDate(now);
 
     task.completedAt = task.completed ? formattedDate : null;
     task.updatedAt = formattedDate;
@@ -117,9 +111,7 @@ app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const now = new Date();
-    const timeZone = 'America/New_York';
-    const zonedDate = utcToZonedTime(now, timeZone);
-    const formattedDate = formatInTimeZone(zonedDate, timeZone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+    const formattedDate = formatDate(now);
 
     const updateData = {
       ...req.body,
