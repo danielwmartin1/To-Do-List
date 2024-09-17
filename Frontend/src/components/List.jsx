@@ -18,7 +18,7 @@ function List() {
 
   const uri = 'https://todolist-backend-six-woad.vercel.app';
 
-  const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const fetchData = async () => {
     try {
@@ -26,10 +26,10 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz'),
-        createdAt: formatInTimeZone(new Date(task.createdAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.newPriority || 'Low', // Default to 'Low' if no priority is set
       }));
       setTaskList(formattedTaskList);
@@ -60,9 +60,9 @@ function List() {
       });
       const formattedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         priority: response.data.priority || 'Low', // Default to 'Low' if no priority is set
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -83,7 +83,7 @@ function List() {
 
   const updateTask = async (taskId) => {
     try {
-      const editedDueDateUTC = new Date(editedDueDate).toISOString(); // Keep the server at UTC
+      const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'); // Keep the server at UTC
       // eslint-disable-next-line
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
@@ -98,7 +98,7 @@ function List() {
             title: editedTask,
             priority: editedPriority,
             dueDate: editedDueDateUTC,
-            updatedAt: formatInTimeZone(new Date(), clientTimezone, 'MMMM d, yyyy hh:mm a zzz'),
+            updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'),
           };
         }
         return task;
@@ -121,7 +121,7 @@ function List() {
 
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
-      const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimezone, 'MMMM d, yyyy hh:mm a zzz') : null;
+      const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : null;
       await axios.put(`${uri}/tasks/${taskId}`, { completed: !completed, completedAt: completedAtTimestamp });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
@@ -129,7 +129,7 @@ function List() {
             ...task, 
             completed: !completed, 
             completedAt: completedAtTimestamp,
-            updatedAt: formatInTimeZone(new Date(), clientTimezone, 'MMMM d, yyyy hh:mm a zzz') 
+            updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') 
           };
         }
         return task;
@@ -152,7 +152,7 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const estTime = formatInTimeZone(now, clientTimezone, 'MMMM d, yyyy hh:mm a zzz'); // ISO format for input[type="datetime-local"]
+    const estTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'); // ISO format for input[type="datetime-local"]
     return estTime;
   };
 
@@ -160,7 +160,7 @@ function List() {
     setEditingId(task._id);
     setEditedTask(task.title);
     setEditedPriority(task.priority || 'Low'); // Default to 'Low' if no priority is set
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy hh:mm a zzz') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : '');
   };
 
   const handleSortChange = (e) => {
