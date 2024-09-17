@@ -162,9 +162,9 @@ body {
   background-color: black;
   bottom: 0;
   color: white;
+  font-size: 1.25rem !important;
   font-family: 'Roboto', sans-serif;
-  left: 0;
-  position: fixed;
+  padding: 0.75rem;
   text-align: center;
   width: 100%;
 }
