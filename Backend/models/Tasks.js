@@ -14,7 +14,7 @@ const TaskSchema = new mongoose.Schema({
   priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }
 });
 
-// Midleware to update the updatedAt field
+// Middleware to update the updatedAt field
 TaskSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();

@@ -44,7 +44,7 @@ class TaskRepository {
       await task.save();
       return this.formatTaskDates(task, 'UTC');
     } catch (error) {
-      console.error('Error ading task:', error);
+      console.error('Error adding task:', error);
       throw new Error('Could not ad task');
     }
   }
@@ -52,12 +52,12 @@ class TaskRepository {
   async update(taskId, updatedTask, timezone) {
     try {
       const now = new Date();
-      const formattedate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
+      const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
 
       const task = await Tasks.findByIdAndUpdate(taskId, {
         ...updatedTask,
         dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : null,
-        updatedAt: formattedate,
+        updatedAt: formattedDate,
         priority: updatedTask.priority || 'low' // Handle priority
       }, { new: true });
       if (!task) return null;

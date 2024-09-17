@@ -11,7 +11,7 @@ function List() {
   const [editedTask, setEditedTask] = useState('');
   const [editedPriority, setEditedPriority] = useState('Low'); // Default priority
   const [dueDate, setDueDate] = useState('');
-  const [editedueDate, setEditedueDate] = useState('');
+  const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');  // Default sort order
   const [filterStatus, setFilterStatus] = useState('all'); // Ad state for filter criteria
@@ -77,18 +77,18 @@ function List() {
 
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedate = date.toISOString().slice(0, 16); // Format to yyyy-MM-dThh:mm
-    setEditedueDate(formattedate);
+    const formattedDate = date.toISOString().slice(0, 16); // Format to yyyy-MM-dThh:mm
+    setEditedDueDate(formattedDate);
   };
 
   const updateTask = async (taskId) => {
     try {
-      const editedueDateUTC = new Date(editedueDate).toISOString(); // Keep the server at UTC
+      const editedDueDateUTC = new Date(editedDueDate).toISOString(); // Keep the server at UTC
       // eslint-disable-next-line
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
         priority: editedPriority,
-        dueDate: editedueDateUTC,
+        dueDate: editedDueDateUTC,
       });
       // Update the task list with the edited task
       const updatedTaskList = taskList.map((task) => {
@@ -97,7 +97,7 @@ function List() {
             ...task,
             title: editedTask,
             priority: editedPriority,
-            dueDate: editedueDateUTC,
+            dueDate: editedDueDateUTC,
             updatedAt: formatInTimeZone(new Date(), clientTimezone, 'MMMM d, yyyy hh:mm a zzz'),
           };
         }
@@ -160,7 +160,7 @@ function List() {
     setEditingId(task._id);
     setEditedTask(task.title);
     setEditedPriority(task.priority || 'Low'); // Default to 'Low' if no priority is set
-    setEditedueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy hh:mm a zzz') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy hh:mm a zzz') : '');
   };
 
   const handleSortChange = (e) => {
@@ -305,7 +305,7 @@ function List() {
                           <input
                             className='editTask'
                             type="datetime-local"
-                            value={editedueDate}
+                            value={editedDueDate}
                             onChange={handleDateChange}
                             min={getCurrentDateTime()}
                           />
@@ -383,8 +383,8 @@ function List() {
                           <input
                             className='editTask'
                             type="datetime-local"
-                            value={editedueDate}
-                            onChange={(e) => setEditedueDate(e.target.value)}
+                            value={editedDueDate}
+                            onChange={(e) => setEditedDueDate(e.target.value)}
                             min={getCurrentDateTime()}
                           />
                         </div>

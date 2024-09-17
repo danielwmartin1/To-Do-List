@@ -50,7 +50,7 @@ test('adds a new task', async () => {
   user.click(screen.getByRole('button', { name: /submit/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(4);
   });
 });
@@ -61,7 +61,7 @@ test('updates a task', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
@@ -73,7 +73,7 @@ test('updates a task', async () => {
   user.click(screen.getByRole('button', { name: /submit/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
@@ -87,14 +87,14 @@ test('toggles task completion', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.click(screen.getByRole('button', { name: /toggle completion/i }));
 
   await waitFor(() => {
-    const completedTasks = screen.getAllByRole('listitem', { name: /completed/i });
+    const completedTasks = screen.getAllByRole('listItem', { name: /completed/i });
     expect(completedTasks).toHaveLength(1);
   });
 });
@@ -105,14 +105,14 @@ test('deletes a task', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.click(screen.getByRole('button', { name: /delete/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(2);
   });
 });
@@ -123,14 +123,14 @@ test('filters tasks by priority', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.click(screen.getByRole('button', { name: /high/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(1);
   });
 });
@@ -141,14 +141,14 @@ test('filters tasks by completion', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.click(screen.getByRole('button', { name: /completed/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(1);
   });
 });
@@ -159,14 +159,14 @@ test('filters tasks by due date', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.click(screen.getByRole('button', { name: /due date/i }));
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(1);
   });
 });
@@ -177,14 +177,14 @@ test('filters tasks by search term', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
   user.type(screen.getByRole('textBox'), 'Task 1');
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(1);
   });
 });
@@ -195,7 +195,7 @@ test('fetches tasks from the server', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 });
@@ -206,7 +206,7 @@ test('handles server errors', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 
@@ -224,7 +224,7 @@ test('handles network errors', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 

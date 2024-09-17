@@ -87,9 +87,9 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
     }
     task.completed = !task.completed;
     const now = new Date();
-    const formattedate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
-    task.completedAt = task.completed ? formattedate : null;
-    task.updatedAt = formattedate;
+    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
+    task.completedAt = task.completed ? formattedDate : null;
+    task.updatedAt = formattedDate;
     task.priority = task.priority || 'low'; // Handle priority
     await task.save();
     res.send(task);
@@ -104,14 +104,14 @@ app.patch('/tasks/:id', async (req, res) => {
     const id = req.params.id;
     const now = new Date();
     const timezone = req.query.timezone || 'UTC';
-    const formattedate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
+    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
     const updateData = {
       ...req.body,
-      updatedAt: formattedate,
+      updatedAt: formattedDate,
     };
 
     if (typeof req.body.completed === 'boolean') {
-      updateData.completedAt = req.body.completed ? formattedate : null;
+      updateData.completedAt = req.body.completed ? formattedDate : null;
     }
 
     const task = await Tasks.findByIdAndUpdate(id, updateData, { new: true });
