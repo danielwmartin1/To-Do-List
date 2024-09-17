@@ -126,7 +126,6 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-left: 25vw;
 }
 
 .editLabel {
@@ -479,7 +478,6 @@ ul {
   .editDiv {
     align-items: center;
     display: flex;
-    flex-direction: column !important;
   }
 
   h1, h2 {
