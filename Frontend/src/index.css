@@ -147,12 +147,15 @@ body {
 }
 
 .error {
-  background-color: antiquewhite;
-  color: rgb(255, 0, 0);
+  background-color: #f8d7da; /* Light red/pink background */
+  color: #721c24; /* Dark red text */
   font-size: 1.2rem;
-  font-style: italic;
+  font-weight: bold; /* Bold font style */
   margin: 0.5rem;
-  text-align: center;
+  padding: 1rem; /* Padding for spacing */
+  border: 1px solid #f5c6cb; /* Border to highlight the error */
+  border-radius: 5px; /* Rounded corners */
+  text-align: center; /* Center the text */
 }
 
 .footer {
