@@ -212,7 +212,7 @@ function List() {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
-            placeholder="Ad a new task"
+            placeholder="Add a new task"
           />
           <select
             className="newTask"
