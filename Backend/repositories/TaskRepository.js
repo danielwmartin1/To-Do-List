@@ -5,10 +5,10 @@ class TaskRepository {
   formatTaskDates(task, timezone) {
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-      createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-      updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       priority: task.priority // Include priority
     };
   }
@@ -34,7 +34,7 @@ class TaskRepository {
     }
   }
 
-  async add(newTask) {
+  async ad(newTask) {
     try {
       const task = new Tasks({
         ...newTask,
@@ -44,20 +44,20 @@ class TaskRepository {
       await task.save();
       return this.formatTaskDates(task, 'UTC');
     } catch (error) {
-      console.error('Error adding task:', error);
-      throw new Error('Could not add task');
+      console.error('Error ading task:', error);
+      throw new Error('Could not ad task');
     }
   }
 
   async update(taskId, updatedTask, timezone) {
     try {
       const now = new Date();
-      const formattedDate = formatInTimeZone(now, timezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+      const formattedate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
 
       const task = await Tasks.findByIdAndUpdate(taskId, {
         ...updatedTask,
         dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : null,
-        updatedAt: formattedDate,
+        updatedAt: formattedate,
         priority: updatedTask.priority || 'low' // Handle priority
       }, { new: true });
       if (!task) return null;
@@ -70,7 +70,7 @@ class TaskRepository {
 
   async delete(id) {
     try {
-      const task = await Tasks.findByIdAndDelete(id);
+      const task = await Tasks.findByIdAndelete(id);
       return task;
     } catch (error) {
       console.error(`Error deleting task with id ${id}:`, error);
