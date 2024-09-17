@@ -250,7 +250,7 @@ h1, h2 {
 .projectTitle {
   background-color: black;
   color: white;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 4rem;
   font-weight: 700;
   margin: 0;
@@ -305,7 +305,6 @@ h1, h2 {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 1rem;
 }
 
 .sortSection {
