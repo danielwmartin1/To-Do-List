@@ -472,6 +472,18 @@ ul {
     margin-left: 2.5rem;
     margin-right: auto;
   }
+
+  .taskTitle {
+    font-size: 1.1rem;
+  }
+
+  .taskPriority {
+    font-size: 0.85rem;
+  }
+
+  .timestamp {
+    font-size: 0.75rem;
+  }
 }
 
 @media (min-width: 768px) {
