@@ -118,7 +118,6 @@ function List() {
       handleError(error);
     }
   };
-  
 
   const handleError = (error) => {
     if (error.response) {

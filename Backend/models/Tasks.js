@@ -11,6 +11,7 @@ const TaskSchema = new mongoose.Schema({
   completed: { type: Boolean, default: false },
   completedAt: { type: Date, set: (date) => date && isValidDate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
+  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
 });
 
 // Middleware to update the updatedAt field

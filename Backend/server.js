@@ -64,6 +64,7 @@ app.post('/tasks', async (req, res) => {
       dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
       createdAt: now,
       updatedAt: now,
+      priority: req.body.priority || '!' // Handle priority
     });
 
     const task = await newTask.save();
