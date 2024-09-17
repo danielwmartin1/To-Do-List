@@ -237,24 +237,24 @@ function List() {
         <div className="sortSection">
           <label htmlFor="sortTasks">Sort by: </label>
           <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
-            <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
-            <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
-            <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
-            <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
             <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
             <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
-            <option className="sortOption" value="title-asc">Title Ascending</option>
-            <option className="sortOption" value="title-desc">Title Descending</option>
             <option className="sortOption" value="completedAt-asc">Completed Date Ascending</option>
             <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
+            <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
+            <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
             <option className="sortOption" value="priority-asc">Priority Ascending</option>
             <option className="sortOption" value="priority-desc">Priority Descending</option>
+            <option className="sortOption" value="title-asc">Title Ascending</option>
+            <option className="sortOption" value="title-desc">Title Descending</option>
+            <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
+            <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
           </select>
           <label htmlFor="filterTasks">Filter by: </label>
           <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
             <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="incomplete">Incomplete</option>
+            <option value="completed">Incomplete</option>
+            <option value="incomplete">Completed</option>
           </select>
         </div>
 
