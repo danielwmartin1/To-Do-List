@@ -235,7 +235,7 @@ function List() {
         </div>
 
         <div className="sortSection">
-          <label htmlFor="sortTasks">Sort by: </label>
+          <label className="label" htmlFor="sortTasks">Sort by: </label>
           <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
             <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
             <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
@@ -250,7 +250,7 @@ function List() {
             <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
             <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
           </select>
-          <label htmlFor="filterTasks">Filter by: </label>
+          <label className="label" htmlFor="filterTasks">Filter by: </label>
           <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
             <option value="all">All</option>
             <option value="completed">Incomplete</option>

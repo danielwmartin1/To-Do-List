@@ -348,7 +348,7 @@ h1, h2 {
 .taskPriority {
   font-size: 1rem;
   font-weight: 400;
-  margin-left: 2rem;
+  margin: 1rem;
 }
 
 .taskTitle {
@@ -361,7 +361,7 @@ h1, h2 {
   font-family: 'Arial', sans-serif;
   font-size: 0.8rem;
   font-style: italic;
-  margin: 1rem 0;
+  margin: 1rem;
   text-align: left;
 }
 
@@ -407,6 +407,10 @@ ul {
     flex-direction: column !important;
   }
 
+  .label {
+    margin: 0.5rem;
+  }
+
   .listItem {
     flex-direction: row;
     justify-content: flex-start;
@@ -429,9 +433,8 @@ ul {
   }
 
   .sortSection {
-    align-items: center;
-    justify-content: center;
-    max-width: fit-content;
+    display: flex;
+    flex-direction: column;
   }
 
   .timestamp {
