@@ -34,7 +34,7 @@ class TaskRepository {
     }
   }
 
-  async ad(newTask) {
+  async add(newTask) {
     try {
       const task = new Tasks({
         ...newTask,
@@ -45,7 +45,7 @@ class TaskRepository {
       return this.formatTaskDates(task, 'UTC');
     } catch (error) {
       console.error('Error adding task:', error);
-      throw new Error('Could not ad task');
+      throw new Error('Could not add task');
     }
   }
 
