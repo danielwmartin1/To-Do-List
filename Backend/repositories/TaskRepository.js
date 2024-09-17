@@ -70,7 +70,7 @@ class TaskRepository {
 
   async delete(id) {
     try {
-      const task = await Tasks.findByIdAndelete(id);
+      const task = await Tasks.findByIdAndDelete(id);
       return task;
     } catch (error) {
       console.error(`Error deleting task with id ${id}:`, error);
