@@ -340,16 +340,6 @@ h1, h2 {
   margin-right: 2.5rem; 
 }
 
-.taskPriority {
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 1rem;
-}
-
-.taskTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
 
 .timestamp {
   color: #555;
