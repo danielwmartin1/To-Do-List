@@ -25,9 +25,6 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  obj.dueDate = obj.dueDate ? formatInTimeZone(new Date(this.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
-  obj.completedAt = obj.completedAt ? formatInTimeZone(new Date(this.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
-  obj.updatedAt = obj.updatedAt ? formatInTimeZone(new Date(this.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
   return obj;
 };
 
