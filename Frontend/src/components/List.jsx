@@ -268,6 +268,7 @@ function List() {
                   <li
                   className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                   key={task._id}
+                  onClick={() => {setEditingId(false)}}
                   onKeyDown={(e) => {
                     if (e.key === 'Escape') {
                     setEditingId(null);
@@ -339,11 +340,13 @@ function List() {
                   <div className="taskActions">
                     {editingId !== task._id && (
                     <>
+                      {!task.completed && (
                       <button
-                      className="editButton"
-                      onClick={(e) => { e.stopPropagation(); startEditing(task); }}
-                      aria-label={`Edit task "${task.title}"`}
+                        className="editButton"
+                        onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                        aria-label={`Edit task "${task.title}"`}
                       >Edit</button>
+                      )}
                       <button
                       className="removeButton"
                       onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
