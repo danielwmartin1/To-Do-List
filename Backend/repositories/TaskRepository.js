@@ -5,9 +5,9 @@ class TaskRepository {
   formatTaskDates(task, timezone) {
     return {
       ...task.toObject(),
-      dueDate: formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
-      createdAt: formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
-      updatedAt: formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+      createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+      updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
     };
   }
