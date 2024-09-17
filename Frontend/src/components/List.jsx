@@ -16,6 +16,7 @@ function List() {
   // eslint-disable-next-line
   const [completedAt, setCompletedAt] = useState(null); // Add state for completed timestamp
   const uri = 'https://todolist-backend-six-woad.vercel.app';
+  const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const fetchData = async () => {
     try {
@@ -23,10 +24,10 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        createdAt: formatInTimeZone(new Date(task.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(task.createdAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -49,13 +50,13 @@ function List() {
       return;
     }
     try {
-      const dueDateEDT = formatInTimeZone(new Date(dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
-      const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate: dueDateEDT });
+      const dueDateUTC = formatInTimeZone(new Date(dueDate), 'UTC', 'MMMM dd, yyyy hh:mm:ss a zzz');
+      const response = await axios.post(`${uri}/tasks`, { title: newTask, dueDate: dueDateUTC });
       const formattedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
@@ -72,13 +73,13 @@ function List() {
         alert('Please choose a future date and time.');
         return;
       }
-      const editedDueDateEST = formatInTimeZone(new Date(editedDueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz');
-      const response = await axios.patch(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDateEST });
+      const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), 'UTC', 'MMMM dd, yyyy hh:mm:ss a zzz');
+      const response = await axios.patch(`${uri}/tasks/${taskId}`, { title: editedTask, dueDate: editedDueDateUTC });
       const updatedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), 'America/New_York', 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null,
       };
       setTaskList(taskList.map(task => (task._id === taskId ? updatedTask : task)));
       setEditingId(null);
@@ -92,10 +93,9 @@ function List() {
   const removeTask = async (taskId) => {
     try {
       await axios.delete(`${uri}/tasks/${taskId}`);
-      const updatedTaskList = taskList.filter((task) => task._id !== taskId);
-      setTaskList(updatedTaskList);
+      setTaskList(taskList.filter(task => task._id !== taskId));
     } catch (error) {
-      handleError(error);
+      console.error('Error deleting task:', error);
     }
   };
 
