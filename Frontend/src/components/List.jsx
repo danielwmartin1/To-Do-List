@@ -52,9 +52,10 @@ function List() {
       return;
     }
     try {
+      const formattedDueDate = formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
-        dueDate,
+        dueDate: formattedDueDate,
         priority: newPriority,
       });
       const formattedTask = {

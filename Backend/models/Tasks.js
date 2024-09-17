@@ -3,6 +3,11 @@ import { formatInTimeZone } from 'date-fns-tz';
 
 const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+// Helper function to check if a date is valid
+function isValidate(date) {
+  return !isNaN(Date.parse(date));
+}
+
 // Define the Task schema
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -25,7 +30,7 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
   next();
 });
 
-// Ad a toJSON method to format dates before sending to frontend
+// Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
   obj.createdAt = formatInTimeZone(this.createdAt, clientTimezone, 'MMMM d, yyyy h:mm a zzz');
@@ -35,11 +40,6 @@ TaskSchema.methods.toJSON = function() {
   obj.priority = this.priority; // Include priority
   return obj;
 };
-
-// Helper function to check if a date is valid
-function isValidate(date) {
-  return !isNaN(Date.parse(date));
-}
 
 // Create a model
 const Tasks = mongoose.model('Tasks', TaskSchema);

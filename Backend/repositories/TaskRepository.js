@@ -9,7 +9,7 @@ class TaskRepository {
       createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
-      priority: task.priority // Include priority
+      priority: task.priority || 'low' // Include priority with default value
     };
   }
 
