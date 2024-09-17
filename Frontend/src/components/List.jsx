@@ -5,19 +5,18 @@ import '../index.css';
 
 function List() {
   const [newTask, setNewTask] = useState('');
-  const [newPriority, setNewPriority] = useState('Low'); // Default priority
+  const [newPriority, setNewPriority] = useState('Low');
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
-  const [editedPriority, setEditedPriority] = useState('Low'); // Default priority
+  const [editedPriority, setEditedPriority] = useState('Low');
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
-  const [sortOrder, setSortOrder] = useState('updatedAt-desc');  // Default sort order
-  const [filterStatus, setFilterStatus] = useState('all'); // Ad state for filter criteria
+  const [sortOrder, setSortOrder] = useState('updatedAt-desc');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   const uri = 'https://todolist-backend-six-woad.vercel.app';
-
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const fetchData = async () => {
@@ -30,7 +29,7 @@ function List() {
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: task.newPriority || 'Low', // Default to 'Low' if no priority is set
+        priority: task.newPriority || 'Low',
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -56,19 +55,19 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate,
-        priority: newPriority, // Include priority
+        priority: newPriority,
       });
       const formattedTask = {
         ...response.data,
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: response.data.priority || 'Low', // Default to 'Low' if no priority is set
+        priority: response.data.priority || 'Low',
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setNewTask('');
-      setNewPriority('Low'); // Reset priority to default
+      setNewPriority('Low');
       setDueDate('');
     } catch (error) {
       handleError(error);
@@ -77,20 +76,18 @@ function List() {
 
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedDate = date.toISOString().slice(0, 16); // Format to yyyy-MM-dThh:mm
+    const formattedDate = formatInTimeZone(date, clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm');
     setEditedDueDate(formattedDate);
   };
 
   const updateTask = async (taskId) => {
     try {
-      const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'); // Keep the server at UTC
-      // eslint-disable-next-line
+      const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
         priority: editedPriority,
         dueDate: editedDueDateUTC,
       });
-      // Update the task list with the edited task
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
           return {
@@ -152,15 +149,15 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const estTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'); // ISO format for input[type="datetime-local"]
-    return estTime;
+    const formattedTime = formatInTimeZone(now, clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+    return formattedTime;
   };
 
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedPriority(task.priority || 'Low'); // Default to 'Low' if no priority is set
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : '');
+    setEditedPriority(task.priority || 'Low');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm:ssXXX') : '');
   };
 
   const handleSortChange = (e) => {
@@ -169,25 +166,18 @@ function List() {
     const sorted = [...taskList].sort((a, b) => {
       const [key, direction] = order.split('-');
       if (key === 'title') {
-        if (direction === 'asc') {
-          return a[key].localeCompare(b[key]);
-        } else {
-          return b[key].localeCompare(a[key]);
-        }
+        return direction === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
       } else {
-        if (direction === 'asc') {
-          return new Date(a[key]) - new Date(b[key]);
-        } else {
-          return new Date(b[key]) - new Date(a[key]);
-        }
+        return direction === 'asc' ? new Date(a[key]) - new Date(b[key]) : new Date(b[key]) - new Date(a[key]);
       }
     });
     setTaskList(sorted);
   };
-
+  
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
   };
+
   const filteredTasks = taskList.filter(task => {
     if (filterStatus === 'completed') {
       return task.completed;
@@ -197,9 +187,10 @@ function List() {
       return true;
     }
   });
+
   const incompleteTasks = filteredTasks.filter(task => !task.completed);
   const completedTasks = filteredTasks.filter(task => task.completed);
-
+  
   return (
     <React.StrictMode>
       <div id='container'>
@@ -307,6 +298,84 @@ function List() {
                             type="datetime-local"
                             value={editedDueDate}
                             onChange={handleDateChange}
+                            min={getCurrentDateTime()}
+                          />
+                        </div>
+                        <button
+                          className="saveButton"
+                          onClick={() => updateTask(task._id)}
+                        >Save</button>
+                      </div>
+                    ) : (
+                      <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
+                        <div className="titleDiv"><span className="taskTitle">{task.title}</span></div>
+                        <div className="priorityDiv"><span className="taskPriority">Priority: {task.priority}</span></div>
+                        <div className="timestampContainer">
+                          {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
+                          <span className="timestamp">Created: {task.createdAt}</span>
+                          <span className="timestamp">Updated: {task.updatedAt}</span>
+                          {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
+                        </div>
+                      </div>
+                    )}
+                    <div className="taskActions">
+                      {editingId !== task._id && (
+                        <>
+                          <button
+                            className="editButton"
+                            onClick={(e) => { e.stopPropagation(); startEditing(task); }}
+                            aria-label={`Edit task "${task.title}"`}
+                          >Edit</button>
+                          <button
+                            className="removeButton"
+                            onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                            aria-label={`Remove task "${task.title}"`}
+                          >Remove</button>
+                        </>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="completedTaskList" onClick={() => setEditingId(null)}>
+            <h2>Completed Tasks</h2>
+            <ul className="taskList" onClick={(e) => e.stopPropagation()}>
+              {completedTasks.map((task) => {
+                const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
+                return (
+                  <li
+                    className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
+                    key={task._id}
+                  >
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleTaskCompletion(task._id, task.completed)}
+                      onClick={(e) => { e.stopPropagation(); }}
+                    />
+                    {editingId === task._id && !task.completed ? (
+                      <div className="editDiv">
+                        <div className="editContainer">
+                          <label className="editLabel">Edit Task:</label>
+                          <input
+                            className='editTask'
+                            autoFocus
+                            type="text"
+                            value={editedTask}
+                            onChange={(e) => setEditedTask(e.target.value)}
+                          />
+                        </div>
+                        <div className="editContainer">
+                          <label className="editLabel">Edit Due Date:</label>
+                          <input
+                            className='editTask'
+                            type="datetime-local"
+                            value={editedDueDate}
+                            onChange={(e) => setEditedDueDate(e.target.value)}
                             min={getCurrentDateTime()}
                           />
                         </div>
