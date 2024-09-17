@@ -304,6 +304,7 @@ h1, h2 {
 .sortSection {
   align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-top: 0;
   width: 100%;
