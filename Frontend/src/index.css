@@ -241,6 +241,12 @@ h1, h2 {
   font-weight: bold !important;
 }
 
+.priorityDiv {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
 .projectTitle {
   background-color: black;
   color: white;
@@ -330,19 +336,24 @@ h1, h2 {
 
 .taskItem {
   display: flex;
-  flex-direction: row !important;
+  justify-content: space-between;
   align-items: center;
   background-color: #faebd6;
   transition: background-color 0.3s ease;
   width: 100%;
-  margin-left: 20vw;
+  margin-left: 7.5rem;
   margin-right: 2.5rem; 
+}
+
+.taskPriority {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 2rem;
 }
 
 .taskTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  min-width: 35vw;
 }
 
 .timestamp {
@@ -364,7 +375,7 @@ h1, h2 {
 
 ul {
   list-style-type: none;
-  margin: 1;
+  margin: 0;
   padding: 0;
 }
 
@@ -376,7 +387,6 @@ ul {
 
   .editButton, .removeButton {
     font-size: 0.75rem;
-    width: 85%;
   }
 
   .container {
@@ -440,12 +450,6 @@ ul {
     margin-left: auto;
   }
 
-  .taskItem {
-    flex-direction: row;
-    align-items: center;
-    flex-grow: 1;
-  }
-
   .taskTitle {
     font-size: 1.2rem;
     min-width: 90%;
@@ -462,7 +466,7 @@ ul {
   }
 }
 
-@media (min-width: 431px) and (max-width: 767px) {
+@media (max-width: 768px) {
   .container {
     align-items: center;
     flex-direction: column;
@@ -511,6 +515,11 @@ ul {
   .sortSection {
     align-items: center;
     justify-content: center;
+  }
+
+  .taskItem {
+    margin-left: 2.5rem;
+    margin-right: auto;
   }
 
   .taskActions {
