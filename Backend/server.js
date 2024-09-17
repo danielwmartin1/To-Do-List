@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import TaskRepository from './repositories/TaskRepository.js';
-import Task from './models/Task.js';
+import Tasks from './models/Tasks.js';
 import { formatInTimeZone } from 'date-fns-tz';
 
 const app = express();
@@ -28,6 +28,7 @@ const connectDB = async () => {
 connectDB();
 
 const taskRepository = new TaskRepository();
+
 
 app.get('/tasks', async (req, res) => {
   try {
@@ -59,12 +60,12 @@ app.get('/tasks/:id', async (req, res) => {
 app.post('/tasks', async (req, res) => {
   try {
     const now = new Date();
-    const newTask = new Task({
+    const newTask = new Tasks({
       title: req.body.title,
       dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
       createdAt: now,
       updatedAt: now,
-      priority: req.body.priority || '!' // Handle priority
+      priority: req.body.priority || 'low' // Handle priority
     });
 
     const task = await newTask.save();
@@ -80,16 +81,16 @@ app.put('/tasks/:id/toggleCompletion', async (req, res) => {
   try {
     const taskId = req.params.id;
     const timezone = req.query.timezone || 'UTC';
-    const task = await Task.findById(taskId);
+    const task = await Tasks.findById(taskId);
     if (!task) {
       return res.status(404).send('Task not found');
     }
     task.completed = !task.completed;
     const now = new Date();
     const formattedDate = formatInTimeZone(now, timezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
-
     task.completedAt = task.completed ? formattedDate : null;
     task.updatedAt = formattedDate;
+    task.priority = task.priority || 'low'; // Handle priority
     await task.save();
     res.send(task);
   } catch (error) {
@@ -104,17 +105,16 @@ app.patch('/tasks/:id', async (req, res) => {
     const now = new Date();
     const timezone = req.query.timezone || 'UTC';
     const formattedDate = formatInTimeZone(now, timezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
-
     const updateData = {
       ...req.body,
       updatedAt: formattedDate,
     };
 
-    if (req.body.completed !== undefined) {
+    if (typeof req.body.completed === 'boolean') {
       updateData.completedAt = req.body.completed ? formattedDate : null;
     }
 
-    const task = await Task.findByIdAndUpdate(id, updateData, { new: true });
+    const task = await Tasks.findByIdAndUpdate(id, updateData, { new: true });
     if (!task) {
       return res.status(404).send('Task not found');
     }
@@ -130,7 +130,6 @@ app.delete('/tasks/:id', async (req, res) => {
     const id = req.params.id;
     const deleteTask = await taskRepository.delete(id);
     res.send(deleteTask);
-    console.log('Deleted id' + id);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');

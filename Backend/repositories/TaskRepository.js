@@ -39,6 +39,7 @@ class TaskRepository {
       const task = new Tasks({
         ...newTask,
         dueDate: newTask.dueDate ? new Date(newTask.dueDate) : null,
+        priority: newTask.priority || 'low' // Handle priority
       });
       await task.save();
       return this.formatTaskDates(task, 'UTC');
@@ -57,12 +58,23 @@ class TaskRepository {
         ...updatedTask,
         dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : null,
         updatedAt: formattedDate,
+        priority: updatedTask.priority || 'low' // Handle priority
       }, { new: true });
       if (!task) return null;
       return this.formatTaskDates(task, timezone);
     } catch (error) {
       console.error(`Error updating task with id ${taskId}:`, error);
       throw new Error('Could not update task');
+    }
+  }
+
+  async delete(id) {
+    try {
+      const task = await Tasks.findByIdAndDelete(id);
+      return task;
+    } catch (error) {
+      console.error(`Error deleting task with id ${id}:`, error);
+      throw new Error('Could not delete task');
     }
   }
 }

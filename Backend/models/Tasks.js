@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
   completed: { type: Boolean, default: false },
   completedAt: { type: Date, set: (date) => date && isValidDate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
-  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
+  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }
 });
 
 // Middleware to update the updatedAt field
@@ -28,10 +28,11 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  obj.createdAt = formatInTimeZone(obj.createdAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
-  obj.dueDate = obj.dueDate ? formatInTimeZone(obj.dueDate, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
-  obj.completedAt = obj.completedAt ? formatInTimeZone(obj.completedAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
-  obj.updatedAt = formatInTimeZone(obj.updatedAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+  obj.createdAt = formatInTimeZone(this.createdAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+  obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
+  obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz') : null;
+  obj.updatedAt = formatInTimeZone(this.updatedAt, clientTimezone, 'MMMM dd, yyyy hh:mm:ss a zzz');
+  obj.priority = this.priority; // Include priority
   return obj;
 };
 
