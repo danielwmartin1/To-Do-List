@@ -241,11 +241,6 @@ h1, h2 {
   font-weight: bold !important;
 }
 
-.priorityDiv {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
 
 .projectTitle {
   background-color: black;
@@ -313,7 +308,7 @@ h1, h2 {
   justify-content: center;
   margin-top: 0;
   width: 100%;
-  margin-bottom: 1cap;
+  margin: 0rem 1rem 0.5rem 0rem;
 }
 
 .sortSection label {
