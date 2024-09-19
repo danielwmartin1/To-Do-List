@@ -260,8 +260,8 @@ h1, h2 {
 .priorityDiv {
   align-items: center;
   display: flex;
-  flex-direction: column;
   justify-content: start;
+  flex-direction: row;
 }
 
 .projectTitle {
@@ -277,7 +277,7 @@ h1, h2 {
   background-color: #04a675;
   border: 1px solid black;
   color: rgb(25, 0, 255);
-  border: 
+  border: 1px solid black;
 }
 
 .saveButton:hover {
