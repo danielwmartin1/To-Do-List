@@ -31,7 +31,7 @@ const taskRepository = new TaskRepository();
 
 app.get('/tasks', async (req, res) => {
   try {
-    const tasks = await taskRepository.getAll('UTC');
+    const tasks = await taskRepository.getAll(req.query, 'UTC');
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
