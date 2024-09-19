@@ -3,7 +3,9 @@ import axios from 'axios';
 import { formatInTimeZone } from 'date-fns-tz';
 import '../index.css';
 
+// List component
 function List() {
+  // State variables
   const [newTask, setNewTask] = useState('');
   const [newPriority, setNewPriority] = useState('Low');
   const [taskList, setTaskList] = useState([]);
@@ -15,10 +17,10 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
-
+  // Constants 
   const uri = 'https://todolist-backend-six-woad.vercel.app';
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+  // Fetch tasks from the server
   const fetchData = async () => {
     try {
       const response = await axios.get(`${uri}/tasks`);
@@ -36,12 +38,12 @@ function List() {
       handleError(error);
     }
   };
-
+  // Fetch tasks on component mount
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, []);
-
+  // Add a new task
   const addTask = async () => {
     if (!newTask.trim()) {
       setError('Task title cannot be empty.');
@@ -75,13 +77,13 @@ function List() {
       handleError(error);
     }
   };
-
+  // Handle date change
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
     const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
     setEditedDueDate(formattedDate);
   };
-
+  // Update a task
   const updateTask = async (taskId) => {
     try {
       const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
@@ -108,7 +110,7 @@ function List() {
       handleError(error);
     }
   };
-
+  // Remove a task
   const removeTask = async (taskId) => {
     try {
       await axios.delete(`${uri}/tasks/${taskId}`);
@@ -117,7 +119,7 @@ function List() {
       console.error('Error deleting task:', error);
     }
   };
-
+  // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
       const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : null;
@@ -138,7 +140,7 @@ function List() {
       handleError(error);
     }
   };
-
+  // Handle errors
   const handleError = (error) => {
     if (error.response) {
       setError(`Error: ${error.response.status} - ${error.response.data}`);
@@ -148,20 +150,20 @@ function List() {
       setError(`Error: ${error.message}`);
     }
   };
-
+  // Get current date and time
   const getCurrentDateTime = () => {
     const now = new Date();
     const formattedTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
     return formattedTime;
   };
-
+  // Start editing a task
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
     setEditedPriority(task.priority || 'Low');
     setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : '');
   };
-
+  // Handle sort change
   const handleSortChange = (e) => {
     const order = e.target.value;
     setSortOrder(order);
@@ -175,11 +177,11 @@ function List() {
     });
     setTaskList(sorted);
   };
-  
+  // Handle filter change
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
   };
-
+  // Filter tasks
   const filteredTasks = taskList.filter(task => {
     if (filterStatus === 'completed') {
       return task.completed;
@@ -189,10 +191,10 @@ function List() {
       return true;
     }
   });
-
+  // Sort tasks
   const incompleteTasks = filteredTasks.filter(task => !task.completed);
   const completedTasks = filteredTasks.filter(task => task.completed);
-  
+  // Return JSX
   return (
     <React.StrictMode>
       <div id='container'>
