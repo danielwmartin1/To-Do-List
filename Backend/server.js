@@ -1,6 +1,6 @@
 import express from 'express';
-import cors from 'cors';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import TaskRepository from './repositories/TaskRepository.js';
 import Tasks from './models/Tasks.js';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -29,115 +29,48 @@ connectDB();
 
 const taskRepository = new TaskRepository();
 
-
 app.get('/tasks', async (req, res) => {
   try {
-    const timezone = req.query.timezone || 'UTC';
-    const taskList = await taskRepository.getAll(timezone);
-    res.send(taskList);
-    console.log('taskList', taskList);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server Error' });
-  }
-});
-
-app.get('/tasks/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
-    const task = await taskRepository.getById(id, timezone);
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-    res.send(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server Error' });
+    const tasks = await taskRepository.getAllTasks();
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
 app.post('/tasks', async (req, res) => {
   try {
-    const now = new Date();
-    const newTask = new Tasks({
-      title: req.body.title,
-      dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
-      createdAt: now,
-      updatedAt: now,
-      priority: req.body.priority || 'low' // Handle priority
-    });
-
-    const task = await newTask.save();
-    res.send(task);
-    console.log('Posted a task titled', req.body.title);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
+    const task = await taskRepository.createTask(req.body);
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
-app.put('/tasks/:id/toggleCompletion', async (req, res) => {
+app.put('/tasks/:id', async (req, res) => {
   try {
-    const taskId = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
-    const task = await Tasks.findById(taskId);
+    const task = await taskRepository.updateTask(req.params.id, req.body);
     if (!task) {
-      return res.status(404).send('Task not found');
+      return res.status(404).json({ message: 'Task not found' });
     }
-    task.completed = !task.completed;
-    const now = new Date();
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
-    task.completedAt = task.completed ? formattedDate : null;
-    task.updatedAt = formattedDate;
-    task.priority = task.priority || 'low'; // Handle priority
-    await task.save();
-    res.send(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
-  }
-});
-
-app.patch('/tasks/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const now = new Date();
-    const timezone = req.query.timezone || 'UTC';
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
-    const updateData = {
-      ...req.body,
-      updatedAt: formattedDate,
-    };
-
-    if (typeof req.body.completed === 'boolean') {
-      updateData.completedAt = req.body.completed ? formattedDate : null;
-    }
-
-    const task = await Tasks.findByIdAndUpdate(id, updateData, { new: true });
-    if (!task) {
-      return res.status(404).send('Task not found');
-    }
-    res.send(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
 app.delete('/tasks/:id', async (req, res) => {
   try {
-    const id = req.params.id;
-    const deleteTask = await taskRepository.delete(id);
-    res.send(deleteTask);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server Error');
+    const task = await taskRepository.deleteTask(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.json({ message: 'Task deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
-
-export default app;
