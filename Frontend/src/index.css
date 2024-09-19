@@ -270,8 +270,6 @@ h1, h2 {
   font-family: 'Roboto', sans-serif;
   font-size: 4rem;
   font-weight: 700;
-  margin: 0;
-  padding: 1rem;
   text-align: center;
 }
 
@@ -397,9 +395,8 @@ ul {
     justify-content: flex-start;
   }
 
-  .newTask {
-    font-size: 1rem;
-    width: 90%;
+  select, input, .editTask, .newTask {
+    font-size: 0.7rem !important;
   }
 
   .priorityDiv {
@@ -461,6 +458,10 @@ ul {
 
   .footer {
     font-size: 1rem;
+  }
+
+  input, select, .editTask {
+    font-size: 0.8rem;
   }
 
   .listItem > span {
