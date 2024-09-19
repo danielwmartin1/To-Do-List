@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import { formatInTimeZone } from 'date-fns-tz';
 
-const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 // Helper function to check if a date is valid
 function isValidate(date) {
   return !isNaN(Date.parse(date));
@@ -33,10 +31,10 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  obj.createdAt = formatInTimeZone(this.createdAt, timezone, 'MMMM d, yyyy h:mm a zzz');
-  obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, timezone, 'MMMM d, yyyy h:mm a zzz') : null;
-  obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, timezone, 'MMMM d, yyyy h:mm a zzz') : null;
-  obj.updatedAt = formatInTimeZone(this.updatedAt, timezone, 'MMMM d, yyyy h:mm a zzz');
+  obj.createdAt = formatInTimeZone(this.createdAt, 'UTC', 'MMMM d, yyyy h:mm a zzz');
+  obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, 'UTC', 'MMMM d, yyyy h:mm a zzz') : null;
+  obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, 'UTC', 'MMMM d, yyyy h:mm a zzz') : null;
+  obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', 'MMMM d, yyyy h:mm a zzz');
   obj.priority = this.priority; // Include priority
   return obj;
 };

@@ -29,11 +29,9 @@ connectDB();
 
 const taskRepository = new TaskRepository();
 
-
 app.get('/tasks', async (req, res) => {
   try {
-    const timezone = req.query.timezone || 'UTC';
-    const taskList = await taskRepository.getAll(timezone);
+    const taskList = await taskRepository.getAll();
     res.send(taskList);
     console.log('taskList', taskList);
   } catch (error) {
@@ -45,8 +43,7 @@ app.get('/tasks', async (req, res) => {
 app.get('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
-    const task = await taskRepository.getById(id, timezone);
+    const task = await taskRepository.getById(id);
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
@@ -80,16 +77,14 @@ app.post('/tasks', async (req, res) => {
 app.put('/tasks/:id/toggleCompletion', async (req, res) => {
   try {
     const taskId = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
     const task = await Tasks.findById(taskId);
     if (!task) {
       return res.status(404).send('Task not found');
     }
     task.completed = !task.completed;
     const now = new Date();
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
-    task.completedAt = task.completed ? formattedDate : null;
-    task.updatedAt = formattedDate;
+    task.completedAt = task.completed ? now : null;
+    task.updatedAt = now;
     task.priority = task.priority || 'low'; // Handle priority
     await task.save();
     res.send(task);
@@ -103,15 +98,13 @@ app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const now = new Date();
-    const timezone = req.query.timezone || 'UTC';
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
     const updateData = {
       ...req.body,
-      updatedAt: formattedDate,
+      updatedAt: now,
     };
 
     if (typeof req.body.completed === 'boolean') {
-      updateData.completedAt = req.body.completed ? formattedDate : null;
+      updateData.completedAt = req.body.completed ? now : null;
     }
 
     const task = await Tasks.findByIdAndUpdate(id, updateData, { new: true });
