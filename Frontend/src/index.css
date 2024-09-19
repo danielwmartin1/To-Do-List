@@ -460,8 +460,8 @@ ul {
     font-size: 1rem;
   }
 
-  input, select, .editTask {
-    font-size: 0.8rem;
+  input, select, .editTask, .newTask {
+    font-size: 0.85rem;
   }
 
   .listItem > span {
