@@ -2,33 +2,32 @@ import Tasks from '../models/Tasks.js';
 import { formatInTimeZone } from 'date-fns-tz';
 
 class TaskRepository {
-
-  formatTaskDates(task) {
+  formatTaskDates(task, timezone) {
     return {
       ...task.toObject(),
-      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), 'UTC', 'MMMM d, yyyy h:mm a zzz') : null,
-      createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), 'UTC', 'MMMM d, yyyy h:mm a zzz') : null,
-      updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), 'UTC', 'MMMM d, yyyy h:mm a zzz') : null,
-      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), 'UTC', 'MMMM d, yyyy h:mm a zzz') : null,
+      dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
+      completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       priority: task.priority || 'low' // Include priority with default value
     };
   }
 
-  async getAll() {
+  async getAll(timezone) {
     try {
       const tasks = await Tasks.find();
-      return tasks.map(task => this.formatTaskDates(task));
+      return tasks.map(task => this.formatTaskDates(task, timezone));
     } catch (error) {
       console.error('Error fetching tasks:', error);
       throw new Error('Could not fetch tasks');
     }
   }
 
-  async getById(id) {
+  async getById(id, timezone) {
     try {
       const task = await Tasks.findById(id);
       if (!task) return null;
-      return this.formatTaskDates(task);
+      return this.formatTaskDates(task, timezone);
     } catch (error) {
       console.error(`Error fetching task with id ${id}:`, error);
       throw new Error('Could not fetch task');
@@ -43,25 +42,26 @@ class TaskRepository {
         priority: newTask.priority || 'low' // Handle priority
       });
       await task.save();
-      return this.formatTaskDates(task);
+      return this.formatTaskDates(task, 'UTC');
     } catch (error) {
       console.error('Error adding task:', error);
       throw new Error('Could not add task');
     }
   }
 
-  async update(taskId, updatedTask) {
+  async update(taskId, updatedTask, timezone) {
     try {
       const now = new Date();
+      const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
 
       const task = await Tasks.findByIdAndUpdate(taskId, {
         ...updatedTask,
         dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : null,
-        updatedAt: now,
+        updatedAt: formattedDate,
         priority: updatedTask.priority || 'low' // Handle priority
       }, { new: true });
       if (!task) return null;
-      return this.formatTaskDates(task);
+      return this.formatTaskDates(task, timezone);
     } catch (error) {
       console.error(`Error updating task with id ${taskId}:`, error);
       throw new Error('Could not update task');
