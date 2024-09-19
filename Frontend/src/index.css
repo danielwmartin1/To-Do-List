@@ -345,7 +345,7 @@ h1, h2 {
   font-family: 'Arial', sans-serif;
   font-size: 0.85rem;
   font-style: italic;
-  margin: 1rem;
+  margin: 0.5rem 0.5rem 0.5rem 5rem;
   text-align: left;
 }
 
@@ -423,12 +423,9 @@ ul {
 
   .timestamp {
     font-size: 0.7rem;
-    margin-right: auto;
   }
 
-  .timestampContainer {
-    margin: 0;
-  }
+
 }
 
 @media (max-width: 768px) {
@@ -493,18 +490,15 @@ ul {
     flex-direction: column;
   }
 
-  .taskItem {
-    margin: 0.5rem;
-  }
-
-  .taskTitle {
-    font-size: 1.1rem;
-  }
-
   .taskPriority {
     font-size: 0.85rem;
     margin-left: 2rem;
   }
+
+  .taskTitle {
+    font-size: 1.0rem;
+  }
+
 
   .timestamp {
     font-size: 0.75rem;
