@@ -261,6 +261,13 @@ h1, h2 {
   font-weight: bold !important;
 }
 
+.priorityDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .projectTitle {
   background-color: black;
   color: white;
@@ -306,20 +313,35 @@ h1, h2 {
   justify-content: flex-end;
 }
 
+.taskDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  max-width: 10% !important;
+}
+
 .taskItem {
   align-items: center;
   background-color: #faebd6;
   display: flex;
-  justify-content: space-between;
-  margin-left: 7.5rem;
-  margin-right: 2.5rem;
+  gap: 1rem;
   transition: background-color 0.3s ease;
   width: 100%;
+}
+
+.taskItem > * {
+  flex: 1 1 calc(33.333% - 1rem); /* Adjust the percentage as needed */
+  box-sizing: border-box;
 }
 
 .taskTitle {
   font-size: 1.2rem;
   font-weight: 600;
+  margin-left: 2.5rem;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
 }
 
 .timestamp {
@@ -335,7 +357,7 @@ h1, h2 {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 0 2rem;
 }
 
@@ -469,8 +491,7 @@ ul {
   }
 
   .taskItem {
-    margin-left: 2.5rem;
-    margin-right: auto;
+    margin: 0.5rem;
   }
 
   .taskTitle {
@@ -479,6 +500,7 @@ ul {
 
   .taskPriority {
     font-size: 0.85rem;
+    margin-left: 2rem;
   }
 
   .timestamp {

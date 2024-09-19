@@ -315,7 +315,7 @@ function List() {
                           {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                           <span className="timestamp">Created: {task.createdAt}</span>
                           <span className="timestamp">Updated: {task.updatedAt}</span>
-                          {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
+                          {task.completed && <span className="timestamp completedTimestamp">Completed: {task.completedAt}</span>}
                         </div>
                       </div>
                     )}
