@@ -77,7 +77,7 @@ function List() {
 
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedDate = formatInTimeZone(date, clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm');
+    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
     setEditedDueDate(formattedDate);
   };
 
@@ -150,7 +150,7 @@ function List() {
 
   const getCurrentDateTime = () => {
     const now = new Date();
-    const formattedTime = formatInTimeZone(now, clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+    const formattedTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
     return formattedTime;
   };
 
@@ -158,7 +158,7 @@ function List() {
     setEditingId(task._id);
     setEditedTask(task.title);
     setEditedPriority(task.priority || 'Low');
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm:ssXXX') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : '');
   };
 
   const handleSortChange = (e) => {
