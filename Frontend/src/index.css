@@ -38,7 +38,9 @@ body {
 }
 
 .editButton:active {
-  background-color: #0056b3;
+  background-color: rgb(255, 10, 255);
+  border: 1px solid black;
+  color: rgb(255, 0, 0);
 }
 
 .editButton:hover {
@@ -56,7 +58,7 @@ body {
 }
 
 .removeButton:hover {
-  background-color: rgb(255, 10, 10);
+  background-color: rgb(200, 42, 42);
 }
 
 .saveButton {
@@ -232,14 +234,6 @@ h1, h2 {
 .listItem:hover,
 .listItem:hover > * {
   background-color: #ebf79f;
-}
-
-.listItem:hover .editButton {
-  background-color: blue;
-}
-
-.listItem:hover .removeButton {
-  background-color: red;
 }
 
 .newTask {
