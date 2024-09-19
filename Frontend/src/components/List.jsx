@@ -402,11 +402,6 @@ function List() {
                       {editingId !== task._id && (
                         <>
                           <button
-                            className="editButton"
-                            onClick={(e) => { e.stopPropagation(); startEditing(task); }}
-                            aria-label={`Edit task "${task.title}"`}
-                          >Edit</button>
-                          <button
                             className="removeButton"
                             onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
                             aria-label={`Remove task "${task.title}"`}
