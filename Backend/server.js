@@ -7,6 +7,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 
 const app = express();
 const port = process.env.PORT || 4000;
+const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 app.use(cors());
 app.use(express.json());
@@ -32,8 +33,8 @@ const taskRepository = new TaskRepository();
 
 app.get('/tasks', async (req, res) => {
   try {
-    const timezone = req.query.timezone || 'UTC';
-    const taskList = await taskRepository.getAll(timezone);
+    const clientTimezone = req.query.clientTimezone || 'UTC';
+    const taskList = await taskRepository.getAll(clientTimezone);
     res.send(taskList);
     console.log('taskList', taskList);
   } catch (error) {
@@ -45,8 +46,8 @@ app.get('/tasks', async (req, res) => {
 app.get('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
-    const task = await taskRepository.getById(id, timezone);
+    const clientTimezone = req.query.clientTimezone || 'UTC';
+    const task = await taskRepository.getById(id, clientTimezone);
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
@@ -80,14 +81,14 @@ app.post('/tasks', async (req, res) => {
 app.put('/tasks/:id/toggleCompletion', async (req, res) => {
   try {
     const taskId = req.params.id;
-    const timezone = req.query.timezone || 'UTC';
+    const clientTimezone = req.query.clientTimezone || 'UTC';
     const task = await Tasks.findById(taskId);
     if (!task) {
       return res.status(404).send('Task not found');
     }
     task.completed = !task.completed;
     const now = new Date();
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
+    const formattedDate = formatInTimeZone(now, clientTimezone, 'MMMM d, yyyy h:mm a zzz');
     task.completedAt = task.completed ? formattedDate : null;
     task.updatedAt = formattedDate;
     task.priority = task.priority || 'low'; // Handle priority
@@ -103,8 +104,8 @@ app.patch('/tasks/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const now = new Date();
-    const timezone = req.query.timezone || 'UTC';
-    const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
+    const clientTimezone = req.query.clientTimezone || 'UTC';
+    const formattedDate = formatInTimeZone(now, clientTimezone, 'MMMM d, yyyy h:mm a zzz');
     const updateData = {
       ...req.body,
       updatedAt: formattedDate,
