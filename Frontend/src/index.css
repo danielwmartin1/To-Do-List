@@ -264,8 +264,8 @@ h1, h2 {
 .priorityDiv {
   align-items: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
 }
 
 .projectTitle {
