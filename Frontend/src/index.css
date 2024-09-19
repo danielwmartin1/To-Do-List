@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Button styles */
 .addButton, .editButton, .removeButton, .saveButton {
   border: none;
   border-radius: 5px;
@@ -16,7 +17,7 @@ body {
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  margin: 0.5rem;
+  margin: 2%; /* Changed to percentage */
   padding: 0.5rem 1rem;
   transition: background-color 0.3s ease;
 }
@@ -87,7 +88,7 @@ body {
   border: 1px solid black;
   border-radius: 5px;
   cursor: pointer;
-  margin: 0.5rem;
+  margin: 2%; /* Changed to percentage */
   padding: 0.5rem;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -114,7 +115,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 2rem;
+  margin: 0 5%; /* Changed to percentage */
 }
 
 .container {
@@ -137,7 +138,7 @@ body {
   background: #ccc;
   border: 0;
   height: 1px;
-  margin: 2rem 0;
+  margin: 5% 0; /* Changed to percentage */
 }
 
 .editContainer {
@@ -157,7 +158,7 @@ body {
 .editLabel {
   color: #555;
   font-size: 1rem;
-  margin-left: 1rem;
+  margin-left: 2%; /* Changed to percentage */
   text-align: center;
 }
 
@@ -167,7 +168,7 @@ body {
   box-sizing: border-box;
   cursor: text;
   font-family: 'Roboto', sans-serif;
-  margin: 0.5rem;
+  margin: 2%; /* Changed to percentage */
   padding: 0.5rem;
 }
 
@@ -176,7 +177,7 @@ body {
   color: #721c24; /* Dark red text */
   font-size: 1.2rem;
   font-weight: bold; /* Bold font style */
-  margin: 0.5rem;
+  margin: 2%; /* Changed to percentage */
   padding: 1rem; /* Padding for spacing */
   border: 1px solid #f5c6cb; /* Border to highlight the error */
   border-radius: 5px; /* Rounded corners */
@@ -209,7 +210,7 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin: 0rem;
+  margin: 0;
 }
 
 .listItem {
@@ -225,9 +226,8 @@ h1, h2 {
   justify-content: space-between;
   list-style-position: inside;
   list-style-type: disc;
-  margin: 0rem;
-  padding: 0rem;
   transition: background-color 0.3s ease;
+  margin: 0;
 }
 
 .listItem:active,
@@ -246,7 +246,7 @@ h1, h2 {
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
   font-size: 1rem;
-  margin: 0.5rem;
+  margin: 2%; /* Changed to percentage */
   max-width: 20rem;
   padding: 1rem;
   text-align: center;
@@ -288,11 +288,11 @@ h1, h2 {
   justify-content: center;
   margin-top: 0;
   width: 100%;
-  margin: 0rem 1rem 0.5rem 0rem;
+  margin: 0 2% 1% 0; /* Changed to percentage */
 }
 
 .sortSection label {
-  margin: 1rem;
+  margin: 2%; /* Changed to percentage */
 }
 
 .sortSection select {
@@ -315,14 +315,16 @@ h1, h2 {
   justify-content: center;
   max-width: 10% !important;
 }
-
+ 
 .taskItem {
   align-items: center;
   background-color: #faebd6;
   display: flex;
-  gap: 1rem;
+  gap: 1rem; /* Adjusted gap */
   transition: background-color 0.3s ease;
   width: 100%;
+  margin: 0.5rem 0; /* Decreased margin */
+  padding: 0.5rem; /* Decreased padding */
 }
 
 .taskItem > * {
@@ -333,7 +335,7 @@ h1, h2 {
 .taskTitle {
   font-size: 1.2rem;
   font-weight: 600;
-  margin-left: 2.5rem;
+  margin-left: 5%; /* Changed to percentage */
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -345,7 +347,7 @@ h1, h2 {
   font-family: 'Arial', sans-serif;
   font-size: 0.85rem;
   font-style: italic;
-  margin: 0.5rem 0.5rem 0.5rem 5rem;
+  margin: 2% 2% 2% 10%; /* Changed to percentage */
   text-align: left;
 }
 
@@ -354,7 +356,7 @@ h1, h2 {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 0 2rem;
+  margin: 0 5%; /* Changed to percentage */
 }
 
 ul {
@@ -371,7 +373,7 @@ ul {
   }
 
   .button {
-    margin-left: 0.5rem;
+    margin-left: 2%; /* Changed to percentage */
   }
 
   .completedTaskTitle {
@@ -389,7 +391,7 @@ ul {
   }
 
   .label {
-    margin: 0.5rem;
+    margin: 2%; /* Changed to percentage */
   }
 
   .listItem {
@@ -412,7 +414,7 @@ ul {
   }
 
   .taskItem {
-    margin-left: 0.5rem !important;
+    margin-left: 2%; /* Changed to percentage */
     margin-right: auto;
   }
 
@@ -424,8 +426,6 @@ ul {
   .timestamp {
     font-size: 0.7rem;
   }
-
-
 }
 
 @media (max-width: 768px) {
@@ -462,8 +462,8 @@ ul {
 
   .listItem > span {
     font-size: 1.3rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-left: 2%; /* Changed to percentage */
+    margin-right: 2%; /* Changed to percentage */
   }
 
   .newTask {
@@ -482,7 +482,7 @@ ul {
     justify-content: center;
     display: flex;
     flex-direction: column;
-    margin: 0.5rem 0;
+    margin: 2% 0; /* Changed to percentage */
   }
 
   .taskActions {
@@ -492,13 +492,12 @@ ul {
 
   .taskPriority {
     font-size: 0.85rem;
-    margin-left: 2rem;
+    margin-left: 5%; /* Changed to percentage */
   }
 
   .taskTitle {
     font-size: 1.0rem;
   }
-
 
   .timestamp {
     font-size: 0.75rem;
@@ -530,8 +529,8 @@ ul {
 
   .listItem > span {
     font-size: 1.5rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 2%; /* Changed to percentage */
+    margin-right: 2%; /* Changed to percentage */
   }
 
   .newTask {
@@ -546,7 +545,7 @@ ul {
   }
 
   .taskItem {
-    margin: 0.5rem;
+    margin: 2%; /* Changed to percentage */
   }
 
   button {
