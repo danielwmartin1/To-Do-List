@@ -23,8 +23,27 @@ TaskSchema.pre('save', function(next) {
   next();
 });
 
+// Middleware to update the updatedAt field
 TaskSchema.pre('findOneAndUpdate', function(next) {
   this._update.updatedAt = new Date();
+  next();
+});
+
+// Middleware to update the createdAt field
+TaskSchema.pre('createdAt', function(next) {
+  this.createdAt = new Date();
+  next();
+});
+
+// Middleware to update the completedAt field
+TaskSchema.pre('completedAt', function(next) {
+  this.completedAt = new Date();
+  next();
+});
+
+// Middleware to update the priority field
+TaskSchema.pre('priority', function(next) {
+  this.priority = this.priority || 'low';
   next();
 });
 
