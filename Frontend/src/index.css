@@ -486,6 +486,12 @@ ul {
     width: 100%;
   }
 
+  .priorityDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
   .sortSection {
     align-items: center;
     justify-content: center;
@@ -544,6 +550,12 @@ ul {
   .newTask {
     font-size: 1.2rem;
     width: 80%;
+  }
+  
+  .priorityDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 
   .taskItem {
