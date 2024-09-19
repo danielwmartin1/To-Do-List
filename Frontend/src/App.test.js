@@ -32,7 +32,7 @@ test('renders list items', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listItem');
+    const listItems = screen.getAllByRole('listitem');
     expect(listItems).toHaveLength(3);
   });
 });
@@ -94,7 +94,7 @@ test('toggles task completion', async () => {
   user.click(screen.getByRole('button', { name: /toggle completion/i }));
 
   await waitFor(() => {
-    const completedTasks = screen.getAllByRole('listItem', { name: /completed/i });
+    const completedTasks = screen.getAllByRole('listitem', { name: /completed/i });
     expect(completedTasks).toHaveLength(1);
   });
 });
