@@ -31,7 +31,7 @@ const taskRepository = new TaskRepository();
 
 app.get('/tasks', async (req, res) => {
   try {
-    const tasks = await taskRepository.getAllTasks();
+    const tasks = await taskRepository.getAll('UTC');
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -40,7 +40,7 @@ app.get('/tasks', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
   try {
-    const task = await taskRepository.createTask(req.body);
+    const task = await taskRepository.add(req.body, 'UTC');
     res.status(201).json(task);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -49,7 +49,7 @@ app.post('/tasks', async (req, res) => {
 
 app.put('/tasks/:id', async (req, res) => {
   try {
-    const task = await taskRepository.updateTask(req.params.id, req.body);
+    const task = await taskRepository.update(req.params.id, req.body, 'UTC');
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
@@ -61,7 +61,7 @@ app.put('/tasks/:id', async (req, res) => {
 
 app.delete('/tasks/:id', async (req, res) => {
   try {
-    const task = await taskRepository.deleteTask(req.params.id);
+    const task = await taskRepository.delete(req.params.id, 'UTC');
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }

@@ -9,7 +9,7 @@ class TaskRepository {
       createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
       completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
-      priority: task.priority || 'low' // Include priority with default value
+      priority: task.priority || 'low'
     };
   }
 
@@ -39,7 +39,7 @@ class TaskRepository {
       const task = new Tasks({
         ...newTask,
         dueDate: newTask.dueDate ? new Date(newTask.dueDate) : null,
-        priority: newTask.priority || 'low' // Handle priority
+        priority: newTask.priority || 'low'
       });
       await task.save();
       return this.formatTaskDates(task, timezone);

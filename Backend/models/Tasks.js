@@ -55,7 +55,7 @@ TaskSchema.methods.toJSON = function() {
   obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, 'UTC', format) : null;
   obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, 'UTC', format) : null;
   obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', format);
-  obj.priority = this.priority; // Include priority
+  obj.priority = this.priority;
   return obj;
 };
 
