@@ -301,11 +301,11 @@ function List() {
                             onChange={handleDateChange}
                             min={getCurrentDateTime()}
                           />
-                        </div>
-                        <button
+                          <button
                           className="saveButton"
                           onClick={() => updateTask(task._id)}
-                        >Save</button>
+                          >Save</button>
+                        </div>
                       </div>
                     ) : (
                       <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>

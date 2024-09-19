@@ -273,6 +273,17 @@ h1, h2 {
   text-align: center;
 }
 
+.saveButton:active {
+  background-color: #04a675;
+  border: 1px solid black;
+  color: rgb(25, 0, 255);
+  border: 
+}
+
+.saveButton:hover {
+  background-color: #05c98b;
+}
+
 .sortBy {
   align-items: center;
   display: flex;
@@ -518,10 +529,6 @@ ul {
   .container {
     align-items: center;
     justify-content: center;
-  }
-
-  .editDiv {
-    flex-direction: column !important;
   }
 
   .footer {
