@@ -306,7 +306,8 @@ h1, h2 {
 .taskActions {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  margin-right: 2%; /* Changed to percentage */
 }
 
 .taskDiv {
