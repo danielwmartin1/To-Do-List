@@ -69,6 +69,8 @@ body {
 
 .saveButton:active {
   background-color: #04a675;
+  border: 1px solid black;
+  color: rgb(25, 0, 255);
 }
 
 .saveButton:hover {
@@ -273,17 +275,6 @@ h1, h2 {
   text-align: center;
 }
 
-.saveButton:active {
-  background-color: #04a675;
-  border: 1px solid black;
-  color: rgb(25, 0, 255);
-  border: 1px solid black;
-}
-
-.saveButton:hover {
-  background-color: #05c98b;
-}
-
 .sortBy {
   align-items: center;
   display: flex;
@@ -432,9 +423,6 @@ ul {
 
   .timestamp {
     font-size: 0.7rem;
-  }
-
-  .timestamp {
     margin-right: auto;
   }
 
@@ -472,7 +460,7 @@ ul {
   }
 
   input, select, .editTask, .newTask {
-    font-size: 0.85rem;
+    font-size: 0.85rem !important;
   }
 
   .listItem > span {
@@ -542,6 +530,10 @@ ul {
     font-size: 1.2rem;
   }
 
+  input, select, .editTask, .newTask {
+    font-size: 1rem !important;
+  }
+
   .listItem > span {
     font-size: 1.5rem;
     margin-left: 1rem;
@@ -565,5 +557,10 @@ ul {
 
   button {
     font-size: 1.2rem;
+  }
+
+  .editDiv {
+    flex-direction: row !important;
+    flex-wrap: nowrap;
   }
 }
