@@ -26,6 +26,8 @@ body {
 }
 
 .addButton:active {
+  border: 1px solid black;
+  color: black;
   background-color: #50ea58;
 }
 
