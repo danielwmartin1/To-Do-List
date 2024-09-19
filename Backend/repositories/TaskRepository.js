@@ -34,7 +34,7 @@ class TaskRepository {
     }
   }
 
-  async add(newTask) {
+  async add(newTask, timezone) {
     try {
       const task = new Tasks({
         ...newTask,
@@ -42,7 +42,7 @@ class TaskRepository {
         priority: newTask.priority || 'low' // Handle priority
       });
       await task.save();
-      return this.formatTaskDates(task, 'UTC');
+      return this.formatTaskDates(task, timezone);
     } catch (error) {
       console.error('Error adding task:', error);
       throw new Error('Could not add task');
@@ -51,15 +51,7 @@ class TaskRepository {
 
   async update(taskId, updatedTask, timezone) {
     try {
-      const now = new Date();
-      const formattedDate = formatInTimeZone(now, timezone, 'MMMM d, yyyy h:mm a zzz');
-
-      const task = await Tasks.findByIdAndUpdate(taskId, {
-        ...updatedTask,
-        dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate) : null,
-        updatedAt: formattedDate,
-        priority: updatedTask.priority || 'low' // Handle priority
-      }, { new: true });
+      const task = await Tasks.findByIdAndUpdate(taskId, updatedTask, { new: true });
       if (!task) return null;
       return this.formatTaskDates(task, timezone);
     } catch (error) {
@@ -68,12 +60,13 @@ class TaskRepository {
     }
   }
 
-  async delete(id) {
+  async delete(taskId, timezone) {
     try {
-      const task = await Tasks.findByIdAndDelete(id);
-      return task;
+      const task = await Tasks.findByIdAndDelete(taskId);
+      if (!task) return null;
+      return this.formatTaskDates(task, timezone);
     } catch (error) {
-      console.error(`Error deleting task with id ${id}:`, error);
+      console.error(`Error deleting task with id ${taskId}:`, error);
       throw new Error('Could not delete task');
     }
   }
