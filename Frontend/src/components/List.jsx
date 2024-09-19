@@ -246,8 +246,8 @@ function List() {
           <label className="label" htmlFor="filterTasks">Filter by: </label>
           <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
             <option value="all">All</option>
-            <option value="completed">Incomplete</option>
-            <option value="incomplete">Completed</option>
+            <option value="completed">Completed</option>
+            <option value="incomplete">Incomplete</option>
           </select>
         </div>
 
@@ -343,7 +343,7 @@ function List() {
           </div>
 
           <div className="completedTaskList" onClick={() => setEditingId(null)}>
-            <h2 onClick = {(filterStatus) => handleFilterChange(filterStatus)}>Completed Tasks</h2>
+            <h2>Completed Tasks</h2>
             <ul className="taskList" onClick={(e) => e.stopPropagation()}>
               {completedTasks.map((task) => {
                 const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
