@@ -74,7 +74,7 @@ function List() {
       setNewPriority('Low');
       setDueDate('');
     } catch (error) {
-      handleError(error);
+      setError(error);
     }
   };
   // Handle date change
