@@ -35,7 +35,7 @@ function List() {
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
-      handleError(error);
+      setError('Failed to fetch tasks');
     }
   };
   // Fetch tasks on component mount
