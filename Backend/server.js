@@ -2,8 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import TaskRepository from './repositories/TaskRepository.js';
-import Tasks from './models/Tasks.js';
-import { formatInTimeZone } from 'date-fns-tz';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -18,7 +16,7 @@ app.use((req, _, next) => {
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://<username>:<password>@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
+    await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
     console.log('MongoDB connected...');
   } catch (err) {
     console.error(err.message);
@@ -31,16 +29,16 @@ const taskRepository = new TaskRepository();
 
 app.get('/tasks', async (req, res) => {
   try {
-    const tasks = await taskRepository.getAll(req.query, 'UTC');
+    const tasks = await taskRepository.getAll();
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+}); 
 
 app.post('/tasks', async (req, res) => {
   try {
-    const task = await taskRepository.add(req.body, 'UTC');
+    const task = await taskRepository.add(req.body);
     res.status(201).json(task);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -49,7 +47,7 @@ app.post('/tasks', async (req, res) => {
 
 app.put('/tasks/:id', async (req, res) => {
   try {
-    const task = await taskRepository.update(req.params.id, req.body, 'UTC');
+    const task = await taskRepository.update(req.params.id, req.body);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
@@ -61,7 +59,7 @@ app.put('/tasks/:id', async (req, res) => {
 
 app.delete('/tasks/:id', async (req, res) => {
   try {
-    const task = await taskRepository.delete(req.params.id, 'UTC');
+    const task = await taskRepository.delete(req.params.id);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
