@@ -7,11 +7,9 @@ import '../index.css';
 function List() {
   // State variables
   const [newTask, setNewTask] = useState('');
-  const [newPriority, setNewPriority] = useState('Low');
   const [taskList, setTaskList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedTask, setEditedTask] = useState('');
-  const [editedPriority, setEditedPriority] = useState('Low');
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
   const [error, setError] = useState('');
@@ -31,7 +29,6 @@ function List() {
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: task.priority || 'Low',
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -58,7 +55,6 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
-        priority: newPriority,
       });
       const formattedTask = {
         ...response.data,
@@ -66,15 +62,13 @@ function List() {
         createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: response.data.priority || 'Low',
-      };
+        };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setNewTask('');
-      setNewPriority('Low');
       setDueDate('');
     } catch (error) {
-      setError(error);
+      handleError(error);
     }
   };
   // Handle date change
@@ -89,7 +83,6 @@ function List() {
       const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
-        priority: editedPriority,
         dueDate: editedDueDateUTC,
       });
       const updatedTaskList = taskList.map((task) => {
@@ -97,7 +90,6 @@ function List() {
           return {
             ...task,
             title: editedTask,
-            priority: editedPriority,
             dueDate: editedDueDateUTC,
             updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'),
           };
@@ -160,7 +152,6 @@ function List() {
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedPriority(task.priority || 'Low');
     setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : '');
   };
   // Handle sort change
@@ -209,15 +200,6 @@ function List() {
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
             placeholder="Add a new task"
           />
-          <select
-            className="newTask"
-            value={newPriority}
-            onChange={(e) => setNewPriority(e.target.value)}
-          >
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
           <input
             className="newTask"
             type="datetime-local"
@@ -238,8 +220,6 @@ function List() {
             <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
             <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
             <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
-            <option className="sortOption" value="priority-asc">Priority Ascending</option>
-            <option className="sortOption" value="priority-desc">Priority Descending</option>
             <option className="sortOption" value="title-asc">Title Ascending</option>
             <option className="sortOption" value="title-desc">Title Descending</option>
             <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
@@ -284,18 +264,6 @@ function List() {
                           />
                         </div>
                         <div className="editContainer">
-                          <label className="editLabel">Edit Priority:</label>
-                          <select
-                            className='editTask'
-                            value={editedPriority}
-                            onChange={(e) => setEditedPriority(e.target.value)}
-                          >
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                          </select>
-                        </div>
-                        <div className="editContainer">
                           <label className="editLabel">Edit Due Date:</label>
                           <input
                             className='editTask'
@@ -313,7 +281,6 @@ function List() {
                     ) : (
                       <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
                         <div className="titleDiv"><span className="taskTitle">{task.title}</span></div>
-                        <div className="priorityDiv"><span className="taskPriority">Priority: {task.priority}</span></div>
                         <div className="timestampContainer">
                           {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                           <span className="timestamp">Created: {task.createdAt}</span>
@@ -391,7 +358,6 @@ function List() {
                     ) : (
                       <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
                         <div className="titleDiv"><span className="taskTitle">{task.title}</span></div>
-                        <div className="priorityDiv"><span className="taskPriority">Priority: {task.priority}</span></div>
                         <div className="timestampContainer">
                           {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                           <span className="timestamp">Created: {task.createdAt}</span>
