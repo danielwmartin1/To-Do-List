@@ -325,65 +325,64 @@ function List() {
                       className="checkbox"
                       type="checkbox"
                       checked={task.completed}
-                      onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                      onClick={(e) => { e.stopPropagation(); }}
+                      onChange={(e) => { toggleTaskCompletion(task._id, task.completed); e.stopPropagation(); }}
                     />
                     {editingId === task._id && !task.completed ? (
-                      <div className="editDiv">
-                        <div className="editContainer">
-                          <label className="editLabel">Edit Task:</label>
-                          <input
-                            className='editTask'
-                            autoFocus
-                            type="text"
-                            value={editedTask}
-                            onChange={(e) => setEditedTask(e.target.value)}
-                          />
-                        </div>
-                        <div className="editContainer">
-                          <label className="editLabel">Edit Due Date:</label>
-                          <input
-                            className='editTask'
-                            type="datetime-local"
-                            value={editedDueDate}
-                            onChange={(e) => setEditedDueDate(e.target.value)}
-                            min={getCurrentDateTime()}
-                          />
-                        </div>
-                        <button
-                          className="saveButton"
-                          onClick={() => updateTask(task._id)}
-                        >Save</button>
-                      </div>
+                                  <div className="editDiv" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
+                                  <div className="editContainer">
+                                    <label className="editLabel">Edit Task:</label>
+                                    <input
+                                    className='editTask'
+                                    autoFocus
+                                    type="text"
+                                    value={editedTask}
+                                    onChange={(e) => setEditedTask(e.target.value)}
+                                    />
+                                  </div>
+                                  <div className="editContainer">
+                                    <label className="editLabel">Edit Due Date:</label>
+                                    <input
+                                    className='editTask'
+                                    type="datetime-local"
+                                    value={editedDueDate}
+                                    onChange={(e) => setEditedDueDate(e.target.value)}
+                                    min={getCurrentDateTime()}
+                                    />
+                                  </div>
+                                  <button
+                                    className="saveButton"
+                                    onClick={() => updateTask(task._id)}
+                                  >Save</button>
+                                  </div>
                     ) : (
-                      <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
-                        <div className="titleDiv"><span className="taskTitle">{task.title}</span></div>
-                        <div className="timestampContainer">
-                          {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
-                          <span className="timestamp">Created: {task.createdAt}</span>
-                          <span className="timestamp">Updated: {task.updatedAt}</span>
-                          {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
-                        </div>
-                      </div>
+                                  <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`} onClick={(e) => e.stopPropagation()}>
+                                  <div className="titleDiv"><span className="taskTitle">{task.title}</span></div>
+                                  <div className="timestampContainer">
+                                    {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
+                                    <span className="timestamp">Created: {task.createdAt}</span>
+                                    <span className="timestamp">Updated: {task.updatedAt}</span>
+                                    {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
+                                  </div>
+                                  </div>
                     )}
                     <div className="taskActions">
-                      {editingId !== task._id && (
-                        <>
-                          <button
-                            className="removeButton"
-                            onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
+                                  {editingId !== task._id && (
+                                  <>
+                                    <button
+                                    className="removeButton"
+                                    onClick={(e) => { e.stopPropagation(); removeTask(task._id); }}
                             aria-label={`Remove task "${task.title}"`}
                           >Remove</button>
                         </>
                       )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </div>
+    </div>
+  </div>
     </React.StrictMode>
   );
 }
