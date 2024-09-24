@@ -57,6 +57,18 @@ app.put('/tasks/:id', async (req, res) => {
   }
 });
 
+app.patch('/tasks/:id', async (req, res) => {
+  try {
+    const task = await taskRepository.update(req.params.id, req.body);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+})
+
 app.delete('/tasks/:id', async (req, res) => {
   try {
     const task = await taskRepository.delete(req.params.id);
