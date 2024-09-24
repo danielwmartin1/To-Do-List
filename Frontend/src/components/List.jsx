@@ -204,7 +204,7 @@ function List() {
             type="datetime-local"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            min={new Date().toISOString().split('.')[0]}
+            min={new Date().toISOString().slice(0, 16).toString()}
             placeholder="Due Date"
           />
           <button className='addButton' onClick={addTask}>Add Task</button>
