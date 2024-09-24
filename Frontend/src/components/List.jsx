@@ -188,7 +188,7 @@ function List() {
   // Return JSX
   return (
     <React.StrictMode>
-      <div id='container'>
+      <div id='container' onClick={() => setEditingId(null)}>
         {error && <div className="error">{error}</div>}
         <div className="inputContainer">
           <input
@@ -197,7 +197,15 @@ function List() {
             type="text"
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addTask()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addTask();
+              } else if (e.key === "Escape") {
+                setNewTask('');
+              } else {
+                e.stopPropagation();
+              }
+            }}
             placeholder="Add a new task"
           />
           <input
@@ -234,7 +242,7 @@ function List() {
         </div>
 
         <div className="todo-container">
-          <div className="incompleteTaskList" onClick={() => setEditingId(null)}>
+          <div className="incompleteTaskList">
             <h2 onClick={() => handleFilterChange({ target: { value: 'incomplete' } })}>Incomplete Tasks</h2>
             <ul className="taskList" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
               {incompleteTasks.map((task) => {
@@ -243,6 +251,7 @@ function List() {
                   <li
                     className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                     key={task._id}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       className="checkbox"
@@ -273,8 +282,8 @@ function List() {
                             min={getCurrentDateTime()}
                           />
                           <button
-                          className="saveButton"
-                          onClick={() => updateTask(task._id)}
+                            className="saveButton"
+                            onClick={() => updateTask(task._id)}
                           >Save</button>
                         </div>
                       </div>
@@ -311,7 +320,7 @@ function List() {
             </ul>
           </div>
 
-          <div className="completedTaskList" onClick={() => setEditingId(null)}>
+          <div className="completedTaskList">
             <h2 onClick={() => handleFilterChange({ target: { value: 'completed' } })}>Completed Tasks</h2>
             <ul className="taskList" onClick={(e) => e.stopPropagation()}>
               {completedTasks.map((task) => {
@@ -320,16 +329,16 @@ function List() {
                   <li
                     className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                     key={task._id}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       className="checkbox"
                       type="checkbox"
                       checked={task.completed}
-                      onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                      onClick={(e) => { e.stopPropagation(); }}
+                      onChange={(e) => { toggleTaskCompletion(task._id, task.completed); e.stopPropagation(); }}
                     />
                     {editingId === task._id && !task.completed ? (
-                      <div className="editDiv">
+                      <div className="editDiv" onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
                         <div className="editContainer">
                           <label className="editLabel">Edit Task:</label>
                           <input
