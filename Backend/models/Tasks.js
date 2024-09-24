@@ -15,29 +15,32 @@ function formatDate(date) {
 // Define the Task schema
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  createdAt: { type: String, default: () => formatDate(new Date()) },
-  dueDate: { type: String, set: (date) => isValidate(date) ? formatDate(new Date(date)) : date },
+  createdAt: { type: Date, default: Date.now },
+  dueDate: { type: Date, set: (date) => isValidate(date) ? new Date(date) : date },
   completed: { type: Boolean, default: false },
-  completedAt: { type: String, set: (date) => date && isValidate(date) ? formatDate(new Date(date)) : date },
-  updatedAt: { type: String, default: () => formatDate(new Date()) },
-  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }
+  completedAt: { type: Date, set: (date) => date && isValidate(date) ? new Date(date) : date },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 // Middleware to update the updatedAt field
 TaskSchema.pre('save', function(next) {
-  this.updatedAt = formatDate(new Date());
+  this.updatedAt = new Date();
   next();
 });
 
 // Middleware to update the updatedAt field
 TaskSchema.pre('findOneAndUpdate', function(next) {
-  this._update.updatedAt = formatDate(new Date());
+  this._update.updatedAt = new Date();
   next();
 });
 
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
+  obj.createdAt = formatDate(obj.createdAt);
+  obj.dueDate = obj.dueDate ? formatDate(obj.dueDate) : null;
+  obj.completedAt = obj.completedAt ? formatDate(obj.completedAt) : null;
+  obj.updatedAt = formatDate(obj.updatedAt);
   return obj;
 };
 
