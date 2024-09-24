@@ -74,8 +74,7 @@ function List() {
   // Handle date change
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
-    setEditedDueDate(formattedDate);
+    setEditedDueDate(date.toISOString().slice(0, 16));
   };
   // Update a task
   const updateTask = async (taskId) => {
