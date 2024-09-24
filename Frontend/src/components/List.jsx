@@ -46,12 +46,21 @@ function List() {
       setError('Task title cannot be empty.');
       return;
     }
-    if (new Date(dueDate) < new Date()) {
+    let taskDueDate = dueDate;
+    if (!taskDueDate) {
+      const defaultDueDate = new Date();
+      defaultDueDate.setDate(defaultDueDate.getDate() + 7);
+      defaultDueDate.setHours(21, 0, 0, 0);
+      const formattedDefaultDueDate = formatInTimeZone(defaultDueDate, clientTimeZone, 'yyyy-MM-dd\'T\'HH:mm');
+      taskDueDate = formattedDefaultDueDate;
+      taskDueDate = defaultDueDate.toISOString();
+    }
+    if (new Date(taskDueDate) < new Date()) {
       setError('Please choose a future date and time.');
       return;
     }
     try {
-      const formattedDueDate = formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+      const formattedDueDate = formatInTimeZone(new Date(taskDueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
@@ -62,7 +71,7 @@ function List() {
         createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        };
+      };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setNewTask('');
@@ -80,7 +89,7 @@ function List() {
   // Update a task
   const updateTask = async (taskId) => {
     try {
-      const editedDueDateUTC = formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
+      const editedDueDateUTC = new Date(editedDueDate).toISOString();
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
         dueDate: editedDueDateUTC,
@@ -90,7 +99,7 @@ function List() {
           return {
             ...task,
             title: editedTask,
-            dueDate: editedDueDateUTC,
+            dueDate: formatInTimeZone(new Date(editedDueDateUTC), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'),
             updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'),
           };
         }
@@ -188,7 +197,7 @@ function List() {
   // Return JSX
   return (
     <React.StrictMode>
-      <div id='container'>
+      <div id='container' onClick={() => setEditingId(null)}>
         {error && <div className="error">{error}</div>}
         <div className="inputContainer">
           <input
@@ -197,52 +206,69 @@ function List() {
             type="text"
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addTask()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addTask();
+              } else if (e.key === "Escape") {
+                setNewTask('');
+              } else {
+                e.stopPropagation();
+              }
+            }}
             placeholder="Add a new task"
           />
           <input
             className="newTask"
             type="datetime-local"
             value={dueDate}
+            placeholder="Due Date"
             onChange={(e) => setDueDate(e.target.value)}
             min={getCurrentDateTime()}
-            placeholder="Due Date"
           />
-          <button className='addButton' onClick={addTask}>Add Task</button>
+          <button
+            className='addButton'
+            onClick={() => {
+              addTask();
+            }}
+          >
+            Add Task
+          </button>
         </div>
+        
 
-        <div className="sortSection">
-          <label className="label" htmlFor="sortTasks">Sort by: </label>
-          <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
-            <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
-            <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
-            <option className="sortOption" value="completedAt-asc">Completed Date Ascending</option>
-            <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
-            <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
-            <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
-            <option className="sortOption" value="title-asc">Title Ascending</option>
-            <option className="sortOption" value="title-desc">Title Descending</option>
-            <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
-            <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
-          </select>
-          <label className="label" htmlFor="filterTasks">Filter by: </label>
-          <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="incomplete">Incomplete</option>
-          </select>
-        </div>
+          <div className="sortSection">
+            <label className="label" htmlFor="sortTasks">Sort by: </label>
+            <select id="sortTasks" value={sortOrder} onChange={handleSortChange}>
+              <option className="sortOption" value="createdAt-asc">Created Date Ascending</option>
+              <option className="sortOption" value="createdAt-desc">Created Date Descending</option>
+              <option className="sortOption" value="completedAt-asc">Completed Date Ascending</option>
+              <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
+              <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
+              <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
+              <option className="sortOption" value="title-asc">Title Ascending</option>
+              <option className="sortOption" value="title-desc">Title Descending</option>
+              <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
+              <option className="sortOption" value="updatedAt-desc">Updated Date Descending</option>
+            </select>
+            <label className="label" htmlFor="filterTasks">Filter by: </label>
+            <select id="filterTasks" value={filterStatus} onChange={handleFilterChange}>
+              <option value="all">All</option>
+              <option value="completed">Completed</option>
+              <option value="incomplete">Incomplete</option>
+            </select>
+          </div>
 
-        <div className="todo-container">
-          <div className="incompleteTaskList" onClick={() => setEditingId(null)}>
-            <h2 onClick={() => handleFilterChange({ target: { value: 'incomplete' } })}>Incomplete Tasks</h2>
-            <ul className="taskList" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
-              {incompleteTasks.map((task) => {
+            <div className="todo-container">
+              <div className="incompleteTaskList">
+              <h2 onClick={() => handleFilterChange({ target: { value: 'incomplete' } })}>Incomplete Tasks</h2>
+              <ul className="taskList" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
+                {incompleteTasks.map((task) => {
                 const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
                 return (
                   <li
                     className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                     key={task._id}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       className="checkbox"
@@ -273,8 +299,8 @@ function List() {
                             min={getCurrentDateTime()}
                           />
                           <button
-                          className="saveButton"
-                          onClick={() => updateTask(task._id)}
+                            className="saveButton"
+                            onClick={() => updateTask(task._id)}
                           >Save</button>
                         </div>
                       </div>
@@ -311,7 +337,7 @@ function List() {
             </ul>
           </div>
 
-          <div className="completedTaskList" onClick={() => setEditingId(null)}>
+          <div className="completedTaskList">
             <h2 onClick={() => handleFilterChange({ target: { value: 'completed' } })}>Completed Tasks</h2>
             <ul className="taskList" onClick={(e) => e.stopPropagation()}>
               {completedTasks.map((task) => {
@@ -320,16 +346,16 @@ function List() {
                   <li
                     className={`listItem ${task.completed ? 'completedTask' : ''} ${isOverdue && !task.completed ? 'overdueIncompleteTask' : ''}`}
                     key={task._id}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <input
                       className="checkbox"
                       type="checkbox"
                       checked={task.completed}
-                      onChange={() => toggleTaskCompletion(task._id, task.completed)}
-                      onClick={(e) => { e.stopPropagation(); }}
+                      onChange={(e) => { toggleTaskCompletion(task._id, task.completed); e.stopPropagation(); }}
                     />
                     {editingId === task._id && !task.completed ? (
-                      <div className="editDiv">
+                      <div className="editDiv" onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
                         <div className="editContainer">
                           <label className="editLabel">Edit Task:</label>
                           <input
