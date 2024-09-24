@@ -14,7 +14,6 @@ const TaskSchema = new mongoose.Schema({
   completed: { type: Boolean, default: false },
   completedAt: { type: Date, set: (date) => date && isValidate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
-  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }
 });
 
 // Middleware to update the updatedAt field
@@ -23,27 +22,8 @@ TaskSchema.pre('save', function(next) {
   next();
 });
 
-// Middleware to update the updatedAt field
 TaskSchema.pre('findOneAndUpdate', function(next) {
   this._update.updatedAt = new Date();
-  next();
-});
-
-// Middleware to update the createdAt field
-TaskSchema.pre('createdAt', function(next) {
-  this.createdAt = new Date();
-  next();
-});
-
-// Middleware to update the completedAt field
-TaskSchema.pre('completedAt', function(next) {
-  this.completedAt = new Date();
-  next();
-});
-
-// Middleware to update the priority field
-TaskSchema.pre('priority', function(next) {
-  this.priority = this.priority || 'low';
   next();
 });
 
@@ -55,7 +35,6 @@ TaskSchema.methods.toJSON = function() {
   obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, 'UTC', format) : null;
   obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, 'UTC', format) : null;
   obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', format);
-  obj.priority = this.priority;
   return obj;
 };
 
