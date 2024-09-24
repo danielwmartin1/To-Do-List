@@ -32,7 +32,7 @@ test('renders list items', async () => {
   expect(listElement).toBeInTheDocument();
 
   await waitFor(() => {
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole('listItem');
     expect(listItems).toHaveLength(3);
   });
 });
