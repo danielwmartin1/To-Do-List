@@ -269,9 +269,9 @@ function List() {
                             <input
                               className='editTask'
                               type="datetime-local"
-                              value={editedDueDate}
+                              value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 16) : ''}
                               onChange={handleDateChange}
-                              min={getCurrentDateTime()}
+                              min={new Date().toISOString().slice(0, 16)}
                             />
                             <button
                             className="saveButton"
