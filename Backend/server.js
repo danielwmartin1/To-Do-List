@@ -47,7 +47,19 @@ app.post('/tasks', async (req, res) => {
 
 app.put('/tasks/:id', async (req, res) => {
   try {
-    const task = await taskRepository.update(req.params.id, req.body);
+    const task = await taskRepository.replace(req.params.id, req.body); // Full update
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+app.patch('/tasks/:id', async (req, res) => {
+  try {
+    const task = await taskRepository.update(req.params.id, req.body); // Partial update
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }

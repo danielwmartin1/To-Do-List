@@ -50,6 +50,19 @@ class TaskRepository {
     }
   }
 
+  async replace(taskId, updatedTask) {
+    try {
+      const task = await Tasks.findByIdAndUpdate
+      (taskId, updatedTask, { new: true });
+      if (!task) return null;
+      return this.formatTaskDates(task);
+    }
+    catch (error) {
+      console.error(`Error replacing task with id ${taskId}:`, error);
+      throw new Error('Could not replace task');
+    }
+  }
+
   async update(taskId, updatedTask) {
     try {
       const task = await Tasks.findByIdAndUpdate(taskId, updatedTask, { new: true });
