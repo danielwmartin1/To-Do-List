@@ -176,16 +176,21 @@ function List() {
       const [key, direction] = order.split('-');
       if (key === 'title') {
         return direction === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
+      } else if (key === 'priority') {
+        const priorityOrder = { low: 1, medium: 2, high: 3 };
+        return direction === 'asc' ? priorityOrder[a[key]] - priorityOrder[b[key]] : priorityOrder[b[key]] - priorityOrder[a[key]];
       } else {
         return direction === 'asc' ? new Date(a[key]) - new Date(b[key]) : new Date(b[key]) - new Date(a[key]);
       }
     });
     setTaskList(sorted);
   };
+
   // Handle filter change
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
   };
+
   // Filter tasks
   const filteredTasks = taskList.filter(task => {
     if (filterStatus === 'completed') {
@@ -196,6 +201,7 @@ function List() {
       return true;
     }
   });
+
   // Sort tasks
   const incompleteTasks = filteredTasks.filter(task => !task.completed);
   const completedTasks = filteredTasks.filter(task => task.completed);
@@ -244,6 +250,8 @@ function List() {
             <option className="sortOption" value="completedAt-desc">Completed Date Descending</option>
             <option className="sortOption" value="dueDate-asc">Due Date Ascending</option>
             <option className="sortOption" value="dueDate-desc">Due Date Descending</option>
+            <option className="sortOption" value="priority-asc">Priority Ascending</option>
+            <option className="sortOption" value="priority-desc">Priority Descending</option>
             <option className="sortOption" value="title-asc">Title Ascending</option>
             <option className="sortOption" value="title-desc">Title Descending</option>
             <option className="sortOption" value="updatedAt-asc">Updated Date Ascending</option>
