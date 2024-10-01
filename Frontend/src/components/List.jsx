@@ -145,7 +145,9 @@ function List() {
   };
   // Handle errors
   const handleError = (error) => {
-    if (error.response) {
+    if (error.message === 'Invalid time value') {
+      setError('Pick a Due Date');
+    } else if (error.response) {
       setError(`Error: ${error.response.status} - ${error.response.data}`);
     } else if (error.request) {
       setError("Network error: No response received from server");
