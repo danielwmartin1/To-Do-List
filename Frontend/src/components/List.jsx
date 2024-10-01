@@ -295,23 +295,23 @@ function List() {
                               onChange={handleDateChange}
                               min={new Date().toISOString().slice(0, 16)}
                             />
-                            <div className="editContainer">
-                              <label className="editTask">Edit Priority:</label>
-                              <select 
-                                className="editPriority editTask"
-                                value={editedPriority}
-                                onChange={(e) => setEditedPriority(e.target.value)}
-                              >
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                              </select>
-                            </div>
-                            <button
+                          </div>
+                          <div className="editContainer">
+                            <label className="editLabel">Edit Priority:</label>
+                            <select 
+                              className="editTask"
+                              value={editedPriority}
+                              onChange={(e) => setEditedPriority(e.target.value)}
+                            >
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                          </div>
+                          <button
                             className="saveButton"
                             onClick={() => updateTask(task._id)}
-                            >Save</button>
-                          </div>
+                          >Save</button>
                         </div>
                       ) : (
                         <div className={`taskItem ${isOverdue ? 'overdueTaskItem' : ''} ${editingId === task._id ? 'editing' : ''}`}>
