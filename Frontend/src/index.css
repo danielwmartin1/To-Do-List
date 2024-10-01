@@ -7,6 +7,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+select {
+  border: 1px solid black;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
 .addButton, .editButton, .removeButton, .saveButton {
   border: none;
   border-radius: 5px;
@@ -47,6 +56,20 @@ body {
 .editButton:hover {
   background-color: #0069d9;
 }
+
+.editPriority {
+  border: none;
+  border-radius: 5px;
+  color: black;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 2%;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
 
 .removeButton {
   background-color: red;
@@ -207,6 +230,7 @@ h1, h2 {
   justify-content: center;
   text-align: center;
   margin: 0;
+  cursor: pointer;
 }
 
 .listItem {

@@ -298,7 +298,7 @@ function List() {
                             <div className="editContainer">
                               <label className="editTask">Edit Priority:</label>
                               <select 
-                                className="editTask"
+                                className="editPriority editTask"
                                 value={editedPriority}
                                 onChange={(e) => setEditedPriority(e.target.value)}
                               >
