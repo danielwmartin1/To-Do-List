@@ -12,8 +12,8 @@ function List() {
   const [editedTask, setEditedTask] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
-  const [priority, setPriority] = useState('low');
-  const [editedPriority, setEditedPriority] = useState('low');
+  const [priority, setPriority] = useState('Low');
+  const [editedPriority, setEditedPriority] = useState('Low');
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -31,7 +31,7 @@ function List() {
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: task.priority || 'low',
+        priority: task.priority || 'Low',
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -49,12 +49,12 @@ function List() {
       setError('Task title cannot be empty.');
       return;
     }
-    if (new Date(dueDate) < new Date()) {
+    if (dueDate && new Date(dueDate) < new Date()) {
       setError('Please choose a future date and time.');
       return;
     }
     try {
-      const formattedDueDate = formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+      const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
@@ -65,14 +65,14 @@ function List() {
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        priority: response.data.priority || 'low',
+        priority: response.data.priority || 'Low',
         completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setNewTask('');
       setDueDate('');
-      setPriority('low');
+      setPriority('Low');
       setEditedDueDate('');
       setError('');
       setFilterStatus('all');
@@ -177,7 +177,7 @@ function List() {
       if (key === 'title') {
         return direction === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
       } else if (key === 'priority') {
-        const priorityOrder = { low: 1, medium: 2, high: 3 };
+        const priorityOrder = { Low: 1, Medium: 2, High: 3 };
         return direction === 'asc' ? priorityOrder[a[key]] - priorityOrder[b[key]] : priorityOrder[b[key]] - priorityOrder[a[key]];
       } else {
         return direction === 'asc' ? new Date(a[key]) - new Date(b[key]) : new Date(b[key]) - new Date(a[key]);
@@ -234,9 +234,9 @@ function List() {
             onChange={(e) => setPriority(e.target.value)}
             placeholder="Priority"
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
           </select>
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
@@ -313,9 +313,9 @@ function List() {
                               value={editedPriority}
                               onChange={(e) => setEditedPriority(e.target.value)}
                             >
-                              <option value="low">Low</option>
-                              <option value="medium">Medium</option>
-                              <option value="high">High</option>
+                              <option value="Low">Low</option>
+                              <option value="Medium">Medium</option>
+                              <option value="High">High</option>
                             </select>
                           </div>
                           <button
@@ -399,9 +399,9 @@ function List() {
                           <div className="editContainer">
                             <label className="editLabel">Edit Priority:</label>
                             <select>
-                              <option value="low">Low</option>
-                              <option value="medium">Medium</option>
-                              <option value="high">High</option>
+                              <option value="Low">Low</option>
+                              <option value="Medium">Medium</option>
+                              <option value="High">High</option>
                             </select>
                           </div>
                           <button

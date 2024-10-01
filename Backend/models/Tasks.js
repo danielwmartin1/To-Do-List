@@ -29,23 +29,7 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
   next();
 });
 
-// Middleware to update the createdAt field
-TaskSchema.pre('createdAt', function(next) {
-  this.createdAt = new Date();
-  next();
-});
-
-// Middleware to update the completedAt field
-TaskSchema.pre('completedAt', function(next) {
-  this.completedAt = new Date();
-  next();
-});
-
-// Middleware to update the priority field
-TaskSchema.pre('priority', function(next) {
-  this.priority = this.priority || 'low';
-  next();
-});
+// Remove invalid middleware hooks for createdAt, completedAt, and priority
 
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
