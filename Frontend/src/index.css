@@ -511,7 +511,7 @@ ul {
     flex-direction: column;
   }
 
-  .editPriory {
+  .editPriority {
     font-size: 0.85rem;
     margin-left: 5%; /* Changed to percentage */
   }
