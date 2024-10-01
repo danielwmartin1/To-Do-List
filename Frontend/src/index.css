@@ -161,8 +161,6 @@ body {
 }
 
 .editTask {
-  border: 1px solid black;
-  border-radius: 5px;
   box-sizing: border-box;
   cursor: text;
   font-family: 'Roboto', sans-serif;
@@ -262,6 +260,7 @@ h1, h2 {
   display: flex;
   justify-content: center;
   flex-direction: row;
+  cursor: pointer;
 }
 
 .projectTitle {
@@ -488,7 +487,7 @@ ul {
     flex-direction: column;
   }
 
-  .taskPriority {
+  .editPriory {
     font-size: 0.85rem;
     margin-left: 5%; /* Changed to percentage */
   }

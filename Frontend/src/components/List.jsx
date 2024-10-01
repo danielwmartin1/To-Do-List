@@ -12,6 +12,8 @@ function List() {
   const [editedTask, setEditedTask] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [editedDueDate, setEditedDueDate] = useState('');
+  const [priority, setPriority] = useState('low');
+  const [editedPriority, setEditedPriority] = useState('low');
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -29,6 +31,7 @@ function List() {
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        priority: task.priority || 'low',
       }));
       setTaskList(formattedTaskList);
     } catch (error) {
@@ -55,18 +58,24 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
+        priority: priority,
       });
       const formattedTask = {
         ...response.data,
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        priority: response.data.priority || 'low',
         completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        };
+      };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setNewTask('');
       setDueDate('');
+      setPriority('low');
+      setEditedDueDate('');
+      setError('');
+      setFilterStatus('all');
     } catch (error) {
       handleError(error);
     }
@@ -84,6 +93,7 @@ function List() {
       await axios.patch(`${uri}/tasks/${taskId}`, {
         title: editedTask,
         dueDate: editedDueDateUTC,
+        priority: editedPriority,
       });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
@@ -91,6 +101,7 @@ function List() {
             ...task,
             title: editedTask,
             dueDate: editedDueDateUTC,
+            priority: editedPriority,
             updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz'),
           };
         }
@@ -153,6 +164,7 @@ function List() {
     setEditingId(task._id);
     setEditedTask(task.title);
     setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : '');
+    setEditedPriority(task.priority);
   };
   // Handle sort change
   const handleSortChange = (e) => {
@@ -208,6 +220,16 @@ function List() {
             min={getCurrentDateTime()}
             placeholder="Due Date"
           />
+          <select 
+            className="newTask"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            placeholder="Priority"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
 
@@ -273,6 +295,18 @@ function List() {
                               onChange={handleDateChange}
                               min={new Date().toISOString().slice(0, 16)}
                             />
+                            <div className="editContainer">
+                              <label className="editTask">Edit Priority:</label>
+                              <select 
+                                className="editTask"
+                                value={editedPriority}
+                                onChange={(e) => setEditedPriority(e.target.value)}
+                              >
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                              </select>
+                            </div>
                             <button
                             className="saveButton"
                             onClick={() => updateTask(task._id)}
@@ -286,6 +320,7 @@ function List() {
                             {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                             <span className="timestamp">Created: {task.createdAt}</span>
                             <span className="timestamp">Updated: {task.updatedAt}</span>
+                            <span className="timestamp">Priority: {task.priority}</span> 
                             {task.completed && <span className="timestamp completedTimestamp">Completed: {task.completedAt}</span>}
                           </div>
                         </div>
@@ -351,6 +386,14 @@ function List() {
                               min={getCurrentDateTime()}
                             />
                           </div>
+                          <div className="editContainer">
+                            <label className="editLabel">Edit Priority:</label>
+                            <select>
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                            </select>
+                          </div>
                           <button
                             className="saveButton"
                             onClick={() => updateTask(task._id)}
@@ -363,6 +406,7 @@ function List() {
                             {task.dueDate && <span className={`timestamp ${isOverdue ? 'overdue' : ''}`}>Due: {task.dueDate}</span>}
                             <span className="timestamp">Created: {task.createdAt}</span>
                             <span className="timestamp">Updated: {task.updatedAt}</span>
+                            <span className="timestamp">Priority: {task.priority}</span>
                             {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
                           </div>
                         </div>
