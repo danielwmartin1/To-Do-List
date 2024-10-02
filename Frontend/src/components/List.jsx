@@ -18,7 +18,7 @@ function List() {
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
   // Constants 
-  const uri = 'https://todolist-backend-six-woad.vercel.app';
+  const uri = process.env.REACT_APP_BACKEND_URI;
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   // Fetch tasks from the server
   const fetchData = async () => {
@@ -58,7 +58,11 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
-        priority: priority,
+        priority: priority
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       const formattedTask = {
         ...response.data,
@@ -180,7 +184,9 @@ function List() {
         const priorityOrder = { Low: 1, Medium: 2, High: 3 };
         return direction === 'asc' ? priorityOrder[a[key]] - priorityOrder[b[key]] : priorityOrder[b[key]] - priorityOrder[a[key]];
       } else {
-        return direction === 'asc' ? new Date(a[key]) - new Date(b[key]) : new Date(b[key]) - new Date(a[key]);
+        const dateA = new Date(a[key]);
+        const dateB = new Date(b[key]);
+        return direction === 'asc' ? dateA - dateB : dateB - dateA;
       }
     });
     setTaskList(sorted);
