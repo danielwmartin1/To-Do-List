@@ -225,8 +225,7 @@ function List() {
             type="datetime-local"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            min={getCurrentDateTime()}
-            placeholder="Due Date"
+            min={new Date().toISOString().slice(0, 16)}
           />
           <select 
             className="newTask"
@@ -303,7 +302,7 @@ function List() {
                               type="datetime-local"
                               value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 16) : ''}
                               onChange={handleDateChange}
-                              min={new Date().toISOString().slice(0, 16)}
+                              min={new Date().toISOString().split('.')[0]}
                             />
                           </div>
                           <div className="editContainer">
@@ -398,7 +397,11 @@ function List() {
                           </div>
                           <div className="editContainer">
                             <label className="editLabel">Edit Priority:</label>
-                            <select>
+                            <select 
+                              className="editTask"
+                              value={editedPriority}
+                              onChange={(e) => setEditedPriority(e.target.value)}
+                            >
                               <option value="Low">Low</option>
                               <option value="Medium">Medium</option>
                               <option value="High">High</option>
