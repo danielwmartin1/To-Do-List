@@ -14,8 +14,7 @@ const TaskSchema = new mongoose.Schema({
   completed: { type: Boolean, default: false },
   completedAt: { type: Date, set: (date) => date && isValidate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
-  priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' },
-  files: [{ type: String }]
+  priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' }
 });
 
 // Middleware to update the updatedAt field
@@ -30,7 +29,7 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
   next();
 });
 
-// Middleware hooks for createdAt, completedAt, and priority are not needed
+// Remove invalid middleware hooks for createdAt, completedAt, and priority
 
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {

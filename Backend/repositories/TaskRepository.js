@@ -1,6 +1,5 @@
 import Tasks from '../models/Tasks.js';
 import { formatInTimeZone } from 'date-fns-tz';
-import mongoose from 'mongoose';
 
 class TaskRepository {
   formatTaskDates(task) {
@@ -26,9 +25,6 @@ class TaskRepository {
   }
 
   async getById(id) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid task ID');
-    }
     try {
       const task = await Tasks.findById(id);
       if (!task) return null;
@@ -44,8 +40,7 @@ class TaskRepository {
       const task = new Tasks({
         ...newTask,
         dueDate: newTask.dueDate ? new Date(newTask.dueDate) : null,
-        priority: newTask.priority || 'low',
-        files: newTask.files || [] // Add this line
+        priority: newTask.priority || 'low'
       });
       await task.save();
       return this.formatTaskDates(task);
@@ -55,24 +50,20 @@ class TaskRepository {
     }
   }
 
-  async replace(taskId, updatedTask) {
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      throw new Error('Invalid task ID');
-    }
+    async replace(taskId, updatedTask) {
     try {
-      const task = await Tasks.findByIdAndUpdate(taskId, updatedTask, { new: true });
+      const task = await Tasks.findByIdAndUpdate
+      (taskId, updatedTask, { new: true });
       if (!task) return null;
       return this.formatTaskDates(task);
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Error replacing task with id ${taskId}:`, error);
       throw new Error('Could not replace task');
     }
   }
 
   async update(taskId, updatedTask) {
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      throw new Error('Invalid task ID');
-    }
     try {
       const task = await Tasks.findByIdAndUpdate(taskId, updatedTask, { new: true });
       if (!task) return null;
@@ -83,10 +74,9 @@ class TaskRepository {
     }
   }
 
+
+
   async delete(taskId) {
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      throw new Error('Invalid task ID');
-    }
     try {
       const task = await Tasks.findByIdAndDelete(taskId);
       if (!task) return null;
@@ -96,25 +86,6 @@ class TaskRepository {
       throw new Error('Could not delete task');
     }
   }
-
-  async deleteFile(taskId, fileName) {
-    if (!mongoose.Types.ObjectId.isValid(taskId)) {
-      throw new Error('Invalid task ID');
-    }
-    try {
-      const task = await Tasks.findById(taskId);
-      if (!task) return null;
-
-      task.files = task.files.filter(file => file !== fileName);
-      await task.save();
-
-      return this.formatTaskDates(task);
-    } catch (error) {
-      console.error(`Error deleting file from task with id ${taskId}:`, error);
-      throw new Error('Could not delete file from task');
-    }
-  }
-  
 }
 
 export default TaskRepository;

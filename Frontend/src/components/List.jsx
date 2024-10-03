@@ -5,7 +5,6 @@ import '../index.css';
 
 // List component
 function List() {
-
   // State variables
   const [newTask, setNewTask] = useState('');
   const [taskList, setTaskList] = useState([]);
@@ -18,12 +17,9 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [newTaskFiles, setNewTaskFiles] = useState([]);
-
   // Constants 
   const uri = process.env.REACT_APP_BACKEND_URI;
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   // Fetch tasks from the server
   const fetchData = async () => {
     try {
@@ -42,13 +38,11 @@ function List() {
       setError('Failed to fetch tasks');
     }
   };
-
   // Fetch tasks on component mount
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, []);
-
   // Add a new task
   const addTask = async () => {
     if (!newTask.trim()) {
@@ -64,10 +58,12 @@ function List() {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
         dueDate: formattedDueDate,
-        priority,
-        files: newTaskFiles,
+        priority: priority
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-
       const formattedTask = {
         ...response.data,
         updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
@@ -82,7 +78,6 @@ function List() {
       setDueDate('');
       setPriority('Low');
       setEditedDueDate('');
-      setNewTaskFiles([]);
       setError('');
       setFilterStatus('all');
     } catch (error) {
@@ -95,7 +90,6 @@ function List() {
     const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy hh:mm a zzz');
     setEditedDueDate(formattedDate);
   };
-  
   // Update a task
   const updateTask = async (taskId) => {
     try {
@@ -104,7 +98,6 @@ function List() {
         title: editedTask,
         dueDate: editedDueDateUTC,
         priority: editedPriority,
-        files: newTaskFiles,
       });
       const updatedTaskList = taskList.map((task) => {
         if (task._id === taskId) {
@@ -120,15 +113,10 @@ function List() {
       }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
       setEditingId(null);
-      setEditedTask('');
-      setEditedDueDate('');
-      setEditedPriority('Low');
-      setNewTaskFiles([]);
     } catch (error) {
       handleError(error);
     }
   };
-
   // Remove a task
   const removeTask = async (taskId) => {
     try {
@@ -138,7 +126,6 @@ function List() {
       console.error('Error deleting task:', error);
     }
   };
-
   // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     try {
@@ -160,27 +147,6 @@ function List() {
       handleError(error);
     }
   };
-
-  const handleFileChange = async (event) => {
-    const files = Array.from(event.target.files);
-    const uploadedFiles = [];
-
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const response = await axios.post(`${uri}/upload`, formData);
-        uploadedFiles.push(response.data.filePath);
-      } catch (error) {
-        setError('File upload failed');
-        return;
-      }
-    }
-
-    setNewTaskFiles([...newTaskFiles, ...uploadedFiles]);
-  };
-
   // Handle errors
   const handleError = (error) => {
     if (error.message === 'Invalid time value') {
@@ -193,14 +159,12 @@ function List() {
       setError(`Error: ${error.message}`);
     }
   };
-
   // Get current date and time
   const getCurrentDateTime = () => {
     const now = new Date();
     const formattedTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
     return formattedTime;
   };
-
   // Start editing a task
   const startEditing = (task) => {
     setEditingId(task._id);
@@ -208,7 +172,6 @@ function List() {
     setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : '');
     setEditedPriority(task.priority);
   };
-
   // Handle sort change
   const handleSortChange = (e) => {
     const order = e.target.value;
@@ -220,12 +183,10 @@ function List() {
       } else if (key === 'priority') {
         const priorityOrder = { Low: 1, Medium: 2, High: 3 };
         return direction === 'asc' ? priorityOrder[a[key]] - priorityOrder[b[key]] : priorityOrder[b[key]] - priorityOrder[a[key]];
-      } else if (key === 'createdAt' || key === 'updatedAt' || key === 'dueDate' || key === 'completedAt') {
+      } else {
         const dateA = new Date(a[key]);
         const dateB = new Date(b[key]);
         return direction === 'asc' ? dateA - dateB : dateB - dateA;
-      } else {
-        return 0;
       }
     });
     setTaskList(sorted);
@@ -250,20 +211,6 @@ function List() {
   // Sort tasks
   const incompleteTasks = filteredTasks.filter(task => !task.completed);
   const completedTasks = filteredTasks.filter(task => task.completed);
-
-  // Delete File
-  const deleteFile = async (taskId, filePath) => {
-    try {
-      await axios.put(`${uri}/tasks/${taskId}/delete-file`, { filePath });
-      const updatedTaskList = taskList.map(task => 
-        task._id === taskId ? { ...task, files: task.files.filter(file => file !== filePath) } : task
-      );
-      setTaskList(updatedTaskList);
-    } catch (error) {
-      setError('Failed to delete file');
-    }
-  };
-
   // Return JSX
   return (
     <React.StrictMode>
@@ -296,17 +243,6 @@ function List() {
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
-          {/* File upload section */}
-          <div className="fileUploadSection">
-            <label className="label" htmlFor="fileUpload">Attach Files:</label>
-            <input
-              type="file"
-              id="fileUpload"
-              onChange={handleFileChange}
-              multiple
-            />
-          </div>
-
           <button className='addButton' onClick={addTask}>Add Task</button>
         </div>
 
@@ -387,17 +323,6 @@ function List() {
                               <option value="High">High</option>
                             </select>
                           </div>
-                          {task.completed && <span className="timestamp">Completed: {task.completedAt}</span>}
-                          {/* File upload section */}
-                          <div className="fileUploadSection editContainer">
-                            <label className="label" htmlFor="fileUpload">Attach Files:</label>
-                            <input
-                              type="file"
-                              id="fileUpload"
-                              onChange={handleFileChange}
-                              multiple
-                            />
-                          </div>
                           <button
                             className="saveButton"
                             onClick={() => updateTask(task._id)}
@@ -413,19 +338,6 @@ function List() {
                             <span className="timestamp">Priority: {task.priority}</span> 
                             {task.completed && <span className="timestamp completedTimestamp">Completed: {task.completedAt}</span>}
                           </div>
-                          {task.files && task.files.length > 0 && (
-                            <div className="fileContainer">
-                              <label className="fileLabel">Attached Files:</label>
-                              <ul className="fileList">
-                                {task.files.map((file, index) => (
-                                  <li key={index}>
-                                    <a href={file} target="_blank" rel="noopener noreferrer">View File {index + 1}</a>
-                                    <button onClick={() => deleteFile(task._id, file)}>Delete</button>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
                         </div>
                       )}
                       <div className="taskActions">
@@ -536,7 +448,7 @@ function List() {
             </div>
           </div>
         ) : (
-          <div className="noTasksMessage">No tasks available at the moment</div>
+          <div className="noTasksMessage">No tasks available</div>
         )}
       </div>
     </React.StrictMode>
