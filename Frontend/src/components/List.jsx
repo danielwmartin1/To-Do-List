@@ -183,10 +183,12 @@ function List() {
       } else if (key === 'priority') {
         const priorityOrder = { Low: 1, Medium: 2, High: 3 };
         return direction === 'asc' ? priorityOrder[a[key]] - priorityOrder[b[key]] : priorityOrder[b[key]] - priorityOrder[a[key]];
-      } else {
+      } else if (key === 'createdAt' || key === 'updatedAt' || key === 'dueDate' || key === 'completedAt') {
         const dateA = new Date(a[key]);
         const dateB = new Date(b[key]);
         return direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else {
+        return 0;
       }
     });
     setTaskList(sorted);
