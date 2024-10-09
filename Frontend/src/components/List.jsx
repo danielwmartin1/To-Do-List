@@ -237,7 +237,6 @@ function List() {
             className="newTask"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            placeholder="Priority"
           >
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
