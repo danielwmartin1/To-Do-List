@@ -38,7 +38,7 @@ import { formatInTimeZone } from 'date-fns-tz';
           clientIp,
           headers,
           geolocation, 
-          timezone: geolocation.timezone
+          client_timezone: task.timezone
         });
         await task.save();
         return this.formatTaskDates(task);

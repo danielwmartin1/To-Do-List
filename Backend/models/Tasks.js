@@ -18,7 +18,7 @@ const TaskSchema = new mongoose.Schema({
   clientIp: { type: String },
   headers: { type: Map, of: String }, // Store headers as a map of strings
   geolocation: { type: Map, of: String }, // Store geolocation as a map of strings
-  timezone: { type: String , default: 'UTC' }
+  timezone: { type: String }
 });
 
 // Middleware to update the updatedAt field

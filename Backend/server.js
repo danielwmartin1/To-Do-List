@@ -42,7 +42,7 @@ const logRequestDetails = (clientIp, headers, geolocation, requestBody) => {
   console.log('Request Headers:', headers);
   console.log('Geolocation:', geolocation);
   console.log('Request Body:', requestBody);
-  console.log('Timezone:', geolocation.timezone);
+  console.log('Client Timezone:', geolocation.timezone);
 };
 
 app.get('/tasks', async (req, res) => {
