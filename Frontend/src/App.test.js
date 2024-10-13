@@ -1,6 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { setupServer } from 'msw/node';
+import { rest } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
 import user from '@testing-library/user-event';
+import HomeRouter from './HomeRoute';
 import App from './components/App';
+
 
 test('renders learn react link', () => {
   render(<App />);
