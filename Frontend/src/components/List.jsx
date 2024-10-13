@@ -258,7 +258,7 @@ const removeTask = async (taskId) => {
 // Toggle task completion
 const toggleTaskCompletion = async (taskId, completed) => {
   const clientIp = await fetchClientIp(); // Fetch client IP
-  console.log('Client IP:', clientIp); // Log client IP
+  console.log('Client IP:', clientIp); // Log headers
   const getGeolocation = async () => {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
