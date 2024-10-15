@@ -15,7 +15,7 @@ const TaskSchema = new mongoose.Schema({
   completedAt: { type: Date, set: (date) => date && isValidate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
   priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' },
-  geolocation: { type: Map, of: String }, // Store geolocation as a map of strings
+  geolocation: { type: Map, of: mongoose.Schema.Types.String }, // Store geolocation as a map of strings
   timezone: { type: String, default: 'UTC' },
 });
 

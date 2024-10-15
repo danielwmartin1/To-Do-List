@@ -242,7 +242,7 @@ function List() {
     };
 
   // Remove a task
-  const removeTask = async (taskId, req) => {
+  const removeTask = async (taskId) => {
     try {
       const clientIp = await fetchClientIp(); // Fetch client IP
       const geolocation = await getGeolocation(); // Fetch geolocation
