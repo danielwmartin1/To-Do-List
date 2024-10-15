@@ -59,25 +59,6 @@ function List() {
     console.log('Client IP:', clientIp); // Log client IP
     console.log('Client Timezone:', clientTimeZone); // Log client timezone 
     console.log('Request Body:', { title: newTask, dueDate, priority }); // Log request body
-    const getGeolocation = async () => {
-      return new Promise((resolve) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              resolve({ latitude, longitude });
-            },
-            (error) => {
-              console.error('Error getting geolocation:', error);
-              resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-          resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-        }
-      });
-    };
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation); // Log geolocation
 
@@ -116,6 +97,7 @@ function List() {
       handleError(error);
     }
   };
+
   // Handle date change
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
@@ -134,6 +116,27 @@ function List() {
     }
   };
 
+  // Function to fetch geolocation
+  const getGeolocation = async () => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            resolve({ latitude, longitude });
+          },
+          (error) => {
+            console.error('Error getting geolocation:', error);
+            resolve({ latitude: 'Unknown', longitude: 'Unknown' });
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        resolve({ latitude: 'Unknown', longitude: 'Unknown' });
+      }
+    });
+  };
+
   // Start editing a task
   const startEditing = (task) => {
     setEditingId(task._id);
@@ -146,26 +149,6 @@ function List() {
   const updateTask = async (taskId) => {
     const clientIp = await fetchClientIp(); // Fetch client IP
     console.log('Client IP:', clientIp); // Log client IP  
-    const getGeolocation = async () => {
-      return new Promise((resolve) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              resolve({ latitude, longitude });
-            },
-            (error) => {
-              console.error('Error getting geolocation:', error);
-              resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-          resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-        }
-      });
-    };
-
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation); // Log geolocation
     console.log('Request Body:', { title: editedTask, dueDate: editedDueDate, priority: editedPriority }); // Log request body
@@ -203,70 +186,32 @@ function List() {
       handleError(error);
     }
   };
+
   // Remove a task
   const removeTask = async (taskId) => {
     const clientIp = await fetchClientIp(); // Fetch client IP
     console.log('Client IP:', clientIp); // Log client IP
-    const getGeolocation = async () => {
-      return new Promise((resolve) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              resolve({ latitude, longitude });
-            },
-            (error) => {
-              console.error('Error getting geolocation:', error);
-              resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-          resolve({ latitude: 'Unknown', longitude: 'Unknown' });
+    const geolocation = await getGeolocation(); // Fetch geolocation
+    console.log('Geolocation:', geolocation); // Log geolocation
+    try {
+      await axios.delete(`${uri}/tasks/${taskId}`, {
+        headers: {
+          'Client-IP': clientIp, // Add client IP
+          'Client-Timezone': clientTimeZone, // Add client timezone
+          'Geolocation': JSON.stringify(geolocation), // Add geolocation
+          'Timezone': clientTimeZone // Add client timezone
         }
       });
-    };
-
-  const geolocation = await getGeolocation(); // Fetch geolocation
-  console.log('Geolocation:', geolocation); // Log geolocation
-  try {
-    await axios.delete(`${uri}/tasks/${taskId}`, {
-      headers: {
-        'Client-IP': clientIp, // Add client IP
-        'Client-Timezone': clientTimeZone, // Add client timezone
-        'Geolocation': JSON.stringify(geolocation), // Add geolocation
-        'Timezone': clientTimeZone // Add client timezone
-      }
-    });
-    setTaskList(taskList.filter(task => task._id !== taskId));
-  } catch (error) {
-    console.error('Error deleting task:', error);
-  }};
+      setTaskList(taskList.filter(task => task._id !== taskId));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
   
   // Toggle task completion
   const toggleTaskCompletion = async (taskId, completed) => {
     const clientIp = await fetchClientIp(); // Fetch client IP
     console.log('Client IP:', clientIp); // Log client IP
-    const getGeolocation = async () => {
-      return new Promise((resolve) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              resolve({ latitude, longitude });
-            },
-            (error) => {
-              console.error('Error getting geolocation:', error);
-              resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-            }
-          );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-          resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-        }
-      });
-    };
-
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation); // Log geolocation
     console.log('Request Body:', { completed: !completed, completedAt: !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : null }); // Log request body
@@ -316,7 +261,6 @@ function List() {
     const formattedTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
     return formattedTime;
   };
-
 
   // Handle sort change
   const handleSortChange = (e) => {
@@ -379,7 +323,7 @@ function List() {
             type="datetime-local"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            min={new Date().toISOString().slice(0, 16)}
+            min={new Date().toISOString().split('.')[0]}
           />
           <select 
             className="newTask"
@@ -454,9 +398,9 @@ function List() {
                             <input
                               className='editTask'
                               type="datetime-local"
-                              value={editedDueDate ? new Date(editedDueDate).toISOString().split('.')[0] : ''}
+                              value={editedDueDate && !isNaN(new Date(editedDueDate).getTime()) ? new Date(editedDueDate).toISOString().split('.')[0] : ''}
                               onChange={handleDateChange}
-                              min={new Date().toISOString().slice(0, 16)}
+                              min={new Date().toISOString().split('.')[0]}
                             />
                           </div>
                           <div className="editContainer">
