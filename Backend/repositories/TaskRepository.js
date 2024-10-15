@@ -12,7 +12,6 @@ import { formatInTimeZone } from 'date-fns-tz';
         updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone,'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'low',
-        clientIp: task.clientIp,
         geolocation: task.geolocation,
         timezone: task.timezone
       };
@@ -28,13 +27,12 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async add(newTask, clientIp, geolocation) {
+    async add(newTask, geolocation) {
       try {
         const task = new Tasks({
           ...newTask,
           dueDate: newTask.dueDate ? new Date(newTask.dueDate) : null,
           priority: newTask.priority || 'low',
-          clientIp,
           geolocation, 
           client_timezone: this.timezone
         });
@@ -46,11 +44,11 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async replace(taskId, updatedTask, clientIp, geolocation) {
+    async replace(taskId, updatedTask, geolocation) {
       try {
         const task = await Tasks.findByIdAndUpdate(
           taskId,
-          { ...updatedTask, clientIp, geolocation, updatedAt: new Date() },
+          { ...updatedTask, geolocation, updatedAt: new Date() },
           { new: true }
         );
         if (!task) return null;
@@ -61,11 +59,11 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async update(taskId, updatedTask, clientIp, geolocation) {
+    async update(taskId, updatedTask, geolocation) {
       try {
         const task = await Tasks.findByIdAndUpdate(
           taskId,
-          { ...updatedTask, clientIp, geolocation, updatedAt: new Date() },
+          { ...updatedTask, geolocation, updatedAt: new Date() },
           { new: true }
         );
         if (!task) return null;
@@ -76,7 +74,7 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async delete(taskId, clientIp, geolocation) {
+    async delete(taskId) {
       try {
         const task = await Tasks.findByIdAndDelete(taskId);
         if (!task) return false;

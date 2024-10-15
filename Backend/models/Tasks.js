@@ -15,9 +15,8 @@ const TaskSchema = new mongoose.Schema({
   completedAt: { type: Date, set: (date) => date && isValidate(date) ? new Date(date) : date },
   updatedAt: { type: Date, default: Date.now },
   priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' },
-  clientIp: { type: String },
   geolocation: { type: Map, of: String }, // Store geolocation as a map of strings
-  timezone: { type: String }
+  timezone: { type: String, default: 'UTC' },
 });
 
 // Middleware to update the updatedAt field
@@ -37,8 +36,8 @@ TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
   const format = 'MMMM d, yyyy h:mm a zzz';
   obj.createdAt = formatInTimeZone(this.createdAt, 'UTC', format);
-  obj.dueDate = obj.dueDate ? formatInTimeZone(this.dueDate, 'UTC', format) : null;
-  obj.completedAt = obj.completedAt ? formatInTimeZone(this.completedAt, 'UTC', format) : null;
+  obj.dueDate = this.dueDate ? formatInTimeZone(this.dueDate, 'UTC', format) : null;
+  obj.completedAt = this.completedAt ? formatInTimeZone(this.completedAt, 'UTC', format) : null;
   obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', format);
   obj.priority = this.priority;
   obj.clientIp = this.clientIp;
