@@ -16,7 +16,6 @@ const TaskSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' },
   clientIp: { type: String },
-  headers: { type: Map, of: String }, // Store headers as a map of strings
   geolocation: { type: Map, of: String }, // Store geolocation as a map of strings
   timezone: { type: String }
 });
@@ -33,8 +32,6 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
   next();
 });
 
-// Remove invalid middleware hooks for createdAt, completedAt, and priority
-
 // Add a toJSON method to format dates before sending to frontend
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
@@ -45,7 +42,6 @@ TaskSchema.methods.toJSON = function() {
   obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', format);
   obj.priority = this.priority;
   obj.clientIp = this.clientIp;
-  obj.headers = this.headers;
   obj.geolocation = this.geolocation;
   obj.timezone = 'UTC';  
   return obj;

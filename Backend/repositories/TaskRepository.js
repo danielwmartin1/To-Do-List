@@ -13,7 +13,6 @@ import { formatInTimeZone } from 'date-fns-tz';
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone,'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'low',
         clientIp: task.clientIp,
-        headers: task.headers,
         geolocation: task.geolocation,
         timezone: task.timezone
       };
@@ -29,16 +28,15 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async add(newTask, clientIp, headers, geolocation) {
+    async add(newTask, clientIp, geolocation) {
       try {
         const task = new Tasks({
           ...newTask,
           dueDate: newTask.dueDate ? new Date(newTask.dueDate) : null,
           priority: newTask.priority || 'low',
           clientIp,
-          headers,
           geolocation, 
-          client_timezone: task.timezone
+          client_timezone: this.timezone
         });
         await task.save();
         return this.formatTaskDates(task);
@@ -48,11 +46,11 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async replace(taskId, updatedTask, clientIp, headers, geolocation) {
+    async replace(taskId, updatedTask, clientIp, geolocation) {
       try {
         const task = await Tasks.findByIdAndUpdate(
           taskId,
-          { ...updatedTask, clientIp, headers, geolocation, updatedAt: new Date() },
+          { ...updatedTask, clientIp, geolocation, updatedAt: new Date() },
           { new: true }
         );
         if (!task) return null;
@@ -63,11 +61,11 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async update(taskId, updatedTask, clientIp, headers, geolocation) {
+    async update(taskId, updatedTask, clientIp, geolocation) {
       try {
         const task = await Tasks.findByIdAndUpdate(
           taskId,
-          { ...updatedTask, clientIp, headers, geolocation, updatedAt: new Date() },
+          { ...updatedTask, clientIp, geolocation, updatedAt: new Date() },
           { new: true }
         );
         if (!task) return null;
@@ -78,9 +76,11 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async delete(taskId, clientIp, headers, geolocation) {
+    async delete(taskId, clientIp, geolocation) {
       try {
         const task = await Tasks.findByIdAndDelete(taskId);
+        if (!task) return false;
+        return true;
         if (!task) return null;
         return this.formatTaskDates(task);
       } catch (error) {

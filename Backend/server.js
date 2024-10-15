@@ -6,7 +6,8 @@ import TaskRepository from './repositories/TaskRepository.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
-const ipInfoToken = '50fc15099ad0b0'; // Replace with your ipinfo token
+const ipInfoToken = '50fc15099ad0b0'; // Replace with your IPInfo token
+// spell-checker: disable
 
 app.use(cors());
 app.use(express.json());
@@ -29,7 +30,6 @@ const taskRepository = new TaskRepository();
 const getGeolocation = async (ip) => {
   try {
     const response = await axios.get(`https://ipinfo.io/${ip}?token=${ipInfoToken}`);
-    console.log('Geolocation response:', response.data); // Log the response
     return response.data;
   } catch (error) {
     console.error('Error fetching geolocation:', error);
@@ -37,15 +37,14 @@ const getGeolocation = async (ip) => {
   }
 };
 
-const logRequestDetails = (clientIp, headers, geolocation, requestBody) => {
+const logRequestDetails = (clientIp, geolocation, requestBody) => {
   console.log('Client IP:', clientIp);
-  console.log('Request Headers:', headers);
   console.log('Geolocation:', geolocation);
   console.log('Request Body:', requestBody);
   console.log('Client Timezone:', geolocation.timezone);
 };
 
-app.get('/tasks', async (req, res) => {
+app.get('/tasks', async (_, res) => {
   try {
     const tasks = await taskRepository.getAll();
     res.json(tasks);
@@ -56,13 +55,11 @@ app.get('/tasks', async (req, res) => {
 
 app.post('/tasks', async (req, res) => {
   try {
-    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const headers = req.headers;
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const requestBody = req.body;
     const geolocation = clientIp ? await getGeolocation(clientIp) : null;
-    logRequestDetails(clientIp, headers, geolocation, requestBody);
-
-    const task = await taskRepository.add(requestBody, clientIp, headers, geolocation);
+    logRequestDetails(clientIp, geolocation, requestBody);
+    const task = await taskRepository.add(requestBody, clientIp, geolocation);
     res.status(201).json(task);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -71,13 +68,11 @@ app.post('/tasks', async (req, res) => {
 
 app.put('/tasks/:id', async (req, res) => {
   try {
-    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const headers = req.headers;
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const requestBody = req.body;
     const geolocation = await getGeolocation(clientIp);
-    logRequestDetails(clientIp, headers, geolocation, requestBody);
-
-    const task = await taskRepository.replace(req.params.id, requestBody, clientIp, headers, geolocation);
+    logRequestDetails(clientIp, geolocation, requestBody);
+    const task = await taskRepository.replace(req.params.id, requestBody, clientIp, geolocation);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
@@ -90,12 +85,11 @@ app.put('/tasks/:id', async (req, res) => {
 app.patch('/tasks/:id', async (req, res) => {
   try {
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const headers = req.headers;
     const requestBody = req.body;
     const geolocation = await getGeolocation(clientIp);
-    logRequestDetails(clientIp, headers, geolocation, requestBody);
+    logRequestDetails(clientIp, geolocation, requestBody);
 
-    const task = await taskRepository.update(req.params.id, requestBody, clientIp, headers, geolocation);
+    const task = await taskRepository.update(req.params.id, requestBody, clientIp, geolocation);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
@@ -108,12 +102,11 @@ app.patch('/tasks/:id', async (req, res) => {
 app.delete('/tasks/:id', async (req, res) => {
   try {
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const headers = req.headers;
     const requestBody = req.body;
     const geolocation = await getGeolocation(clientIp);
-    logRequestDetails(clientIp, headers, geolocation, requestBody);
+    logRequestDetails(clientIp, geolocation, requestBody);
 
-    const task = await taskRepository.delete(req.params.id, clientIp, headers, geolocation);
+    const task = await taskRepository.delete(req.params.id, clientIp, geolocation);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
