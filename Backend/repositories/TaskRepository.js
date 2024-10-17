@@ -60,21 +60,25 @@ import { formatInTimeZone } from 'date-fns-tz';
         throw new Error('Could not replace task');
       }
     }
-  
-    async update(taskId, updatedTask, clientIp, geolocation) {
-      try {
-        const task = await Tasks.findByIdAndUpdate(
-          taskId,
-          { ...updatedTask, clientIp, geolocation, updatedAt: new Date() },
-          { new: true }
-        );
-        if (!task) return null;
-        return this.formatTaskDates(task);
-      } catch (error) {
-        console.error(`Error updating task with id ${taskId}:`, error);
-        throw new Error('Could not update task');
-      }
+  async update(taskId, updatedTask, clientIp, geolocation) {
+    try {
+    const task = await Tasks.findByIdAndUpdate(
+      taskId,
+      { 
+      ...updatedTask, 
+      clientIp, 
+      geolocation, 
+      updatedAt: new Date() 
+      },
+      { new: true }
+    );
+    if (!task) return null;
+    return this.formatTaskDates(task);
+    } catch (error) {
+    console.error(`Error updating task with id ${taskId}:`, error);
+    throw new Error('Could not update task');
     }
+  }
   
     async delete(taskId) {
       try {
