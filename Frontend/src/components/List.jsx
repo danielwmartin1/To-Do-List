@@ -22,7 +22,6 @@ function List() {
   const uri = process.env.REACT_APP_BACKEND_URI;
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-
   // Fetch tasks from the server (GET)
   const fetchData = async () => {
     setError(''); // Reset error message
@@ -48,27 +47,6 @@ function List() {
     fetchData();
     // eslint-disable-next-line
   }, []);
-
-  // Function to fetch geolocation
-  const getGeolocation = async () => {
-    return new Promise((resolve) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            resolve({ latitude, longitude });
-          },
-          (error) => {
-            console.error('Error getting geolocation:', error);
-            resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-        resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-      }
-    });
-  };
 
   // Add task (POST)
   const addTask = async () => {
@@ -127,6 +105,14 @@ function List() {
     }
   };
   
+  // Start editing a task
+  const startEditing = (task) => {
+    setEditingId(task._id);
+    setEditedTask(task.title);
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null);
+    setEditedPriority(task.priority);
+  };
+
   // Update Task (PUT)
   const updateTask = async (taskId) => {
     setError(''); // Reset error message
@@ -177,32 +163,6 @@ function List() {
     } catch (error) {
       handleError(error);
     }
-  };
-
-  // Handle date change
-  const handleDateChange = (event) => {
-    const date = new Date(event.target.value);
-    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
-    setEditedDueDate(formattedDate);
-  };
-
-  // Function to fetch client IP
-  const fetchClientIp = async () => {
-    try {
-      const response = await axios.get('https://api.ipify.org?format=json');
-      return response.data.ip;
-    } catch (error) {
-      console.error('Failed to fetch client IP:', error);
-      return 'Unknown IP';
-    }
-  };
-
-  // Start editing a task
-  const startEditing = (task) => {
-    setEditingId(task._id);
-    setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null);
-    setEditedPriority(task.priority);
   };
 
   // Toggle completion status (PATCH)
@@ -263,6 +223,45 @@ function List() {
     } catch (error) {
       console.error('Error deleting task:', error);
     }
+  };
+
+  // Function to fetch client IP
+  const fetchClientIp = async () => {
+    try {
+      const response = await axios.get('https://api.ipify.org?format=json');
+      return response.data.ip;
+    } catch (error) {
+      console.error('Failed to fetch client IP:', error);
+      return 'Unknown IP';
+    }
+  };
+
+      // Function to fetch geolocation
+  const getGeolocation = async () => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            resolve({ latitude, longitude });
+          },
+          (error) => {
+            console.error('Error getting geolocation:', error);
+            resolve({ latitude: 'Unknown', longitude: 'Unknown' });
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        resolve({ latitude: 'Unknown', longitude: 'Unknown' });
+      }
+    });
+  };
+
+  // Handle date change
+  const handleDateChange = (event) => {
+    const date = new Date(event.target.value);
+    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+    setEditedDueDate(formattedDate);
   };
 
   // Handle errors
