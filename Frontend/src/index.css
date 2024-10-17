@@ -9,7 +9,7 @@ body {
 }
 
 label {
-  font-style: bold;
+  font-weight: 600;
   font-size: 1.25rem;
   margin: 2%;
 }
