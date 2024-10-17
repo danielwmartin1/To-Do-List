@@ -20,6 +20,7 @@ function List() {
   // Constants 
   const uri = process.env.REACT_APP_BACKEND_URI;
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   // Fetch tasks from the server
   const fetchData = async () => {
     try {
@@ -29,7 +30,7 @@ function List() {
         ...task,
         updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'Low',
       }));
@@ -45,59 +46,7 @@ function List() {
     // eslint-disable-next-line
   }, []);
 
-  // Add a new task
-  const addTask = async () => {
-    if (!newTask.trim()) {
-      setError('Task title cannot be empty.');
-      return;
-    }
-    if (dueDate && new Date(dueDate) < new Date()) {
-      setError('Please choose a future date and time.');
-      return;
-    }
-    const clientIp = await fetchClientIp(); // Fetch client IP
-    console.log('IP:', clientIp); // Log client IP
-    console.log('Timezone:', clientTimeZone); // Log client timezone 
-    const geolocation = await getGeolocation(); // Fetch geolocation
-    console.log('Geolocation:', geolocation); // Log geolocation
-    console.log('Request Body:', { title: newTask, dueDate, priority }); // Log request body
-
-    try {
-      const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
-      const response = await axios.post(`${uri}/tasks`, {
-        title: newTask,
-        dueDate: formattedDueDate,
-        priority: priority
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Client-IP': clientIp, // Add client IP
-          'Client-Timezone': clientTimeZone, // Add client timezone
-          'Geolocation': JSON.stringify(geolocation) // Add geolocation
-        }
-      });
-      const formattedTask = {
-        ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
-        priority: response.data.priority || 'Low',
-        completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-      };
-      const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setTaskList(updatedTaskList);
-      setNewTask('');
-      setDueDate('');
-      setPriority('Low');
-      setEditedDueDate('');
-      setError('');
-      setFilterStatus('all');
-      
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
+  // Function to fetch geolocation
   const getGeolocation = async () => {
     return new Promise((resolve) => {
       if (navigator.geolocation) {
@@ -118,13 +67,119 @@ function List() {
     });
   };
 
+  const addTask = async () => {
+    if (!newTask.trim()) {
+      setError('Task title cannot be empty.');
+      return;
+    }
+    if (dueDate && new Date(dueDate) < new Date()) {
+      setError('Please choose a future date and time.');
+      return;
+    }
+    if (!dueDate) {
+      setError('Please choose a Due Date');
+      return;
+    }
+    const clientIp = await fetchClientIp();
+    const geolocation = await getGeolocation();
+    const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+    console.log('IP:', clientIp); // Log client IP
+    console.log('Timezone:', clientTimeZone); // Log client timezone
+    console.log('Geolocation:', geolocation);
+    console.log('Request Body:', { title: newTask, dueDate: formattedDueDate, priority }); // Log request body with formatted dueDate
+  
+    try {
+      const response = await axios.post(`${uri}/tasks`, {
+        title: newTask,
+        dueDate: formattedDueDate,
+        priority,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-IP': clientIp,
+          'Client-Timezone': clientTimeZone,
+          'Geolocation': JSON.stringify(geolocation),
+        }
+      });
+      const formattedTask = {
+        ...response.data,
+        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        priority: response.data.priority || 'Low',
+        completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+      };
+      const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(updatedTaskList);
+      setNewTask('');
+      setDueDate('');
+      setPriority('Low');
+      setEditedDueDate('');
+      setError('');
+      setFilterStatus('all');
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  // Update a task
+  const updateTask = async (taskId) => {
+    if (!editedTask.trim()) {
+      setError('Task title cannot be empty.');
+      return;
+    }
+    if (editedDueDate && new Date(editedDueDate) < new Date()) {
+      setError('Please choose a future date and time.');
+      return;
+    }
+    const clientIp = await fetchClientIp(); // Fetch client IP
+    console.log('IP:', clientIp); // Log client IP  
+    console.log('Timezone:', clientTimeZone);
+    const geolocation = await getGeolocation(); // Fetch geolocation
+    console.log('Geolocation:', geolocation); // Log geolocation
+    const formattedDueDate = editedDueDate ? formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+    console.log('Request Body:', { title: editedTask, dueDate: formattedDueDate, priority: editedPriority }); // Log request body
+
+    try {
+      const response = await axios.put(`${uri}/tasks/${taskId}`, {
+        title: editedTask,
+        dueDate: formattedDueDate,
+        priority: editedPriority
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Client-IP': clientIp, // Add client IP
+          'Client-Timezone': clientTimeZone, // Add client timezone
+          'Geolocation': JSON.stringify(geolocation) // Add geolocation
+        }
+      });
+      const updatedTaskList = taskList.map(task => 
+        task._id === taskId ? {
+          ...response.data,
+          updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+          createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+          dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+          completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        } : task
+      );
+      setTaskList(updatedTaskList);
+      setEditingId(null);
+      setEditedTask('');
+      setEditedDueDate('');
+      setEditedPriority('Low');
+      setError('');
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   // Handle date change
   const handleDateChange = (event) => {
-      const date = new Date(event.target.value);
-      const formattedDate = date.toISOString().split('.')[0];
-      setEditedDueDate(formattedDate);
-    };
-  
+    const date = new Date(event.target.value);
+    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+    setEditedDueDate(formattedDate);
+  };
+
   // Function to fetch client IP
   const fetchClientIp = async () => {
     try {
@@ -140,106 +195,45 @@ function List() {
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : '');
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null);
     setEditedPriority(task.priority);
   };
 
-  // Update a task
-  const updateTask = async (taskId) => {
+  // Toggle task completion
+  const toggleTaskCompletion = async (taskId, completed) => {
     const clientIp = await fetchClientIp(); // Fetch client IP
-    console.log('IP:', clientIp); // Log client IP  
+    console.log('IP:', clientIp);
     console.log('Timezone:', clientTimeZone);
     const geolocation = await getGeolocation(); // Fetch geolocation
-    console.log('Geolocation:', geolocation); // Log geolocation
-    console.log('Request Body:', { title: editedTask, dueDate: editedDueDate, priority: editedPriority }); // Log request body
-      
-      try {
-        const editedDueDateUTC = editedDueDate ? new Date(editedDueDate).toISOString() : null;
-        await axios.put(`${uri}/tasks/${taskId}`, {
-          title: editedTask,
-          dueDate: editedDueDateUTC,
-          priority: editedPriority,
-        }, {
-          headers: {
-            'Client-IP': clientIp, // Add client IP
-            'Client-Timezone': clientTimeZone, // Add client timezone
-            'Geolocation': JSON.stringify(geolocation) // Add geolocation
-          }
-        });
-        const updatedTaskList = taskList.map((task) => {
-          if (task._id === taskId) {
-            return {
-              ...task,
-              title: editedTask,
-              dueDate: editedDueDate,
-              priority: editedPriority,
-              updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz')
-            };
-          }
-          return task;
-        
-        }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        setTaskList(updatedTaskList);
-        setEditingId(null);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    // Toggle task completion
-    const toggleTaskCompletion = async (taskId, completed) => {
-      const clientIp = await fetchClientIp(); // Fetch client IP
-      const getGeolocation = async () => {
-        return new Promise((resolve) => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const { latitude, longitude } = position.coords;
-                resolve({ latitude, longitude });
-              },
-              (error) => {
-                console.error('Error getting geolocation:', error);
-                resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-              }
-            );
-          } else {
-            console.error('Geolocation is not supported by this browser.');
-            resolve({ latitude: 'Unknown', longitude: 'Unknown' });
-          }
-        });
-      };
-      console.log('IP:', clientIp);
-      console.log('Timezone:', clientTimeZone);
-      const geolocation = await getGeolocation(); // Fetch geolocation
-      console.log('Geolocation:', geolocation);
-      console.log('Request Body:', { completed: !completed, completedAt: !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : null }); // Log request body
-
-      try {
-        const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') : null;
-        await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed, completedAt: completedAtTimestamp }, {
-          headers: {
-            'Client-IP': clientIp, // Add client IP
-            'Client-Timezone': clientTimeZone, // Add client timezone
-            'Geolocation': JSON.stringify(geolocation), // Add geolocation
-            'Timezone': clientTimeZone // Add client timezone
-          }
-        });
-        const updatedTaskList = taskList.map((task) => {
-          if (task._id === taskId) {
-            return { 
-              ...task, 
-              completed: !completed, 
-              completedAt: completedAtTimestamp,
-              updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy hh:mm a zzz') 
-            };
-          }
-          return task;
-        }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        setTaskList(updatedTaskList);
-      } catch (error) {
-        handleError(error);
-      }
-    };
+    console.log('Geolocation:', geolocation);
+    console.log('Request Body:', { completed: !completed, completedAt: !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null }); // Log request body
+  
+    try {
+      const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+      await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed, completedAt: completedAtTimestamp }, {
+        headers: {
+          'Client-IP': clientIp, // Add client IP
+          'Client-Timezone': clientTimeZone, // Add client timezone
+          'Geolocation': JSON.stringify(geolocation), // Add geolocation
+          'Timezone': clientTimeZone // Add client timezone
+        }
+      });
+      const updatedTaskList = taskList.map((task) => {
+        if (task._id === taskId) {
+          return { 
+            ...task, 
+            completed: !completed, 
+            completedAt: completedAtTimestamp,
+            updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') 
+          };
+        }
+        return task;
+      }).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setTaskList(updatedTaskList);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   // Remove a task
   const removeTask = async (taskId) => {
@@ -283,7 +277,6 @@ function List() {
     return formattedTime;
   };
 
-
   // Handle sort change
   const handleSortChange = (e) => {
     const order = e.target.value;
@@ -323,7 +316,6 @@ function List() {
   // Sort tasks
   const incompleteTasks = filteredTasks.filter(task => !task.completed);
   const completedTasks = filteredTasks.filter(task => task.completed);
-
 
   // Return JSX
   return (
@@ -421,7 +413,7 @@ function List() {
                               <input
                                 className='editTask'
                                 type="datetime-local"
-                                value={editedDueDate ? new Date(editedDueDate).toISOString().split('.')[0] : ''}
+                                value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 16) : ''}
                                 onChange={handleDateChange}
                                 min={new Date().toISOString().slice(0, 16)}
                               />
