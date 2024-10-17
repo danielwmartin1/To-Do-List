@@ -8,6 +8,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+label {
+  font-style: bold;
+  font-size: 1.25rem;
+  margin: 2%;
+}
+
 select {
   border: 1px solid black;
   border-radius: 5px;
@@ -347,7 +353,7 @@ h1, h2 {
 }
 
 .taskTitle {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin-left: 5%; /* Changed to percentage */
   align-items: center;
@@ -359,8 +365,9 @@ h1, h2 {
 .timestamp {
   color: #555;
   font-family: 'Arial', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-style: italic;
+  font-weight: 500;
   margin: 2% 2% 2% 10%; /* Changed to percentage */
   text-align: left;
 }
