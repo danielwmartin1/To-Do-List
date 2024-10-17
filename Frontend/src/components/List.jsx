@@ -386,7 +386,7 @@ function List() {
         {taskList.length > 0 ? (
           <div className="todo-container">
             <div className="incompleteTaskList" onClick={() => setEditingId(null)}>
-              <h2 onClick={() => handleFilterChange({ target: { value: 'incomplete' } })}>Incomplete Tasks</h2>
+              <h2 onClick={() => handleFilterChange({ target: { value: filterStatus === 'incomplete' ? 'all' : 'incomplete' } })}>Incomplete Tasks</h2>
               <ul className="taskList" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && setEditingId(null)}>
                 {incompleteTasks.map((task) => {
                   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
@@ -478,7 +478,7 @@ function List() {
             </div>
 
             <div className="completedTaskList" onClick={() => setEditingId(null)}>
-              <h2 onClick={() => handleFilterChange({ target: { value: 'completed' } })}>Completed Tasks</h2>
+              <h2 onClick={() => handleFilterChange({ target: { value: filterStatus === 'completed' ? 'all' : 'completed' } })}>Completed Tasks</h2>
               <ul className="taskList" onClick={(e) => e.stopPropagation()}>
                 {completedTasks.map((task) => {
                   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
