@@ -346,12 +346,14 @@ function List() {
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addTask()}
             min={new Date().toISOString().slice(0, 10)}
           />
           <select 
             className="newTask"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addTask()}
             placeholder="Priority"
           >
             <option value="Low">Low</option>
@@ -414,6 +416,7 @@ function List() {
                               type="text"
                               value={editedTask}
                               onChange={(e) => setEditedTask(e.target.value)}
+                              onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
                             />
                           </div>
                           {editedDueDate && (
@@ -424,6 +427,7 @@ function List() {
                                 type="date"
                                 value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 10) : ''}
                                 onChange={(e) => setEditedDueDate(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
                                 min={new Date().toISOString().slice(0, 10)}
                               />
                             </div>
@@ -434,6 +438,7 @@ function List() {
                               className="editTask"
                               value={editedPriority}
                               onChange={(e) => setEditedPriority(e.target.value)}
+                              onKeyDown={(e) => e.key === 'Enter' && updateTask(task._id)}
                             >
                               <option value="Low">Low</option>
                               <option value="Medium">Medium</option>
