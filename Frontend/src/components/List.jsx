@@ -329,7 +329,7 @@ function List() {
   // Return JSX
   return (
     <React.StrictMode>
-      <div id='container'>
+      <div id='container' onClick={() => setEditingId(null)}>
         {error && <div className="error">{error}</div>}
         <div className="inputContainer">
           <input
