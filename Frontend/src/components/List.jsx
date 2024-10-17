@@ -17,12 +17,15 @@ function List() {
   const [error, setError] = useState('');
   const [sortOrder, setSortOrder] = useState('updatedAt-desc');
   const [filterStatus, setFilterStatus] = useState('all');
+
   // Constants 
   const uri = process.env.REACT_APP_BACKEND_URI;
   const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  // Fetch tasks from the server
+
+  // Fetch tasks from the server (GET)
   const fetchData = async () => {
+    setError(''); // Reset error message
     try {
       const response = await axios.get(`${uri}/tasks`);
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -67,7 +70,9 @@ function List() {
     });
   };
 
+  // Add task (POST)
   const addTask = async () => {
+    setError(''); // Reset error message
     if (!newTask.trim()) {
       setError('Task title cannot be empty.');
       return;
@@ -121,9 +126,10 @@ function List() {
       handleError(error);
     }
   };
-
-  // Update a task
+  
+  // Update Task (PUT)
   const updateTask = async (taskId) => {
+    setError(''); // Reset error message
     if (!editedTask.trim()) {
       setError('Task title cannot be empty.');
       return;
@@ -139,7 +145,7 @@ function List() {
     console.log('Geolocation:', geolocation); // Log geolocation
     const formattedDueDate = editedDueDate ? formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
     console.log('Request Body:', { title: editedTask, dueDate: formattedDueDate, priority: editedPriority }); // Log request body
-
+  
     try {
       const response = await axios.put(`${uri}/tasks/${taskId}`, {
         title: editedTask,
@@ -199,8 +205,9 @@ function List() {
     setEditedPriority(task.priority);
   };
 
-  // Toggle task completion
+  // Toggle completion status (PATCH)
   const toggleTaskCompletion = async (taskId, completed) => {
+    setError(''); // Reset error message
     const clientIp = await fetchClientIp(); // Fetch client IP
     console.log('IP:', clientIp);
     console.log('Timezone:', clientTimeZone);
@@ -234,9 +241,10 @@ function List() {
       handleError(error);
     }
   };
-
-  // Remove a task
+  
+  // Remove task (DELETE)
   const removeTask = async (taskId) => {
+    setError(''); // Reset error message
     try {
       const clientIp = await fetchClientIp(); // Fetch client IP
       const geolocation = await getGeolocation(); // Fetch geolocation

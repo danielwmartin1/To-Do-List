@@ -84,7 +84,7 @@ app.put('/tasks/:id', async (req, res) => {
 
 app.patch('/tasks/:id', async (req, res) => {
   try {
-    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const requestBody = req.body;
     const geolocation = await getGeolocation(clientIp);
     logRequestDetails(clientIp, geolocation, requestBody);
@@ -101,7 +101,7 @@ app.patch('/tasks/:id', async (req, res) => {
 
 app.delete('/tasks/:id', async (req, res) => {
   try {
-    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const requestBody = req.body;
     const geolocation = await getGeolocation(clientIp);
     logRequestDetails(clientIp, geolocation, requestBody);

@@ -16,7 +16,7 @@ const TaskSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Low' },
   geolocation: { type: Map, of: mongoose.Schema.Types.String }, // Store geolocation as a map of strings
-  timezone: { type: String, default: 'UTC' },
+  serverTimezone: { type: String, default: 'UTC' },
 });
 
 // Middleware to update the updatedAt field
@@ -42,7 +42,6 @@ TaskSchema.methods.toJSON = function() {
   obj.priority = this.priority;
   obj.clientIp = this.clientIp;
   obj.geolocation = this.geolocation;
-  obj.timezone = 'UTC';  
   return obj;
 };
 

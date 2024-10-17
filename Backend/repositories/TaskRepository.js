@@ -4,17 +4,17 @@ import { formatInTimeZone } from 'date-fns-tz';
   class TaskRepository {
 
     formatTaskDates(task) {
-      const timezone = 'UTC';
+      const clientTimezone = 'UTC';
       return {
         ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
-        createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
-        updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), timezone, 'MMMM d, yyyy h:mm a zzz') : null,
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), timezone,'MMMM d, yyyy h:mm a zzz') : null,
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimezone,'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'low',
         clientIp: task.clientIp,
         geolocation: task.geolocation,
-        timezone: task.timezone
+        clientTimezone: task.clientTimezone
       };
     }
 
@@ -36,7 +36,7 @@ import { formatInTimeZone } from 'date-fns-tz';
           priority: newTask.priority || 'low',
           clientIp,
           geolocation, 
-          client_timezone: this.timezone
+          clientTimezone: this.clientTimezone
         });
         await task.save();
         return this.formatTaskDates(task);
@@ -76,16 +76,13 @@ import { formatInTimeZone } from 'date-fns-tz';
       }
     }
   
-    async delete(taskId, clientIp, geolocation) {
+    async delete(taskId) {
       try {
-        const task = await Tasks.findByIdAndDelete(taskId);
-        if (!task) return false;
-        return true;
-        if (!task) return null;
-        return this.formatTaskDates(task);
+      const task = await Tasks.findByIdAndDelete(taskId);
+      return !!task;
       } catch (error) {
-        console.error(`Error deleting task with id ${taskId}:`, error);
-        throw new Error('Could not delete task');
+      console.error(`Error deleting task with id ${taskId}:`, error);
+      throw new Error('Could not delete task');
       }
     }
   };
