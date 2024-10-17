@@ -35,8 +35,9 @@ TaskSchema.pre('findOneAndUpdate', function(next) {
 TaskSchema.methods.toJSON = function() {
   const obj = this.toObject();
   const format = 'MMMM d, yyyy h:mm a zzz';
+  const dueDateFormat = 'MMMM d, yyyy'
   obj.createdAt = formatInTimeZone(this.createdAt, 'UTC', format);
-  obj.dueDate = this.dueDate ? formatInTimeZone(this.dueDate, 'UTC', format) : null;
+  obj.dueDate = this.dueDate ? formatInTimeZone(this.dueDate, dueDateFormat) : null;
   obj.completedAt = this.completedAt ? formatInTimeZone(this.completedAt, 'UTC', format) : null;
   obj.updatedAt = formatInTimeZone(this.updatedAt, 'UTC', format);
   obj.priority = this.priority;

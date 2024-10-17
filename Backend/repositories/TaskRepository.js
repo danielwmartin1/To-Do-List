@@ -7,7 +7,7 @@ import { formatInTimeZone } from 'date-fns-tz';
       const clientTimezone = 'UTC';
       return {
         ...task.toObject(),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimezone, 'MMMM d, yyyy') : null,
         createdAt: task.createdAt ? formatInTimeZone(new Date(task.createdAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
         updatedAt: task.updatedAt ? formatInTimeZone(new Date(task.updatedAt), clientTimezone, 'MMMM d, yyyy h:mm a zzz') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimezone,'MMMM d, yyyy h:mm a zzz') : null,

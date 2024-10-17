@@ -32,7 +32,7 @@ function List() {
         ...task,
         updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
         createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
         completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'Low',
       }));
@@ -65,7 +65,7 @@ function List() {
     }
     const clientIp = await fetchClientIp();
     const geolocation = await getGeolocation();
-    const formattedDueDate = dueDate ? formatInTimeZone(new Date(dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+    const formattedDueDate = dueDate && !isNaN(new Date(dueDate).getTime()) ? formatInTimeZone(new Date(new Date(dueDate).setDate(new Date(dueDate).getDate() + 1)), clientTimeZone, 'MMMM d, yyyy') : null;
     console.log('IP:', clientIp); // Log client IP
     console.log('Timezone:', clientTimeZone); // Log client timezone
     console.log('Geolocation:', geolocation);
@@ -74,7 +74,7 @@ function List() {
     try {
       const response = await axios.post(`${uri}/tasks`, {
         title: newTask,
-        dueDate: formattedDueDate,
+        dueDate: dueDate, // Use the original dueDate instead of formattedDueDate
         priority,
       }, {
         headers: {
@@ -86,9 +86,9 @@ function List() {
       });
       const formattedTask = {
         ...response.data,
-        updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        updatedAt: response.data.updatedAt ? formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        createdAt: response.data.createdAt ? formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
         priority: response.data.priority || 'Low',
         completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
       };
@@ -109,7 +109,7 @@ function List() {
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null);
+    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null);
     setEditedPriority(task.priority);
   };
 
@@ -129,13 +129,13 @@ function List() {
     console.log('Timezone:', clientTimeZone);
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation); // Log geolocation
-    const formattedDueDate = editedDueDate ? formatInTimeZone(new Date(editedDueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+    const formattedDueDate = editedDueDate && !isNaN(new Date(editedDueDate).getTime()) ? formatInTimeZone(new Date(new Date(editedDueDate).setDate(new Date(editedDueDate).getDate() + 1)), clientTimeZone, 'MMMM d, yyyy') : null;
     console.log('Request Body:', { title: editedTask, dueDate: formattedDueDate, priority: editedPriority }); // Log request body
   
     try {
       const response = await axios.put(`${uri}/tasks/${taskId}`, {
         title: editedTask,
-        dueDate: formattedDueDate,
+        dueDate: editedDueDate,
         priority: editedPriority
       }, {
         headers: {
@@ -150,8 +150,8 @@ function List() {
           ...response.data,
           updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
           createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-          dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-          completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+          dueDate: response.data.dueDate && !isNaN(new Date(response.data.dueDate).getTime()) ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
+          completedAt: response.data.completedAt && !isNaN(new Date(response.data.completedAt).getTime()) ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         } : task
       );
       setTaskList(updatedTaskList);
@@ -257,10 +257,12 @@ function List() {
     });
   };
 
+
   // Handle date change
+    // eslint-disable-next-line
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy');
     setEditedDueDate(formattedDate);
   };
 
@@ -341,10 +343,10 @@ function List() {
           />
           <input
             className="newTask"
-            type="datetime-local"
+            type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            min={new Date().toISOString().slice(0, 16)}
+            min={new Date().toISOString().slice(0, 10)}
           />
           <select 
             className="newTask"
@@ -419,10 +421,10 @@ function List() {
                               <label className="editLabel">Edit Due Date:</label>
                               <input
                                 className='editTask'
-                                type="datetime-local"
-                                value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 16) : ''}
-                                onChange={handleDateChange}
-                                min={new Date().toISOString().slice(0, 16)}
+                                type="date"
+                                value={editedDueDate ? new Date(editedDueDate).toISOString().slice(0, 10) : ''}
+                                onChange={(e) => setEditedDueDate(e.target.value)}
+                                min={new Date().toISOString().slice(0, 10)}
                               />
                             </div>
                           )}
