@@ -1,18 +1,18 @@
-module.exports = {
+export default {
     transform: {
         "^.+\\.js$": "babel-jest",
     },
     testEnvironment: "jsdom",
-    "env": {
-      "test": {
-        "presets": [
+    env: {
+      test: {
+        presets: [
           "@babel/preset-env",
           "@babel/preset-react"
         ],
-        "plugins": [
+        plugins: [
           "transform-export-extensions",
         ],
-        "only": [
+        only: [
           "./**/*.js",
           "node_modules/jest-runtime"
         ]
