@@ -331,7 +331,9 @@ function List() {
     <React.StrictMode>
       <div id='container' onClick={() => setEditingId(null)}>
         {error && <div className="error">{error}</div>}
-        <div className="inputContainer">
+        <div 
+          data-testid="newTaskForm"
+          className="inputContainer">
           <input
             autoFocus
             className="newTask"
