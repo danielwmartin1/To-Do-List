@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { formatInTimeZone } from 'date-fns-tz';
+import { utcToZonedTime, format } from 'date-fns-tz';
 import '../index.css';
 
 // List component
@@ -30,10 +30,10 @@ function List() {
       const sortedTaskList = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       const formattedTaskList = sortedTaskList.map(task => ({
         ...task,
-        updatedAt: formatInTimeZone(new Date(task.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        createdAt: formatInTimeZone(new Date(task.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-        dueDate: task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
-        completedAt: task.completedAt ? formatInTimeZone(new Date(task.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        updatedAt: format(utcToZonedTime(new Date(task.updatedAt), clientTimeZone), 'MMMM d, yyyy h:mm a zzz'),
+        createdAt: format(utcToZonedTime(new Date(task.createdAt), clientTimeZone), 'MMMM d, yyyy h:mm a zzz'),
+        dueDate: task.dueDate ? format(utcToZonedTime(new Date(task.dueDate), clientTimeZone), 'MMMM d, yyyy') : null,
+        completedAt: task.completedAt ? format(utcToZonedTime(new Date(task.completedAt), clientTimeZone), 'MMMM d, yyyy h:mm a zzz') : null,
         priority: task.priority || 'Low',
       }));
       setTaskList(formattedTaskList);
@@ -65,7 +65,7 @@ function List() {
     }
     const clientIp = await fetchClientIp();
     const geolocation = await getGeolocation();
-    const formattedDueDate = dueDate && !isNaN(new Date(dueDate).getTime()) ? formatInTimeZone(new Date(new Date(dueDate).setDate(new Date(dueDate).getDate() + 1)), clientTimeZone, 'MMMM d, yyyy') : null;
+    const formattedDueDate = dueDate && !isNaN(new Date(dueDate).getTime()) ? format(utcToZonedTime(new Date(new Date(dueDate).setDate(new Date(dueDate).getDate() + 1)), clientTimeZone), 'MMMM d, yyyy') : null;
     console.log('IP:', clientIp); // Log client IP
     console.log('Timezone:', clientTimeZone); // Log client timezone
     console.log('Geolocation:', geolocation);
@@ -86,11 +86,11 @@ function List() {
       });
       const formattedTask = {
         ...response.data,
-        updatedAt: response.data.updatedAt ? formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        createdAt: response.data.createdAt ? formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
-        dueDate: response.data.dueDate ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
+        updatedAt: response.data.updatedAt ? utcToZonedTime(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        createdAt: response.data.createdAt ? utcToZonedTime(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        dueDate: response.data.dueDate ? utcToZonedTime(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
         priority: response.data.priority || 'Low',
-        completedAt: response.data.completedAt ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+        completedAt: response.data.completedAt ? utcToZonedTime(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
       };
       const updatedTaskList = [formattedTask, ...taskList].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setTaskList(updatedTaskList);
@@ -109,7 +109,7 @@ function List() {
   const startEditing = (task) => {
     setEditingId(task._id);
     setEditedTask(task.title);
-    setEditedDueDate(task.dueDate ? formatInTimeZone(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null);
+    setEditedDueDate(task.dueDate ? utcToZonedTime(new Date(task.dueDate), clientTimeZone, 'MMMM d, yyyy') : null);
     setEditedPriority(task.priority);
   };
 
@@ -129,7 +129,7 @@ function List() {
     console.log('Timezone:', clientTimeZone);
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation); // Log geolocation
-    const formattedDueDate = editedDueDate && !isNaN(new Date(editedDueDate).getTime()) ? formatInTimeZone(new Date(new Date(editedDueDate).setDate(new Date(editedDueDate).getDate() + 1)), clientTimeZone, 'MMMM d, yyyy') : null;
+    const formattedDueDate = editedDueDate && !isNaN(new Date(editedDueDate).getTime()) ? format(utcToZonedTime(new Date(new Date(editedDueDate).setDate(new Date(editedDueDate).getDate() + 1)), clientTimeZone), 'MMMM d, yyyy') : null;
     console.log('Request Body:', { title: editedTask, dueDate: formattedDueDate, priority: editedPriority }); // Log request body
   
     try {
@@ -148,10 +148,10 @@ function List() {
       const updatedTaskList = taskList.map(task => 
         task._id === taskId ? {
           ...response.data,
-          updatedAt: formatInTimeZone(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-          createdAt: formatInTimeZone(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
-          dueDate: response.data.dueDate && !isNaN(new Date(response.data.dueDate).getTime()) ? formatInTimeZone(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
-          completedAt: response.data.completedAt && !isNaN(new Date(response.data.completedAt).getTime()) ? formatInTimeZone(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
+          updatedAt: utcToZonedTime(new Date(response.data.updatedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+          createdAt: utcToZonedTime(new Date(response.data.createdAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz'),
+          dueDate: response.data.dueDate && !isNaN(new Date(response.data.dueDate).getTime()) ? utcToZonedTime(new Date(response.data.dueDate), clientTimeZone, 'MMMM d, yyyy') : null,
+          completedAt: response.data.completedAt && !isNaN(new Date(response.data.completedAt).getTime()) ? utcToZonedTime(new Date(response.data.completedAt), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null,
         } : task
       );
       setTaskList(updatedTaskList);
@@ -173,10 +173,10 @@ function List() {
     console.log('Timezone:', clientTimeZone);
     const geolocation = await getGeolocation(); // Fetch geolocation
     console.log('Geolocation:', geolocation);
-    console.log('Request Body:', { completed: !completed, completedAt: !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null }); // Log request body
+    console.log('Request Body:', { completed: !completed, completedAt: !completed ? utcToZonedTime(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null }); // Log request body
   
     try {
-      const completedAtTimestamp = !completed ? formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') : null;
+      const completedAtTimestamp = !completed ? format(utcToZonedTime(new Date(), clientTimeZone), 'MMMM d, yyyy h:mm a zzz') : null;
       await axios.patch(`${uri}/tasks/${taskId}`, { completed: !completed, completedAt: completedAtTimestamp }, {
         headers: {
           'Client-IP': clientIp, // Add client IP
@@ -191,7 +191,7 @@ function List() {
             ...task, 
             completed: !completed, 
             completedAt: completedAtTimestamp,
-            updatedAt: formatInTimeZone(new Date(), clientTimeZone, 'MMMM d, yyyy h:mm a zzz') 
+            updatedAt: format(utcToZonedTime(new Date(), clientTimeZone), 'MMMM d, yyyy h:mm a zzz') 
           };
         }
         return task;
@@ -262,7 +262,7 @@ function List() {
     // eslint-disable-next-line
   const handleDateChange = (event) => {
     const date = new Date(event.target.value);
-    const formattedDate = formatInTimeZone(date, clientTimeZone, 'MMMM d, yyyy');
+    const formattedDate = format(utcToZonedTime(date, clientTimeZone), 'MMMM d, yyyy');
     setEditedDueDate(formattedDate);
   };
 
@@ -282,7 +282,7 @@ function List() {
   // Get current date and time
   const getCurrentDateTime = () => {
     const now = new Date();
-    const formattedTime = formatInTimeZone(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
+    const formattedTime = utcToZonedTime(now, clientTimeZone, 'MMMM d, yyyy h:mm a zzz');
     return formattedTime;
   };
 

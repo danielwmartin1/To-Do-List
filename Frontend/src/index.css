@@ -146,12 +146,13 @@ select {
 }
 
 .completedTimestampContainer {
-  align-items: flex-start;
+  align-items: flex-start; /* Changed from start to flex-start */
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0 5%;
 }
+
 
 .container {
   align-items: center;
@@ -361,7 +362,7 @@ h1, h2 {
   align-items: center;
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 .timestamp {

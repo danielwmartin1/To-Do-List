@@ -41,7 +41,6 @@ describe('List Component', () => {
     axios.post.mockResolvedValueOnce({
       data: { _id: '2', title: 'New Task', dueDate: '2023-12-31', priority: 'Low', completed: false, createdAt: '2023-01-01', updatedAt: '2023-01-01' }
     });
-    await fireEvent.click(screen.getByText('Add Task'));
     render(<List />);
     fireEvent.change(screen.getByPlaceholderText('Add a new task'), { target: { value: 'New Task' } });
     fireEvent.change(screen.getByLabelText('Due Date'), { target: { value: '2023-12-31' } });
@@ -58,11 +57,7 @@ describe('List Component', () => {
     axios.put.mockResolvedValueOnce({
       data: { _id: '1', title: 'Updated Task', dueDate: '2023-12-31', priority: 'Low', completed: false, createdAt: '2023-01-01', updatedAt: '2023-01-01' }
     });
-    await fireEvent.click(screen.getByRole('button', { name: /Edit Test Task/i }));
     render(<List />);
-    await fireEvent.click(screen.getByRole('button', { name: /Save/i }));
-
-    fireEvent.click(screen.getByRole('button', { name: /Edit Test Task/i }));
     fireEvent.change(screen.getByDisplayValue('Test Task'), { target: { value: 'Updated Task' } });
     fireEvent.click(screen.getByRole('button', { name: /Save/i }));
 
@@ -77,12 +72,11 @@ describe('List Component', () => {
     axios.patch.mockResolvedValueOnce({
       data: { _id: '1', title: 'Test Task', dueDate: '2023-12-31', priority: 'Low', completed: true, createdAt: '2023-01-01', updatedAt: '2023-01-01' }
     });
-    await fireEvent.click(screen.getByRole('checkbox', { name: /Test Task/i }));
     render(<List />);
-    expect(await screen.findByText('Test Task')).toBeInTheDocument();
-
     fireEvent.click(screen.getByRole('checkbox', { name: /Test Task/i }));
-    await waitFor(() => expect(screen.getByRole('checkbox')).toBeChecked());
+    await waitFor(() => expect(screen.getByRole('checkbox', { name: /Test Task/i })).toBeChecked());
+    fireEvent.click(screen.getByRole('checkbox', { name: /Test Task/i }));
+    await waitFor(() => expect(screen.getByRole('checkbox', { name: /Test Task/i })).not.toBeChecked());
   });
 
   test('removes a task', async () => {
@@ -91,11 +85,11 @@ describe('List Component', () => {
     ];
     axios.get.mockResolvedValueOnce({ data: tasks });
     axios.delete.mockResolvedValueOnce({});
-    await fireEvent.click(screen.getByRole('button', { name: /Remove Test Task/i }));
+    
     render(<List />);
+    
     expect(await screen.findByText('Test Task')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Remove Test Task/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Delete/i }));
     await waitFor(() => expect(screen.queryByText('Test Task')).not.toBeInTheDocument());
   });
 
