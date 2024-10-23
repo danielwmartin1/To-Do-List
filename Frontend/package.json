@@ -35,7 +35,10 @@
     ]
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+=======
+>>>>>>> baf390fe9fcdf4a6a6bc98421496dc7e930b20d6
     "@babel/preset-env": "^7.25.9",
     "@babel/preset-react": "^7.25.9",
     "concurrently": "^8.2.2",
