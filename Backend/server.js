@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import 'dotenv/config'
 import axios from 'axios';
 import TaskRepository from './repositories/TaskRepository.js';
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
+    await mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {});
     console.log('MongoDB connected');
   } catch (err) {
     console.error('Error connecting to MongoDB:', err.message);
