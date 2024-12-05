@@ -346,7 +346,7 @@ function List() {
           <input
             className="newTask"
             type="date"
-            value={dueDate}
+            value={dueDate ? new Date(dueDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
             onChange={(e) => setDueDate(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
             min={new Date().toISOString().slice(0, 10)}
