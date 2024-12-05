@@ -2,8 +2,8 @@
   "name": "to-do-list",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
+<<<<<<< HEAD
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,9 +13,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "web-vitals": "^2.1.4"
+=======
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "4.0.3",
+    "axios": "^0.21.1",
+    "date-fns": "^2.28.0",
+    "date-fns-tz": "^1.1.4"
+>>>>>>> f7a4e6442df98575196bc62986823d976a404f3c
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -37,9 +45,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
   },
   "devDependencies": {
     "eslint-plugin-react-hooks": "^4.6.0",
     "react-scripts": "^5.0.1"
+=======
+>>>>>>> f7a4e6442df98575196bc62986823d976a404f3c
   }
 }

@@ -25,3 +25,4 @@ yarn-error.log*
 
 # prevents .next files from being added to the root
 .next/
+.vercel

@@ -1,114 +1,547 @@
-.architects-daughter-regular {
-  font-family: "Architects Daughter", cursive;
-  font-weight: 400;
-  font-style: normal;
-}
-
 body {
-  margin: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: #afb2bc;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
+label {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 2%;
+}
+
+select {
+  border: 1px solid black;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.addButton, .editButton, .removeButton, .saveButton {
+  border: none;
+  border-radius: 5px;
   color: white;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 2%;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.addButton {
+  background-color: #4CAF50;
+}
+
+.addButton:active {
+  border: 1px solid black;
+  color: black;
+  background-color: #50ea58;
+}
+
+.addButton:hover {
+  background-color: #419c46;
+}
+
+.editButton {
+  background-color: #007BFF;
+}
+
+.editButton:active {
+  background-color: rgb(255, 10, 255);
+  border: 1px solid black;
+  color: rgb(255, 0, 0);
+}
+
+.editButton:hover {
+  background-color: #0069d9;
+}
+
+.inputContainer, .editContainer {
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: 3rem;
   margin: 0;
-  padding: 1rem;
+  cursor: pointer;
+}
+
+.editPriority {
+  border: none;
+  border-radius: 5px;
+  color: black;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 2%;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.removeButton {
+  background-color: red;
+}
+
+.removeButton:active {
+  background-color: rgb(255, 10, 255);
+  border: 1px solid black;
+  color: blue;
+}
+
+.removeButton:hover {
+  background-color: rgb(200, 42, 42);
+}
+
+.saveButton {
+  background-color: #05c98b;
+}
+
+.saveButton:active {
+  background-color: #04a675;
+  border: 1px solid black;
+  color: rgb(25, 0, 255);
+}
+
+.saveButton:hover {
+  background-color: #04b981;
+}
+
+.architects-daughter-regular {
+  font-family: 'Roboto', cursive;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.checkbox {
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 2%;
+  padding: 0.5rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.completedTask {
+  opacity: 0.5;
+}
+
+.completedTaskTitle {
   background-color: black;
   border-bottom: 1px solid white;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+.completedTimestampContainer {
+  align-items: flex-start; /* Changed from start to flex-start */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 5%;
+}
+
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+}
+
+.createdAt, .updatedAt {
+  color: #333;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.divider {
+  background: #ccc;
+  border: 0;
+  height: 1px;
+  margin: 5% 0;
+}
+
+.editDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.editLabel {
+  color: #555;
+  font-size: 1rem;
+  margin-left: 2%;
+  text-align: center;
+}
+
+.editTask {
+  box-sizing: border-box;
+  cursor: text;
+  font-family: 'Roboto', sans-serif;
+  margin: 2%;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 2%;
+  padding: 1rem;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.footer {
+  background-color: black;
+  bottom: 0;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.25rem !important;
+  padding: 0.75rem;
+  text-align: center;
+  width: 100%;
+}
+
+h1, h2 {
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+.listItem {
+  align-items: center;
+  background-color: antiquewhite;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  font-family: 'Roboto', sans-serif;
+  justify-content: space-between;
+  list-style-position: inside;
+  list-style-type: disc;
+  transition: background-color 0.3s ease;
+  margin: 0;
+}
+
+.listItem:active,
+.listItem:active > * {
+  background-color: #bbefff;
+}
+
+.listItem:hover,
+.listItem:hover > * {
+  background-color: #ebf79f;
+}
+
+.newTask {
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  margin: 2%;
+  max-width: 20rem;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.overdue {
+  color: red !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+.priorityDiv {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  cursor: pointer;
+}
+
+.projectTitle {
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sortBy {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.sortSection {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 0;
+  width: 100%;
+  margin: 0 2% 1% 0; 
+}
+
+.sortSection label {
+  margin: 2%; 
+}
+
+.sortSection select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.taskActions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 2%; 
+}
+
+.taskDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  max-width: 10% !important;
+}
+ 
+.taskItem {
+  align-items: center;
+  background-color: #faebd6;
+  display: flex;
+  gap: 1rem; 
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin: 0.5rem; 
+}
+
+.taskItem > * {
+  flex: 1 1 calc(33.333% - 1rem); 
+  box-sizing: border-box;
+}
+
+.taskTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-left: 5%; /* Changed to percentage */
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.timestamp {
+  color: #555;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 500;
+  margin: 2% 2% 2% 10%; /* Changed to percentage */
+  text-align: left;
+}
+
+.timestampContainer {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0 5%; /* Changed to percentage */
 }
 
 ul {
   list-style-type: none;
+  margin: 0;
   padding: 0;
-  margin: 1;
-} 
-
-.listItem {
-  font-family: "Architects Daughter", cursive;
-  color: black;
-  text-indent: 42.5%;
-  font-size: 1.30rem;
-  background-image: url('./notepad.jpg');
-  list-style-type: disc;
-  list-style-position: inside;
-  border: 1px solid black ;
 }
 
-.checkbox {
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  cursor: pointer;
+/* Media Queries */
+@media (max-width: 431px) {
+  .addButton, .editButton, .removeButton, .saveButton {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .button {
+    margin-left: 2%; /* Changed to percentage */
+  }
+
+  .completedTaskTitle {
+    font-size: 1.2rem;
+  }
+
+  .container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .editDiv {
+    flex-direction: column !important;
+  }
+
+  .label {
+    margin: 2%; /* Changed to percentage */
+  }
+
+  .listItem {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  select, input, .editTask, .newTask {
+    font-size: 0.7rem !important;
+  }
+
+  .priorityDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .taskActions {
+    margin-left: auto;
+  }
+
+  .taskItem {
+    margin-left: 2%; /* Changed to percentage */
+    margin-right: auto;
+  }
+
+  .taskPriority {
+    font-size: 0.85rem;
+    padding-left: 2rem;
+  }
+
+  .timestamp {
+    font-size: 0.7rem;
+  }
+
+  .inputContainer, .editContainer {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    cursor: pointer;
+  }
 }
 
-.container {
-  height: 100vh;
-}
+@media (max-width: 768px) {
+  .addButton, .editButton, .removeButton, .saveButton {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
 
-.inputContainer {
-  text-align: center;
-}
+  .completedTaskTitle {
+    font-size: 1.3rem;
+  }
 
+  .container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-.newTask {
-  margin: 1rem;
-  padding: 1rem;
-  font-size: 1.1rem;
-  width: 20rem;
-  border-radius: 5px;
-  border: 1px solid black;
-  text-align: center;
-}
+  .editButton, .removeButton {
+    font-size: 0.8rem;
+  }
 
-.addButton {
-  background-color: green;
-  color: white;  
-  border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.addButton:hover {
-  background-color: rgb(4, 213, 220);
-}
-.addButton:active {
-  background-color: rgb(0,220, 0);
-  color: blue;
-  border: 1px solid black;
-}
+  .editDiv {
+    flex-direction: column !important;
+  }
 
-.removeButton {
-  background-color: rgb(220, 4, 4);
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.removeButton:hover {
-  background-color: rgb(4, 98, 220);
-}
-.removeButton:active {
-  background-color: rgb(255, 10, 255);
-  border: 1px solid black;
-  color: blue
-}
+  .footer {
+    font-size: 1rem;
+  }
 
-footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: black;
-  color: white;
-  text-align: center;
+  input, select, .editTask, .newTask {
+    font-size: 0.85rem !important;
+  }
+
+  .listItem > span {
+    font-size: 1.3rem;
+    margin-left: 2%; /* Changed to percentage */
+    margin-right: 2%; /* Changed to percentage */
+  }
+
+  .newTask {
+    font-size: 0.8rem;
+    width: 100%;
+  }
+
+  .priorityDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .sortSection {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin: 2% 0; /* Changed to percentage */
+  }
+
+  .taskActions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editPriority {
+    font-size: 0.85rem;
+    margin-left: 5%; /* Changed to percentage */
+  }
+
+  .taskItem {
+    margin-left: 2%; /* Changed to percentage */
+    margin-right: auto;
+  }
+
+  .taskPriority {
+    font-size: 0.85rem;
+    padding-left: 2rem;
+  }
+
+  .taskTitle {
+    font-size: 1.0rem;
+  }
+
+  .timestamp {
+    font-size: 0.75rem;
+  }
 }

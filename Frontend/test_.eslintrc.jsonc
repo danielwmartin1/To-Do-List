@@ -1,0 +1,14 @@
+{
+    "extends": [
+        "./.eslintrc.json"
+    ],
+    "overrides": [
+        {
+            "files": ["*.js", "*.jsx"],
+            "rules": {
+                "react-hooks/rules-of-hooks": "error",
+                "react-hooks/exhaustive-deps": "warn"
+            }
+        }
+    ]
+}
