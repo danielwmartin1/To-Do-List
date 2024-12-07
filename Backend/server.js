@@ -16,11 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb+srv://danielwmartin1:Mack2020!!@cluster0.ikgzxfz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {});
-<<<<<<< HEAD
     console.log('MongoDB connected...');
-=======
-    console.log('MongoDB connected');
->>>>>>> f7a4e6442df98575196bc62986823d976a404f3c
   } catch (err) {
     console.error('Error connecting to MongoDB:', err.message);
     process.exit(1);
